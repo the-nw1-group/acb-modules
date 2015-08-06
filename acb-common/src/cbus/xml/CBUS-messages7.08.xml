@@ -1,0 +1,6469 @@
+<?xml version="1.0" encoding="ISO-8859-2" standalone="yes"?>
+<CBUS_Message_List xsi:noNamespaceSchemaLocation="CBUS.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <version>7.08</version>
+  <gendate>2012-08-20</gendate>
+  <revisionHistory>
+    <revision>
+      <date>2012-08-14</date>
+      <version>8a</version>
+      <author>Richard Tearle</author>
+      <comment>Based on CBUS 4.0 Specification Rev. 8a, dated 18/02/2012</comment>
+    </revision>
+    <revision>
+      <date>2012-08-20</date>
+      <version>8c</version>
+      <author>Richard Tearle</author>
+      <comment>Added OpCodes ENUM and CANID.</comment>
+    </revision>
+  </revisionHistory>
+  <message>
+    <acronym>ACK</acronym>
+    <opcode>0x00</opcode>
+    <description>General Acknowledgement</description>
+    <documentation>Positive response to query/ request performed or report of availability on-line.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NAK</acronym>
+    <opcode>0x01</opcode>
+    <description>General No Ack</description>
+    <documentation>Negative response to query/ request denied.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>HLT</acronym>
+    <opcode>0x02</opcode>
+    <description>Bus Halt</description>
+    <documentation>
+      Commonly broadcasted to all devices to indicate CBUS is not available and no further packets should be sent until a BON or ARST is received.
+      Currently only sent by the command station when its input queue is full. Can be ignored by all modules other than those that need to send to the command station (e.g. cabs).
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>BON</acronym>
+    <opcode>0x03</opcode>
+    <description>Bus ON</description>
+    <documentation>Commonly broadcasted to all nodes to indicate CBUS is available following a HLT.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>TOF</acronym>
+    <opcode>0x04</opcode>
+    <description>Track OFF</description>
+    <documentation>Commonly broadcasted to all nodes by a command station to indicate track power is off and no further command packets should be sent, except inquiries.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>7</group>
+    </function>
+  </message>
+  <message>
+    <acronym>TON</acronym>
+    <opcode>0x05</opcode>
+    <description>Track ON (TON)</description>
+    <documentation>Commonly broadcasted to all devices by the command station to indicate track power is on.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>7</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ESTOP</acronym>
+    <opcode>0x06</opcode>
+    <description>Track Stopped</description>
+    <documentation>Commonly broadcasted to all devices by the command station to indicate all engines have been emergency stopped.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>7</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARST</acronym>
+    <opcode>0x07</opcode>
+    <description>System Reset</description>
+    <documentation>Commonly broadcasted to all devices by the command station to indicate a full system reset.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RTOF</acronym>
+    <opcode>0x08</opcode>
+    <description>Request Track OFF</description>
+    <documentation>Sent by a device to request change of track power state to "off".</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>7</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RTON</acronym>
+    <opcode>0x09</opcode>
+    <description>Request Track ON</description>
+    <documentation>Sent by a device to request change of track power state to "on".</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>7</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESTP</acronym>
+    <opcode>0x0A</opcode>
+    <description>Request Emergency Stop ALL</description>
+    <documentation>Sent by a device to request an emergency stop of the entire layout.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>7</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x0B</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RSTAT</acronym>
+    <opcode>0x0C</opcode>
+    <description>Request node Status</description>
+    <documentation>Sent by a node to query the status of the command station or another device. See description of (STAT) for the response from the command station/ other devices.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>2</group>
+    </function>
+  </message>
+  <message>
+    <acronym>QNN</acronym>
+    <opcode>0x0D</opcode>
+    <description>Query node number</description>
+    <documentation>Sent by a node to elicit a PNN reply from each node on the bus that has a node number. See OpCode 0xB6.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>2</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x0E</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x0F</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RQNP</acronym>
+    <opcode>0x10</opcode>
+    <description>Request node parameters</description>
+    <documentation>Sent by device to a node while in "setup" mode to read its parameter set. Used when initially configuring a node.</documentation>
+    <annotation>was RDPAR in version 4.3</annotation>
+    <function>
+      <key>event</key>
+      <group>2</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RQMN</acronym>
+    <opcode>0x11</opcode>
+    <description>Request module name</description>
+    <documentation>Sent by a node to request the name of the type of module that is in setup 	mode. The module in setup mode will reply with opcode NAME. See OpCode 0xE2.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>2</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x12</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x13</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x14</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x15</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x16</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x17</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x18</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x19</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x1A</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x1B</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x1C</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x1D</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x1E</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x1F</opcode>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>STAT</acronym>
+    <opcode>0x20</opcode>
+    <data1>
+      <bytecont>FLGS</bytecont>
+      <bytedesc>STATUS bits</bytedesc>
+    </data1>
+    <description>Command Station status report </description>
+    <documentation>
+      Sent by the command station in response to RSTAT.
+      FLGS is status bits:
+      0 - Hardware Error (self test)
+      1 - Track Error
+      2 - Track On/ Off
+      3 - Bus On/ Halted
+      4 - EM. Stop all performed
+      5 - Reset done
+      6 - Service mode (programming) On/ Off
+      7 - reserved
+      Sent by the command station in response to RSTAT.
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>7</group>
+    </function>
+  </message>
+  <message>
+    <acronym>KLOC</acronym>
+    <opcode>0x21</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is the engine session number.</bytedesc>
+    </data1>
+    <description>Release Engine</description>
+    <documentation>The command station decrements the reference counter for the engine record. If the reference count is 0, the command station removes the engine from the engine list. Sent by a CAB to the Command Station. The engine with that Session number is removed from the active engine list.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>QLOC</acronym>
+    <opcode>0x22</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Byte value is the engine session number.</bytedesc>
+    </data1>
+    <description>Query Engine</description>
+    <documentation>The command station responds with PLOC if the NN is assigned, otherwise responds with ERR: engine not found.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DKEEP</acronym>
+    <opcode>0x23</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Byte value is the engine session number.</bytedesc>
+    </data1>
+    <description>Session keep alive</description>
+    <documentation>The cab sends a keep alive at regular intervals for the active session. The interval between keep alive messages must be less than the session timeout implemented by the command station.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x24</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x25</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x26</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x27</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x28</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x29</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x2A</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x2B</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x2C</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x2D</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x2E</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x2F</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DBG1</acronym>
+    <opcode>0x30</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Freeform status byte for debugging during CBUS module development</bytedesc>
+    </data1>
+    <description>Debug with one data byte</description>
+    <documentation>Not 	used during normal operation.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x31</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x32</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x33</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x34</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x35</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x36</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x37</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x38</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x39</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x3A</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x3B</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x3C</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x3D</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x3E</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EXTC</acronym>
+    <opcode>0x3F</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>EXT</bytedesc>
+    </data1>
+    <description>Extended OPC without data byte packets.</description>
+    <documentation>Used if the basic set of 32 OPCs is not enough. Allows an additional 256 OPCs.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RLOC</acronym>
+    <opcode>0x40</opcode>
+    <data1>
+      <bytecont>ADHI</bytecont>
+      <bytedesc>Byte value is high address of decoder</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>ADLO</bytecont>
+      <bytedesc>Byte value is low address of decoder</bytedesc>
+    </data2>
+    <description>Request engine session</description>
+    <documentation>ADHI and ADLO are the address byte of the decoder, respectively. 7 bit addresses have (ADHI=0). 14 bit addresses have bits 7,8 of AddrH set to 0. The command station responds with (PLOC) if engine is free and is being assigned. Otherwise responds with (ERR): engine in use. This command is typically sent by a cab to the command station following a change of the controlled decoder address.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x41</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>SNN</acronym>
+    <opcode>0x42</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of the node number.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of the node number.</bytedesc>
+    </data2>
+    <description>Set Node Number</description>
+    <documentation>Sent by the command station to assign a node number to a requesting node in response to a RQNN message. The target node must be in "setup" mode.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>2</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x43</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <description></description>
+    <documentation>
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>STMOD</acronym>
+    <opcode>0x44</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>FLGS</bytecont>
+      <bytedesc>FLags  contains following mode bits: bit 0 - 1: speed mode, bit 2: service mode, bit3: Sound control mode</bytedesc>
+    </data2>
+    <description>Set CAB session mode</description>
+    <documentation>
+      FLags  contains following mode bits:
+      bits 0-1: speed mode 
+        00 - 128 speed steps 
+        01 - 14 speed steps
+        10 - 28 speed steps with interleave steps
+        11 - 28 speed steps
+      bit 2:    service mode
+      bit 3:    sound control mode
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>PCON</acronym>
+    <opcode>0x45</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is consist address (8 bits), bit 7 set if consist direction is reversed.</bytedesc>
+    </data2>
+    <description>Consist Engine</description>
+    <documentation>Adds a decoder to a consist. If consisting is successful, an ACK is sent. If engine is consisted already, an error is reported: engine in use.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>KCON</acronym>
+    <opcode>0x46</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is consist address (8 bits).</bytedesc>
+    </data2>
+    <description>Remove Engine From Consist</description>
+    <documentation>Removes a decoder from a consist. If deconsisting is successful an ACK is sent. If engine is consisted already, an error is reported: engine in use. If engine is not found an error is reported: engine not found.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DSPD</acronym>
+    <opcode>0x47</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is engine Speed/Dir.</bytedesc>
+    </data2>
+    <description>Set Engine Speed And Direction</description>
+    <documentation>Sent by a device to request an engine speed/dir change. BVAL is speed/dir value, where the most significant bit is direction and the 7 lsb are unsigned speed value.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DFLG</acronym>
+    <opcode>0x48</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>FLGS</bytecont>
+      <bytedesc>FLGS contains the following flags: Bits 0-1: Speed Mode, Bit 2: Lights On/OFF, Bit 3: Engine relative direction, Bits 4-5: Engine state, Bits 6-7: Reserved.</bytedesc>
+    </data2>
+    <description>Set Engine Flags</description>
+    <documentation>
+      Sent by a cab to notify a change in engine flags.
+      FLGS contains the following flags:
+      Bits 0-1: Speed Mode
+        00 - 128 speed steps
+        01 - 14 speed steps
+        10 - 28 speed steps with interleave steps
+        11 - 28 speed steps
+      Bit 2: Lights On/OFF
+      Bit 3: Engine relative direction
+      Bits 4-5: Engine state (active =0 , consisted =1,  consist master=2, inactive=3)
+      Bits 6-7: Reserved.
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DFNON</acronym>
+    <opcode>0x49</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is the function number - 0 to 27.</bytedesc>
+    </data2>
+    <description>Set Engine function on</description>
+    <documentation>Sent by a cab to turn on a specific loco function. This provides an alternative method to DFUN for controlling loco functions. A command station must implement both methods.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DFNOF</acronym>
+    <opcode>0x4A</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is the function number - 0 to 27.</bytedesc>
+    </data2>
+    <description>Set Engine function off</description>
+    <documentation>Sent by a cab to turn off a specific loco function. This provides an alternative method to 	DFUN for controlling loco functions. A command station must implement both methods.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x4B</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>SSTAT</acronym>
+    <opcode>0x4C</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>STATUS</bytecont>
+      <bytedesc>Status value</bytedesc>
+    </data2>
+    <description>Service Mode Status</description>
+    <documentation>Status returned by command station/programmer at end of programming operation that does not return data</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x4D</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x4E</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x4F</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RQNN</acronym>
+    <opcode>0x50</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Request node number</description>
+    <documentation>Sent by a node that is in setup/configuration mode and requests assignment of a node 	number (NN). The node allocating node numbers responds with (SNN) which contains the 	newly assigned node number. NNHI and NNLO are the existing node number, if the node has one. If it does not yet have a node number, these bytes should be set to zero.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>2</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NNREL</acronym>
+    <opcode>0x51</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Node Number Release</description>
+    <documentation>Sent by node when taken out of service. e.g. when reverting to SLiM mode.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>2</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NNACK</acronym>
+    <opcode>0x52</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Node number acknowledge</description>
+    <documentation>Sent by a node to verify its presence and confirm its node id. This message is sent to acknowledge an SNN.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>2</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NNLRN</acronym>
+    <opcode>0x53</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Set node into learn mode</description>
+    <documentation>Sent by a configuration tool to put a specific node into learn mode.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NNULN</acronym>
+    <opcode>0x54</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Release node from learn mode</description>
+    <documentation>Sent by device to take node out of learn mode and revert to normal running.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NNCLR</acronym>
+    <opcode>0x55</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Clear All Events from a node</description>
+    <documentation>Sent by a configuration tool to clear all events from a specific node. Must be in learn mode first to safeguard against accidental erasure of all events.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NNEVN</acronym>
+    <opcode>0x56</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Read number of events available in a node </description>
+    <documentation>Sent by a configuration tool to read the number of available event slots in a node. Response is EVLNF (0x70).</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NERD</acronym>
+    <opcode>0x57</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Read back all stored events in a node</description>
+    <documentation>Sent by device to read all the stored events in a node. Response is 0xF2</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RQEVN</acronym>
+    <opcode>0x58</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>byte value is low byte of nodenumber  </bytedesc>
+    </data2>
+    <description>Request to read number of stored events</description>
+    <documentation>Sent by device to read the number of stored events in a node. Response is 0x74 (NNEVN).</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>WRACK</acronym>
+    <opcode>0x59</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Write acknowledge.</description>
+    <documentation>Sent by device to indicate the completion of a write to memory operation. Used when teaching nodes where the processing time may be long.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RQDAT</acronym>
+    <opcode>0x5A</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Request node data event</description>
+    <documentation>Sent by device to read the node data event (eg: RFID data). Response is 0xE4 (ARDAT).</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RQDDS</acronym>
+    <opcode>0x5B</opcode>
+    <data1>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data2>
+    <description>Request device data - short mode</description>
+    <documentation>To request a "data set" from a device using the short event 	method Where DN is the device number. Response is 0xFB (DDRS).</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>BOOTM</acronym>
+    <opcode>0x5C</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Put node into bootload mode.</description>
+    <documentation>For SliM nodes with no NN then the NN of the command is must be zero. For SLiM nodes with an NN, and all FLiM nodes the command must contain the NN of the target node. Sent by a configuration tool  to prepare for loading a new program. </documentation>
+    <annotation></annotation>
+    <function>
+      <key>boot</key>
+      <group>6</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ENUM</acronym>
+    <opcode>0x5D</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <description>Force a self enumeration cycle for use with CAN</description>
+    <documentation>For nodes in FLiM using CAN as transport. This OPC will force a self-enumeration cycle for the specified node. A new CAN_ID will be allocated if needed. Following the ENUM sequence, the node should issue a NNACK to confirm completion and verify the new CAN_ID. If no CAN_ID values are available, an error message 7 will be issued instead.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x5E</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EXTC1</acronym>
+    <opcode>0x5F</opcode>
+    <data1>
+      <bytecont>EXTOPC</bytecont>
+      <bytedesc>EXT</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>PARAM1</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <description>Extended OPC with 1 data byte packets.</description>
+    <documentation>Used if the basic set of 32 OPCs is not enough. Allows an additional 256 OPCs.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DFUN</acronym>
+    <opcode>0x60</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Byte value is the engine session number.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>FN1</bytecont>
+      <bytedesc>Byte value is the function range. 1 is F0(FL) to F4, 2 is F5 to F8, 3 is F9 to F12, 4 is F13 to F19, 5 is F20 to F28.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>FN2</bytecont>
+      <bytedesc>Byte value is the NMRA DCC format function byte for that range in corresponding bits. Sent by a CAB or equivalent to request an engine Fn state change.</bytedesc>
+    </data3>
+    <description>Set Engine functions</description>
+    <documentation>Sent by a device to request an engine Fn state change.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>GLOC</acronym>
+    <opcode>0x61</opcode>
+    <data1>
+      <bytecont>ADHI</bytecont>
+      <bytedesc>Byte value is high byte of loco address. 7 bit addresses have (AddrH=0). 14 bit addresses have bits 6,7 of AddrH set to 1.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>ADLO</bytecont>
+      <bytedesc>Byte value is high byte of loco address.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>FLGS</bytecont>
+      <bytedesc>Byte value contains flag bits as follows: Bit 0: Set for "Steal" mode, Bit 1: Set for "Share" mode.</bytedesc>
+    </data3>
+    <description>Get engine session</description>
+    <documentation>Both bits set to 0 is exactly equivalent to an RLOC request. Both bits set to 1 is invalid, because the 2 modes are mutually exclusive. The command station responds with (PLOC) if the request is successful. Otherwise responds with (ERR): engine in use. (ERR:) stack full or (ERR) no session. 			The latter indicates that there is no current session to steal/share depending on the flag bits set in the request. GLOC with all flag bits set to zero is exactly equivalent to RLOC, but command stations must continue to support RLOC for backwards compatibility.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x62</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation>
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ERR</acronym>
+    <opcode>0x63</opcode>
+    <data1>
+      <bytecont>ADHI</bytecont>
+      <bytedesc>Byte value is high byte of loco address. 7 bit addresses have (AddrH=0). 14 bit addresses have bits 6,7 of AddrH set to 1.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>ADLO</bytecont>
+      <bytedesc>Byte value is high byte of loco address.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>ERROR</bytecont>
+      <bytedesc>Byte value is error code.</bytedesc>
+    </data3>
+    <description>Command Station Error report</description>
+    <documentation>Sent in response to an error situation.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>7</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x64</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x65</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x66</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x67</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x68</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x69</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x6A</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x6B</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x6C</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x6D</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x6E</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>CMDERR</acronym>
+    <opcode>0x6F</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>ERROR</bytecont>
+      <bytedesc>Byte value is error code.</bytedesc>
+    </data3>
+    <description>Error messages from nodes during configuration</description>
+    <documentation>Sent by node if there is an error when a configuration command is sent.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EVNLF</acronym>
+    <opcode>0x70</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is a one byte value giving the number of available events left in that node.</bytedesc>
+    </data3>
+    <description>Event Space Reply</description>
+    <documentation>Node sends number of available events left. Response to 0x56 </documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NVRD</acronym>
+    <opcode>0x71</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>NVINDEX</bytecont>
+      <bytedesc>Byte value is the index for the node variable value requested.</bytedesc>
+    </data3>
+    <description>Request Node Variable</description>
+    <documentation>Read a node variable.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NENRD</acronym>
+    <opcode>0x72</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>ENINDEX</bytecont>
+      <bytedesc>Byte value is the index for the stored event requested.</bytedesc>
+    </data3>
+    <description>Request read of stored events by event index</description>
+    <documentation>Request read of stored events by event index. EN# is the index for the stored event requested. Response is F2 (ENRSP)</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RQNPN</acronym>
+    <opcode>0x73</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>PARAINDEX</bytecont>
+      <bytedesc>Byte value index of the parameter requested.</bytedesc>
+    </data3>
+    <description>Request read of a node parameter by index.</description>
+    <documentation>Request read of a node parameter by index. Para# is the index for the parameter requested. Response is 9B (PARAN).</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NUMEV</acronym>
+    <opcode>0x74</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is number of events.</bytedesc>
+    </data3>
+    <description>Number of events stored in node</description>
+    <documentation>Number of events stored in node, response to request 58 (RQEVN)</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>CANID</acronym>
+    <opcode>0x75</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is the CAN_ID.</bytedesc>
+    </data3>
+    <description>Set a CAN_ID in existing FLiM node</description>
+    <documentation>Used to force a specified CAN_ID into a node. Value range is from 1 to 0x63 (99 decimal). This OPC must be used with care as duplicate CAN_IDs are not allowed. Values outside the permitted range will produce an error 7 message and the CAN_ID will not change.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x76</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x77</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x78</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x79</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x7A</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x7B</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x7C</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation> </documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x7D</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x7E</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EXTC2</acronym>
+    <opcode>0x7F</opcode>
+    <data1>
+      <bytecont>EXTOPC</bytecont>
+      <bytedesc>EXT</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>PARAM1</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>PARAM2</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <description>Extended OPC with 2 data byte packets.</description>
+    <documentation>Used if the basic set of 32 OPCs is not enough. Allows an additional 256 OPCs.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RDCC3</acronym>
+    <opcode>0x80</opcode>
+    <data1>
+      <bytecont>REP</bytecont>
+      <bytedesc>byte value is REP # of repetitions in sending the packet.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>PKT0 1 of 3 bytes of the DCC packet.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>PKT11 of 3 bytes of the DCC packet.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>PKT2 1 of 3 bytes of the DCC packet.</bytedesc>
+    </data4>
+    <description>Request 3-byte DCC Packet</description>
+    <documentation>Allows a device to request a 3 byte DCC packet to be sent to the track. The packet is sent REP times and is not refreshed on a regular basis.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x81</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>WCVO</acronym>
+    <opcode>0x82</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number to be written.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>CVHI</bytecont>
+      <bytedesc>CVHI is the MSB # of the CV write (supports CVs 1 - 65536).</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>CVLO</bytecont>
+      <bytedesc>CVLO is the LSB # of the CV write.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>byte value is the value to be written.</bytedesc>
+    </data4>
+    <description> Write CV in Ops mode</description>
+    <documentation>Sent to the command station to write a DCC CV in OPS mode.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>WCVB</acronym>
+    <opcode>0x83</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number to be written.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>CVHI</bytecont>
+      <bytedesc>CVHI is the MSB # of the CV write (supports CVs 1 - 65536).</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>CVLO</bytecont>
+      <bytedesc>CVLO is the LSB # of the CV write.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is the value to be written.</bytedesc>
+    </data4>
+    <description>Write CV (bit) in OPS mode.</description>
+    <documentation>
+      Sent to the command station to write a DCC CV in OPS mode to specific loco.(on the main)
+      The format for Dat4 is that specified in RP 9.2.1 for  OTM bit manipulation in a DCC packet.
+      This is "111CDBBB" where C is here is always 1 as only "writes" are possible OTM. (unless some
+      loco ACK scheme like RailCom is used). D is the bit value, either 0 or 1 and BBB is the bit
+      position in the CV byte. 000 to 111 for bits 0 to 7.
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>QCVS</acronym>
+    <opcode>0x84</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number to be written.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>CVHI</bytecont>
+      <bytedesc>CVHI is the MSB # of the CV write (supports CVs 1 - 65536).</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>CVLO</bytecont>
+      <bytedesc>CVLO is the LSB # of the CV write.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is the programming mode to be used.</bytedesc>
+    </data4>
+    <description>Read CV</description>
+    <documentation>
+      This command is used exclusively with service mode.
+      Sent by the cab to the command station in order to read a CV value. T
+      he command station shall respond with a PCVS message containing the value read,
+      or SSTAT   if the CV cannot be read.
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>PCVS</acronym>
+    <opcode>0x85</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number to be written.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>CVHI</bytecont>
+      <bytedesc>CVHI is the MSB # of the CV write (supports CVs 1 - 65536).</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>CVLO</bytecont>
+      <bytedesc>CVLO is the LSB # of the CV write.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is the read value.</bytedesc>
+    </data4>
+    <description>Report CV</description>
+    <documentation>This command is used exclusively with service mode. Sent by the command station to report a read CV.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x86</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x87</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x88</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x89</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x8A</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x8B</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x8C</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x8D</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x8E</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0x8F</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACON</acronym>
+    <opcode>0x90</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <description>Accessory ON</description>
+    <documentation>Indicates an "ON" event using the full event number of 4 bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACOF</acronym>
+    <opcode>0x91</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <description>Accessory OFF</description>
+    <documentation>Indicates an "OFF" event using the full event number of 4 bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>AREQ</acronym>
+    <opcode>0x92</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <description>Accessory Request Event</description>
+    <documentation>Indicates a "request" event using the full event number of 4 bytes. A request event is used to elicit a response from a consumer when it is required to know the "state" of the consumer without producing an ON oOFF event or to trigger an event from a "combi" node.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARON</acronym>
+    <opcode>0x93</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <description>Accessory On Response Event</description>
+    <documentation>Indicates a "ON" response event using the full event number of 4 bytes. A response event is a reply to a request (AREQ or ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>AROF</acronym>
+    <opcode>0x94</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <description>Accessory Off Response Event</description>
+    <documentation>Indicates an "OFF"  response event. A response event is a reply to a status request (AREQ or ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EVULN</acronym>
+    <opcode>0x95</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <description>Unlearn an event In learn mode</description>
+    <documentation>Sent by a configuration tool to remove an event from a node.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NVSET</acronym>
+    <opcode>0x96</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>NVINDEX</bytecont>
+      <bytedesc>NV# node value index</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>NVVAL</bytecont>
+      <bytedesc>NV node value</bytedesc>
+    </data4>
+    <description>Set A Node Variable Value</description>
+    <documentation>Sent by device to set a node variable. NV# is the NV index number</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NVANS</acronym>
+    <opcode>0x97</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>NVINDEX</bytecont>
+      <bytedesc>NV# node value index</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>NVVAL</bytecont>
+      <bytedesc>NV node value</bytedesc>
+    </data4>
+    <description>Returned Node Variable Value</description>
+    <documentation>Sent by node in response to request. (NVRD) (0x71)</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASON</acronym>
+    <opcode>0x98</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <description>Accessory Short ON</description>
+    <documentation>Indicates an "ON" event using the short event number of 2 LS bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASOF</acronym>
+    <opcode>0x99</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <description>Accessory Short OFF</description>
+    <documentation>Indicates an "OFF" event using the short event number of 2 LS bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASRQ</acronym>
+    <opcode>0x9A</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <description>Accessory Request Event</description>
+    <documentation>Indicates a "request" event using the short event number of 2 LS bytes. A request event is used to elicit a response from a consumer when it is required to know the "state" of the consumer without producing an ON or OFF event or to trigger an event from a "combi" node.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>PARAN</acronym>
+    <opcode>0x9B</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>PARAINDEX</bytecont>
+      <bytedesc>parameter index</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>PARAVAL</bytecont>
+      <bytedesc>parameter value</bytedesc>
+    </data4>
+    <description>Response to request for individual node parameter</description>
+    <documentation>NN is the node number of the sending node. Para# is the index of the parameter and Para val is the parameter value</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>REVAL</acronym>
+    <opcode>0x9C</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>ENINDEX</bytecont>
+      <bytedesc>EN#  event index number</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVINDEX</bytecont>
+      <bytedesc>EV# event variable index</bytedesc>
+    </data4>
+    <description>Request for read of an event variable</description>
+    <documentation>This request differs from B2 (REQEV) as it doesn't need to be in learn mode but does require the knowledge of the event index to which the EV request is directed. EN# is the event index. EV# is the event variable index. Response is B5 (NEVAL).</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARSON</acronym>
+    <opcode>0x9D</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <description>Accessory Short Response Event</description>
+    <documentation>Indicates an "ON" response event. A response event is a reply to a status request (ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARSOF</acronym>
+    <opcode>0x9E</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <description>Accessory Short Response Event</description>
+    <documentation>Indicates an "OFF" response event. A response event is a reply to a status request (ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EXTC3</acronym>
+    <opcode>0x9F</opcode>
+    <data1>
+      <bytecont>EXTOPC</bytecont>
+      <bytedesc>EXT</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>PARAM1</bytecont>
+      <bytedesc>data1</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>PARAM2</bytecont>
+      <bytedesc>data2</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>PARAM3</bytecont>
+      <bytedesc>data3</bytedesc>
+    </data4>
+    <description>Extended OPC with 3 data byte packets.</description>
+    <documentation>Used if the basic set of 32 OPCs is not enough. Allows an additional 256 OPCs </documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RDCC4</acronym>
+    <opcode>0xA0</opcode>
+    <data1>
+      <bytecont>REP</bytecont>
+      <bytedesc>REP is # of repetitions in sending the packet. </bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>PKT0  1 of 4 bytes of the DCC packet.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>PKT1  1 of 4 bytes of the DCC packet.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>PKT2  1 of 4 bytes of the DCC packet.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>PKT2  1 of 4 bytes of the DCC packet.</bytedesc>
+    </data5>
+    <description>Request 4-byte DCC Packet</description>
+    <documentation>The packet is sent REP times and is not refreshed on a regular basis.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xA1</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>WCVS</acronym>
+    <opcode>0xA2</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number to be written.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>CVHI</bytecont>
+      <bytedesc>CVHI is the MSB # of the CV write (supports CVs 1 - 65536).</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>CVLO</bytecont>
+      <bytedesc>CVLO is the LSB # of the CV write.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>MODE</bytecont>
+      <bytedesc>Service write mode.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is the value to be written.</bytedesc>
+    </data5>
+    <description>Write CV in Service mode</description>
+    <documentation>Sent to the command station to write a DCC CV in service mode.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xA3</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xA4</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xA5</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xA6</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xA7</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xA8</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xA9</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xAA</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xAB</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xAC</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xAD</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xAE</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xAF</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACON1</acronym>
+    <opcode>0xB0</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is additional data byte.</bytedesc>
+    </data5>
+    <description>Accessory ON Event With 1 Data</description>
+    <documentation>Indicates an "ON" event using the full event number of 4 bytes with one additional data byte.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACOF1</acronym>
+    <opcode>0xB1</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is additional data byte.</bytedesc>
+    </data5>
+    <description>Accessory Off Event With 1 Data</description>
+    <documentation>Indicates an "OFF" event using the full event number of 4 bytes with one additional data byte.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>REQEV</acronym>
+    <opcode>0xB2</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>EVINDEX</bytecont>
+      <bytedesc>EV# is the EV index</bytedesc>
+    </data5>
+    <description>Request Event With 1 Data</description>
+    <documentation>Read an event variable. (Valid in learn mode) Allows a device to read stored event variables from a node. EV# is the EV index. Reply is (EVANS).</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARON1</acronym>
+    <opcode>0xB3</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is additional data byte.</bytedesc>
+    </data5>
+    <description>Accessory Response Event</description>
+    <documentation>Indicates an "ON" response event with one additional data byte. A response event is a reply to a status request (AREQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>AROF1</acronym>
+    <opcode>0xB4</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is additional data byte.</bytedesc>
+    </data5>
+    <description>Accessory Response Event</description>
+    <documentation>Indicates an "OFF" response event with one additional data byte. A response event is a reply to a status request (AREQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NEVAL</acronym>
+    <opcode>0xB5</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>ENINDEX</bytecont>
+      <bytedesc>EN# is the index of the event in that node.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVINDEX</bytecont>
+      <bytedesc>EV# is the EV index.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>EVVAL</bytecont>
+      <bytedesc>EVval is the value of that EV.</bytedesc>
+    </data5>
+    <description>Response to request for read of EV value</description>
+    <documentation>NN is the node replying. EN# is the index of the event in that node. EV# is the index of the event variable. EVval is the value of that EV. This is response to 9C (REVAL)</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>PNN</acronym>
+    <opcode>0xB6</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>Byte value is the Manufacturer id as defined in the node parameters.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>Byte value is the Module Type Id id as defined in the node parameters</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>FLGS</bytecont>
+      <bytedesc>Byte value is the node flags as defined in the node parameters. The Flags byte contains bit flags as follows: Bit 0: Set to 1 for consumer node, Bit 1: Set to 1 for producer node, Bit 2: Set to 1 for FLiM mode. If a module is both a producer and a consumer then it is referred to as a "combi" node and both flags will be set.</bytedesc>
+    </data5>
+    <description>Response to Query Node</description>
+    <documentation>Every node should send this message in response to a QNN message.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xB7</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASON1</acronym>
+    <opcode>0xB8</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is additional data byte.</bytedesc>
+    </data5>
+    <description>Accessory Short ON</description>
+    <documentation>Indicates an "ON" event using the short event number of 2 LS bytes with one added data byte.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASOF1</acronym>
+    <opcode>0xB9</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is additional data byte.</bytedesc>
+    </data5>
+    <description>Accessory Short OFF</description>
+    <documentation>Indicates an "OFF" event using the short event number of 2 LS bytes with one added data byte.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xBA</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xBB</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xBC</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARSON1</acronym>
+    <opcode>0xBD</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is additional data byte.</bytedesc>
+    </data5>
+    <description>Accessory Short Response Event</description>
+    <documentation>Indicates an "ON" response event with one added data byte. A response event is a reply to a status request (ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARSOF1</acronym>
+    <opcode>0xBE</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value is additional data byte.</bytedesc>
+    </data5>
+    <description>Accessory Short Response Event</description>
+    <documentation>Indicates an "OFF" response event with one added data byte. A response event is a reply to a status request (ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EXTC4</acronym>
+    <opcode>0xBF</opcode>
+    <data1>
+      <bytecont>EXTOPC</bytecont>
+      <bytedesc>EXT</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>PARAM1</bytecont>
+      <bytedesc>data1</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>PARAM2</bytecont>
+      <bytedesc>data2</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>PARAM3</bytecont>
+      <bytedesc>data3</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>PARAM4</bytecont>
+      <bytedesc>data3</bytedesc>
+    </data5>
+    <description>Extended OPC with 4 data byte packets.</description>
+    <documentation>Used if the basic set of 32 OPCs is not enough. Allows an additional 256 OPCs.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RDCC5</acronym>
+    <opcode>0xC0</opcode>
+    <data1>
+      <bytecont>REP</bytecont>
+      <bytedesc>byte value is REP # of repetitions in sending the packet.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>PKT0 1 of 5 bytes of the DCC packet.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>PKT1 1 of 5 bytes of the DCC packet.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>PKT2 1 of 5 bytes of the DCC packet.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>PKT3 1 of 5 bytes of the DCC packet.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE4</bytecont>
+      <bytedesc>PKT4 1 of 5 bytes of the DCC packet.</bytedesc>
+    </data6>
+    <description>Request 5-byte DCC Packet</description>
+    <documentation>Allows a device to request a 5 byte DCC packet to be sent to the track. The packet is sent REP times and is not refreshed on a regular basis.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>WCVOA</acronym>
+    <opcode>0xC1</opcode>
+    <data1>
+      <bytecont>ADHI</bytecont>
+      <bytedesc>Byte value is high address of decoder</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>ADLO</bytecont>
+      <bytedesc>Byte value is low address of decoder</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>CVHI</bytecont>
+      <bytedesc>CVHI is the MSB # of the CV write (supports CVs 1 - 65536)</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>CVLO</bytecont>
+      <bytedesc>CVLO is the LSB # of the CV write</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>MODE</bytecont>
+      <bytedesc>Programming mode to be used</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc>Byte value to be written</bytedesc>
+    </data6>
+    <description>Write CV (byte) in OPS mode by address</description>
+    <documentation>Sent to the command station to write a DCC CV byte in OPS mode to specific loco (on the main). Used by computer based ops mode programmer that does not have a valid throttle handle 7 bit addresses have (AddrH=0). 14 bit addresses have bits 7,8 of AddrH set to 1.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xC2</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xC3</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xC4</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xC5</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xC6</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xC7</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xC8</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xC9</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xCA</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xCB</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xCC</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xCD</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xCE</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>FCLK</acronym>
+    <opcode>0xCF</opcode>
+    <data1>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>Byte value is the minutes of the fast clock.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>Byte value is the hours of the fast clock.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>Byte value is weekday/month. Bits 0-3 are the weekday (1=Sun, 2=Mon etc), bits 4-7 are the month (1=Jan, 2=Feb etc).</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>Byte value is set to 0 for freeze, 1 for real time.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE4</bytecont>
+      <bytedesc>Byte value is day of the month 1-31.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE5</bytecont>
+      <bytedesc>Byte value is temperature as twos complement -127 to +127.</bytedesc>
+    </data6>
+    <description>Fast Clock</description>
+    <documentation>Used to implement a fast clock for the layout.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACON2</acronym>
+    <opcode>0xD0</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>VALHI</bytecont>
+      <bytedesc>Byte value is additional data HI byte.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>VALLO</bytecont>
+      <bytedesc>Byte value is additional data LO byte.</bytedesc>
+    </data6>
+    <description>Accessory ON Event With 2 data bytes</description>
+    <documentation>Indicates an "ON" event using the full event number of 4 bytes with two additional data bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACOF2</acronym>
+    <opcode>0xD1</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>VALHI</bytecont>
+      <bytedesc>Byte value is additional data HI byte.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>VALLO</bytecont>
+      <bytedesc>Byte value is additional data LO byte.</bytedesc>
+    </data6>
+    <description>Accessory OFF Event With 2 Data</description>
+    <documentation>Indicates an "OFF" event using the full event number of 4 bytes with two additional data bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EVLRN</acronym>
+    <opcode>0xD2</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>EVINDEX</bytecont>
+      <bytedesc>Event index number</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>EVVAL</bytecont>
+      <bytedesc>event value to be written</bytedesc>
+    </data6>
+    <description>Teach an event in learn mode.</description>
+    <documentation>Sent by a configuration tool to a node in learn mode to teach it an event. Also teaches it the associated event variables (EVs) by the EV index (EV#). This command is repeated for each EV required.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EVANS</acronym>
+    <opcode>0xD3</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>EVINDEX</bytecont>
+      <bytedesc>Event index number</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>EVVAL</bytecont>
+      <bytedesc>event value to be written</bytedesc>
+    </data6>
+    <description>Response to a request for an EV value in a node in learn mode</description>
+    <documentation>A node response to a request from a configuration tool for the EVs associated with an event (REQEV). For multiple EVs, there will be one response per request.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARON2</acronym>
+    <opcode>0xD4</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <description>Accessory Response Event</description>
+    <documentation>Indicates an "ON" response event with two added data bytes. A response event is a reply to a status request (AREQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>AROF2</acronym>
+    <opcode>0xD5</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <description>Accessory Response OFF Event</description>
+    <documentation>Indicates an "OFF" response event with two added data bytes. A response event is a reply to a status request (AREQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xD6</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xD7</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASON2</acronym>
+    <opcode>0xD8</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <description>Accessory Short ON</description>
+    <documentation>Indicates an "ON" event using the short event number of 2 LS bytes with two added data bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASOF2</acronym>
+    <opcode>0xD9</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <description>Accessory Short OFF</description>
+    <documentation>Indicates an "OFF" event using the short event number of 2 LS bytes with two added data 	bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xDA</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xDB</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xDC</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARSON2</acronym>
+    <opcode>0xDD</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <description>Accessory Short Response Event</description>
+    <documentation>Indicates an "ON" response event with two added data bytes. A response event is a reply to a status request (ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARSOF2</acronym>
+    <opcode>0xDE</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <description>Accessory Short Response Event</description>
+    <documentation>Indicates an "OFF" response event with two added data bytes. A response event is a reply to a status request (ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EXTC5</acronym>
+    <opcode>0xDF</opcode>
+    <data1>
+      <bytecont>EXTOPC</bytecont>
+      <bytedesc>EXT</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>PARAM1</bytecont>
+      <bytedesc>data1</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>PARAM2</bytecont>
+      <bytedesc>data2</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>PARAM3</bytecont>
+      <bytedesc>data3</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>PARAM4</bytecont>
+      <bytedesc>data3</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>PARAM5</bytecont>
+      <bytedesc>data4</bytedesc>
+    </data6>
+    <description>Extended OPC with 5 data bytes</description>
+    <documentation>Used if the basic set of 32 OPCs is not enough. Allows an additional 256 OPCs.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>1</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RDCC6</acronym>
+    <opcode>0xE0</opcode>
+    <data1>
+      <bytecont>REP</bytecont>
+      <bytedesc>byte value is REP # of repetitions in sending the packet.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>PKT0 1 of 6 bytes of the DCC packet.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>PKT1 1 of 6 bytes of the DCC packet.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>PKT2 1 of 6 bytes of the DCC packet.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>PKT2 1 of 6 bytes of the DCC packet.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE4</bytecont>
+      <bytedesc>PKT3 1 of 6 bytes of the DCC packet.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE5</bytecont>
+      <bytedesc>PKT5 1 of 6 bytes of the DCC packet.</bytedesc>
+    </data7>
+    <description>Request 6-byte DCC Packet</description>
+    <documentation>Allows a device to request a 6 byte DCC packet to be sent to the track. The packet is sent REP times and is not refreshed on a regular basis.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>9</group>
+    </function>
+  </message>
+  <message>
+    <acronym>PLOC</acronym>
+    <opcode>0xE1</opcode>
+    <data1>
+      <bytecont>SSNR</bytecont>
+      <bytedesc>Session number for engine assigned by the command station.  This session number is used in all referenced to the engine until it is released.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>ADHI</bytecont>
+      <bytedesc>MS byte of the DCC address. For short addresses it is set to 0. </bytedesc>
+    </data2>
+    <data3>
+      <bytecont>ADLO</bytecont>
+      <bytedesc>LS byte of the DCC address.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>SPEEDDIRECTION</bytecont>
+      <bytedesc>is the Speed/Direction value. Bit 7 is the direction bit and bits 0-6 are the speed value.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>FN1</bytecont>
+      <bytedesc>function byte F0 to F4.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>FN2</bytecont>
+      <bytedesc>function byte F5 to F8.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>FN3</bytecont>
+      <bytedesc>function byte F9 to F12.</bytedesc>
+    </data7>
+    <description>Engine report</description>
+    <documentation>A report of an engine entry sent by the command station. Sent in response to QLOC or as an acknowledgement of acquiring an engine requested by a cab (RLOC).</documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>NAME</acronym>
+    <opcode>0xE2</opcode>
+    <data1>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>Byte 1 of the node's name.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>Byte 2 of the node's name.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>Byte 3 of the node's name.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>Byte 4 of the node's name.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE4</bytecont>
+      <bytedesc>Byte 5 of the node's name.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE5</bytecont>
+      <bytedesc>Byte 6 of the node's name.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE6</bytecont>
+      <bytedesc>Byte 7 of the node's name.</bytedesc>
+    </data7>
+    <description>Response to request for node name string</description>
+    <documentation>A node response while in "setup" mode for its name string. Reply to (RQMN). The string for the module type is returned in char1 to char7. All module types begin with "CAN". This prefix is assumed and is not included in the returned string, so the maximum module type name is 10 characters including the implicit "CAN" prefix.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>misc</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xE3</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xE4</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xE5</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation>
+    </documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xE6</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation>	</documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xE7</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xE8</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>dcc</key>
+      <group>8</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xE9</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xEA</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xEB</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xEC</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xED</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xEE</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>PARAMS</acronym>
+    <opcode>0xEF</opcode>
+    <data1>
+      <bytecont>PARAM1</bytecont>
+      <bytedesc>Manufacturer Id</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>PARAM2</bytecont>
+      <bytedesc>Minor Version - char</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>PARAM3</bytecont>
+      <bytedesc>Module Id</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>PARAM4</bytecont>
+      <bytedesc>Number of Events supported by the module</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>PARAM5</bytecont>
+      <bytedesc>Number of Event Variables per Event</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>PARAM6</bytecont>
+      <bytedesc>Number of Node Variables supported by the module</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>PARAM7</bytecont>
+      <bytedesc>Major Version</bytedesc>
+    </data7>
+    <description>Response to request for node parameters</description>
+    <documentation>The set of seven node parameters. Sent in response to 0x10 with node in "setup" mode.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACON3</acronym>
+    <opcode>0xF0</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>additional data byte 3</bytedesc>
+    </data7>
+    <description>Accessory On Event With 3 Data</description>
+    <documentation>Indicates an "ON" event using the full event number of 4 bytes with three additional data bytes</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACOF3</acronym>
+    <opcode>0xF1</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>additional data byte 3</bytedesc>
+    </data7>
+    <description>Accessory Off Event With 3 Data</description>
+    <documentation>Indicates an "OFF" event using the full event number of 4 bytes with three additional data bytes</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ENRSP</acronym>
+    <opcode>0xF2</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EN3</bytecont>
+      <bytedesc>EN3 event data.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EN2</bytecont>
+      <bytedesc>EN2 event data.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>EN1</bytecont>
+      <bytedesc>EN1 event data.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>EN0</bytecont>
+      <bytedesc>EN0 event data.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>ENINDEX</bytecont>
+      <bytedesc>EN# event index number.</bytedesc>
+    </data7>
+    <description>Response to request to read node events</description>
+    <documentation>Where the NN is that of the sending node. EN3 to EN0 are the four bytes of the stored event. EN# is the index of the event within the sending node. This is a response to either 57 (NERD) or 72 (NENRD)</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>4</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARON3</acronym>
+    <opcode>0xF3</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>additional data byte 3</bytedesc>
+    </data7>
+    <description>Response Event With 3 Data</description>
+    <documentation>Indicates an "ON"  response event. A response event is a reply to a status request (AREQ or ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>AROF3</acronym>
+    <opcode>0xF4</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>additional data byte 3</bytedesc>
+    </data7>
+    <description>Accessory Response Event</description>
+    <documentation>Indicates an "OFF"  response event. A response event is a reply to a status request (AREQ or ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>3</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EVLRNI</acronym>
+    <opcode>0xF5</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>EVHI</bytecont>
+      <bytedesc>Byte value is high byte of the event number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>EVLO</bytecont>
+      <bytedesc>Byte value is low byte of the event number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>ENINDEX</bytecont>
+      <bytedesc>EN# event index number.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>EVINDEX</bytecont>
+      <bytedesc>Event variable index.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>EVVAL</bytecont>
+      <bytedesc>Event value.</bytedesc>
+    </data7>
+    <description>Teach an event in learn mode using event indexing</description>
+    <documentation>Sent by a device to a node in learn mode to teach it an event. The event index must be known. Also teaches it the associated event variables.(EVs). This command is repeated for each EV required.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ACDAT</acronym>
+    <opcode>0xF6</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>Byte values is the first node data byte.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>Byte values is the second node data byte.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>Byte values is the third node data byte.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>Byte values is the forth node data byte.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE4</bytecont>
+      <bytedesc>Byte values is the fifth node data byte.</bytedesc>
+    </data7>
+    <description>Accessory node data event</description>
+    <documentation>Indicates an event from this node with 5 bytes of data. For example, this can be used to send the 40 bits of an RFID tag. There is no event number in order to allow space for 5 bytes of data in the packet, so there can only be one data event per node.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARDAT</acronym>
+    <opcode>0xF7</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>Byte values is the first node data byte.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>Byte values is the second node data byte.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>Byte values is the third node data byte.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>Byte values is the forth node data byte.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE4</bytecont>
+      <bytedesc>Byte values is the fifth node data byte.</bytedesc>
+    </data7>
+    <description>Accessory node data Response</description>
+    <documentation>Indicates a node data response. A response event is a reply to a status request (RQDAT) without producing a new data event. </documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASON3</acronym>
+    <opcode>0xF8</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>additional data byte 3</bytedesc>
+    </data7>
+    <description>Accessory Short ON</description>
+    <documentation>Indicates an "ON" event using the short event number of 2 LS bytes with three added data bytes.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ASOF3</acronym>
+    <opcode>0xF9</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>additional data byte 3</bytedesc>
+    </data7>
+    <description>Accessory Short OFF</description>
+    <documentation>Indicates an "OFF" event using the short event number of 2 LS bytes with three added data bytes</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>5</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DDES</acronym>
+    <opcode>0xFA</opcode>
+    <data1>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>Byte values is the first node data byte.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>Byte values is the second node data byte.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>Byte values is the third node data byte.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>Byte values is the forth node data byte.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE4</bytecont>
+      <bytedesc>Byte values is the fifth node data byte.</bytedesc>
+    </data7>
+    <description>Device data event (short mode)</description>
+    <documentation>Function is the same as F6 but uses device addressing so can relate data to a device attached to a node. e.g. one of several RFID readers attached to a single node.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>DDRS</acronym>
+    <opcode>0xFB</opcode>
+    <data1>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>Byte values is the first node data byte.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>Byte values is the second node data byte.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>Byte values is the third node data byte.</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE3</bytecont>
+      <bytedesc>Byte values is the forth node data byte.</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE4</bytecont>
+      <bytedesc>Byte values is the fifth node data byte.</bytedesc>
+    </data7>
+    <description>Device data response (short mode)</description>
+    <documentation>The response to a request for data from a device. (0x5B)</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>RESERVED</acronym>
+    <opcode>0xFC</opcode>
+    <data1>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data1>
+    <data2>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data2>
+    <data3>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data3>
+    <data4>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BVAL</bytecont>
+      <bytedesc></bytedesc>
+    </data7>
+    <description></description>
+    <documentation></documentation>
+    <annotation></annotation>
+    <function>
+      <key>free</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARSON3</acronym>
+    <opcode>0xFD</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>additional data byte 3</bytedesc>
+    </data7>
+    <description>Accessory Short Response Event</description>
+    <documentation>Indicates an "ON" response event with with three added data bytes. A response event is a reply to a status request (ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>ARSOF3</acronym>
+    <opcode>0xFE</opcode>
+    <data1>
+      <bytecont>NNHI</bytecont>
+      <bytedesc>Byte value is high byte of nodenumber.</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>NNLO</bytecont>
+      <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>DNHI</bytecont>
+      <bytedesc>Byte value is high byte of device number.</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>DNLO</bytecont>
+      <bytedesc>Byte value is low byte of device number.</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>BYTE0</bytecont>
+      <bytedesc>additional data byte 1</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>BYTE1</bytecont>
+      <bytedesc>additional data byte 2</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>BYTE2</bytecont>
+      <bytedesc>additional data byte 3</bytedesc>
+    </data7>
+    <description>Accessory Short Response Event</description>
+    <documentation>Indicates an "OFF" response event with with three added data bytes. A response event is a reply to a status request (ASRQ) without producing an ON or OFF event.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+  <message>
+    <acronym>EXTC6</acronym>
+    <opcode>0xFF</opcode>
+    <data1>
+      <bytecont>EXTOPC</bytecont>
+      <bytedesc>EXT</bytedesc>
+    </data1>
+    <data2>
+      <bytecont>PARAM1</bytecont>
+      <bytedesc>data1</bytedesc>
+    </data2>
+    <data3>
+      <bytecont>PARAM2</bytecont>
+      <bytedesc>data2</bytedesc>
+    </data3>
+    <data4>
+      <bytecont>PARAM3</bytecont>
+      <bytedesc>data3</bytedesc>
+    </data4>
+    <data5>
+      <bytecont>PARAM4</bytecont>
+      <bytedesc>data3</bytedesc>
+    </data5>
+    <data6>
+      <bytecont>PARAM5</bytecont>
+      <bytedesc>data4</bytedesc>
+    </data6>
+    <data7>
+      <bytecont>PARAM6</bytecont>
+      <bytedesc>data5</bytedesc>
+    </data7>
+    <description>Extended op-code with 6 data bytes</description>
+    <documentation>Used if the basic set of 32 OPCs is not enough. Allows an additional 256 OPCs.</documentation>
+    <annotation></annotation>
+    <function>
+      <key>event</key>
+      <group>0</group>
+    </function>
+  </message>
+</CBUS_Message_List>
