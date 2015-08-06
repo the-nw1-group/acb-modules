@@ -3,7 +3,8 @@ Another Control Bus
 
 or Accessory Control Bus - a CBUS like control bus for model railway accessories such as control panels, servos,
 signals and the like. More details on CBUS can be found on the <http://www.merg.org.uk/merg_resources/cbus.php> website.
-These modules should be compatible with CBUS as described in the Developers Guide version 
+These modules should be compatible with CBUS as described in the Developers Guide version 6a to CBUS 4.0 Specification 
+Revision 8c. The modules only support FLiM (The Full Layout implementation Model)
 
 The Modules
 -----------
@@ -11,17 +12,17 @@ The Modules
 The modules are based around either STM32F042 ARM Cortex-M0 microcontroller, or various PIC24/dsPIC33 microcontrollers. 
 All of the boards have been designed, with only the ACB-16IO requiring the Gerbers to be drawn. 
 
-| Module | Microcontroller | Description |
-| ------ | --------------- | ----------- |
-| ACB-4TC | STM32F042K6 | For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving |
-| ACB-8IOMV | STM32F042F6 | 8 configuration input or outputs, configurable for various voltages and other options |
-| ACB-8IO | STM32F042F6 | 8 configurable open drain inputs or outputs, 5V tolerant |
-| ACB-16IO | STM32F042F6 | 16 configurable open drain inputs or outputs, 5V tolerant |
-| ACB-16LED | STM32F042F6 | 16 constant current LED outputs |
-| ACB-MATRIX | STM32F042C6 | 10x7 LED matrix driver |
-| ACB-RF | STM32F042F6 | Wireless link |
-| ACB-ETH100 | PIC24HJ128GP504 | CAN to Ethernet bridge |
-| ACB-BRIDGE | PIC24EP512GP806 | CAN to CAN bridge |
+| Module     | Microcontroller | Description |
+| ---------- | --------------- | ------------------------------------------------------------------------------------- |
+| ACB-4TC    | STM32F042K6     | For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving                 |
+| ACB-8IOMV  | STM32F042F6     | 8 configuration input or outputs, configurable for various voltages and other options |
+| ACB-8IO    | STM32F042F6     | 8 configurable open drain inputs or outputs, 5V tolerant                              |
+| ACB-16IO   | STM32F042F6     | 16 configurable open drain inputs or outputs, 5V tolerant                             |
+| ACB-16LED  | STM32F042F6     | 16 constant current LED outputs                                                       |
+| ACB-MATRIX | STM32F042C6     | 10x7 LED matrix driver                                                                |
+| ACB-RF     | STM32F042F6     | Wireless link                                                                         |
+| ACB-ETH100 | PIC24HJ128GP504 | CAN to Ethernet bridge                                                                |
+| ACB-BRIDGE | PIC24EP512GP806 | CAN to CAN bridge                                                                     |
  
 Most of the code is written in assembler - yeah I know...  
 
