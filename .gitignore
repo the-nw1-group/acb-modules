@@ -5,6 +5,9 @@ RemoteSystemsTempFiles/
 Debug/
 Release/
 
+# Auto-generated files
+cbusMessages.S
+
 # =========================
 # Operating System Files
 # =========================
