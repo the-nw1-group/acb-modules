@@ -37,6 +37,16 @@ You'll need the following tools to build the source code:
 * GNU build tools (for Windows) - again, I'm using the one prebuilt by the GNU ARM Eclipse plug-in team
 * Saxon XSLT and XQuery Processor - I'm using version Saxon-HE 9-6-0-6J
 
+You might need to add the following 2 substitution strings (Windows > Preferences > Run/Debug > String Substitution),
+as I think these are workspace, rather than project settings:
+
+| Variable        | Value              | Description            |
+| --------------- | ------------------ | ---------------------- |
+| saxon_xslt_jar  | saxon9he.jar       | Name of Saxon XSTL Jar |
+| saxon_xslt_path | *path to JAR file* | Path to Saxon XSLT Jar |
+
+Note: On Windows systems, in saxon_xslt_path use forward slashes rather than backslashes.
+
 For debugging and for burning the boot loader, you need:
 * ST-LINK/V2  in-circuit debugger/programmer for STM8 and STM32 - either a stand-alone version, 
 or from a ST-Discovery board
