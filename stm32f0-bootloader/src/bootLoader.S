@@ -68,7 +68,7 @@
  * Only writing to FLASH is supported, specifically writing to configuration/option bytes and EEPROM is not
  * supported.
  *
- * The user program must start at address 0x08001000 and the size reduced by 4K,
+ * The user program must start at address 0x08000C00 and the size reduced by 3K,
  * and the RAM region must start from 0x200000C0 and the size reduced by 192 bytes
  *
  */
