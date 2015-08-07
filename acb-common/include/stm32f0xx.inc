@@ -7,19 +7,19 @@
   * @author  MCD Application Team
   * @version V1.3.1
   * @date    17-January-2014
-  * @brief   CMSIS Cortex-M0 Device Peripheral Access Layer Header File. 
-  *          This file contains all the peripheral register's definitions, bits 
-  *          definitions and memory mapping for STM32F0xx devices.  
-  *          
+  * @brief   CMSIS Cortex-M0 Device Peripheral Access Layer Header File.
+  *          This file contains all the peripheral register's definitions, bits
+  *          definitions and memory mapping for STM32F0xx devices.
+  *
   *          The file is the unique include file that the application programmer
   *          is using in the C source code, usually in main.c. This file contains:
   *           - Configuration section that allows to select:
   *              - The device used in the target application
-  *              - To use or not the peripheral’s drivers in application code(i.e. 
-  *                code will be based on direct access to peripheral’s registers 
-  *                rather than drivers API), this option is controlled by 
+  *              - To use or not the peripheral’s drivers in application code(i.e.
+  *                code will be based on direct access to peripheral’s registers
+  *                rather than drivers API), this option is controlled by
   *                "#define USE_STDPERIPH_DRIVER"
-  *              - To change few application-specific parameters such as the HSE 
+  *              - To change few application-specific parameters such as the HSE
   *                crystal frequency
   *           - Data structures and the address mapping for all peripherals
   *           - Peripheral's registers declarations and bits definition
@@ -36,8 +36,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -57,38 +57,38 @@
 #define __STM32F0XX_H
 
 #ifdef __cplusplus
-#endif 
+#endif
 
 /** @addtogroup Library_configuration_section
   * @{
   */
 
-/* Uncomment the line below according to the target STM32F0 device used in your 
-   application 
+/* Uncomment the line below according to the target STM32F0 device used in your
+application
   */
 
 #if !defined (STM32F030) && !defined (STM32F031) && !defined (STM32F051) && !defined (STM32F072) && !defined (STM32F042)
-  #define STM32F072   
+#define STM32F072
 #endif
 
 /*  Tip: To avoid modifying this file each time you need to switch between these
         devices, you can define the device in your toolchain compiler preprocessor.
   */
 
-#if defined(STM32F0XX) || defined(STM32F0XX_MD) 
-  #define STM32F051
+#if defined(STM32F0XX) || defined(STM32F0XX_MD)
+#define STM32F051
 #endif /* STM32F0XX */
 
 #ifdef STM32F0XX_LD
-  #define     STM32F031
+#define     STM32F031
 #endif /* STM32F0XX_LD */
 
 #ifdef STM32F0XX_HD
-   #define   STM32F072
+#define   STM32F072
 #endif /* STM32F0XX_HD */
 
 #if defined (STM32F030X8) || defined (STM32F030X6)
-  #define    STM32F030
+#define    STM32F030
 #endif /* STM32F030X8 or  STM32F030X6 */
 
 
@@ -98,63 +98,63 @@
 #if !defined  USE_STDPERIPH_DRIVER
 /**
  * @brief Comment the line below if you will not use the peripherals drivers.
-   In this case, these drivers will not be included and the application code will 
-   be based on direct access to peripherals registers 
+In this case, these drivers will not be included and the application code will
+be based on direct access to peripherals registers
    */
 #endif /* USE_STDPERIPH_DRIVER */
 
 /**
  * @brief In the following line adjust the value of External High Speed oscillator (HSE)
-   used in your application 
+used in your application
 
-   Tip: To avoid modifying this file each time you need to use different HSE, you
+Tip: To avoid modifying this file each time you need to use different HSE, you
         can define the HSE value in your toolchain compiler preprocessor.
   */
-#if !defined  (HSE_VALUE)     
+#if !defined  (HSE_VALUE)
 #define HSE_VALUE    (8000000) /*!< Value of the External oscillator in Hz*/
 #endif /* HSE_VALUE */
 
 /**
- * @brief In the following line adjust the External High Speed oscillator (HSE) Startup 
-   Timeout value 
+ * @brief In the following line adjust the External High Speed oscillator (HSE) Startup
+Timeout value
    */
 #if !defined  (HSE_STARTUP_TIMEOUT)
 #define HSE_STARTUP_TIMEOUT   (0x5000) /*!< Time out for HSE start up */
 #endif /* HSE_STARTUP_TIMEOUT */
 
 /**
- * @brief In the following line adjust the Internal High Speed oscillator (HSI) Startup 
-   Timeout value 
+ * @brief In the following line adjust the Internal High Speed oscillator (HSI) Startup
+Timeout value
    */
 #if !defined  (HSI_STARTUP_TIMEOUT)
 #define HSI_STARTUP_TIMEOUT   (0x5000) /*!< Time out for HSI start up */
 #endif /* HSI_STARTUP_TIMEOUT */
 
-#if !defined  (HSI_VALUE) 
+#if !defined  (HSI_VALUE)
 #define HSI_VALUE  (8000000) /*!< Value of the Internal High Speed oscillator in Hz.
                                              The real value may vary depending on the variations
                                              in voltage and temperature.  */
 #endif /* HSI_VALUE */
 
-#if !defined  (HSI14_VALUE) 
+#if !defined  (HSI14_VALUE)
 #define HSI14_VALUE (14000000) /*!< Value of the Internal High Speed oscillator for ADC in Hz.
                                              The real value may vary depending on the variations
                                              in voltage and temperature.  */
 #endif /* HSI14_VALUE */
 
-#if !defined  (HSI48_VALUE) 
+#if !defined  (HSI48_VALUE)
 #define HSI48_VALUE (48000000) /*!< Value of the Internal High Speed oscillator for USB in Hz.
                                              The real value may vary depending on the variations
                                              in voltage and temperature.  */
 #endif /* HSI48_VALUE */
 
-#if !defined  (LSI_VALUE) 
+#if !defined  (LSI_VALUE)
 #define LSI_VALUE  (40000)    /*!< Value of the Internal Low Speed oscillator in Hz
                                              The real value may vary depending on the variations
                                              in voltage and temperature.  */
 #endif /* LSI_VALUE */
 
-#if !defined  (LSE_VALUE) 
+#if !defined  (LSE_VALUE)
 #define LSE_VALUE  (32768)    /*!< Value of the External Low Speed oscillator in Hz */
 #endif /* LSE_VALUE */
 
@@ -164,7 +164,7 @@
 #define __STM32F0XX_STDPERIPH_VERSION_MAIN   (0x01) /*!< [31:24] main version */
 #define __STM32F0XX_STDPERIPH_VERSION_SUB1   (0x03) /*!< [23:16] sub1 version */
 #define __STM32F0XX_STDPERIPH_VERSION_SUB2   (0x01) /*!< [15:8]  sub2 version */
-#define __STM32F0XX_STDPERIPH_VERSION_RC     (0x00) /*!< [7:0]  release candidate */ 
+#define __STM32F0XX_STDPERIPH_VERSION_RC     (0x00) /*!< [7:0]  release candidate */
 #define __STM32F0XX_STDPERIPH_VERSION        ((__STM32F0XX_STDPERIPH_VERSION_MAIN << 24)\
                                              |(__STM32F0XX_STDPERIPH_VERSION_SUB1 << 16)\
                                              |(__STM32F0XX_STDPERIPH_VERSION_SUB2 << 8)\
@@ -179,160 +179,160 @@
   */
 
 /**
- * @brief STM32F0xx Interrupt Number Definition, according to the selected device 
- *        in @ref Library_configuration_section 
+ * @brief STM32F0xx Interrupt Number Definition, according to the selected device
+ *        in @ref Library_configuration_section
  */
 #define __CM0_REV                 0 /*!< Core Revision r0p0                            */
 #define __MPU_PRESENT             0 /*!< STM32F0xx do not provide MPU                  */
 #define __NVIC_PRIO_BITS          2 /*!< STM32F0xx uses 2 Bits for the Priority Levels */
 #define __Vendor_SysTickConfig    0 /*!< Set to 1 if different SysTick Config is used  */
 
-  NonMaskableInt_IRQn         = -14    /*!< 2 Non Maskable Interrupt                                */
-  HardFault_IRQn              = -13    /*!< 3 Cortex-M0 Hard Fault Interrupt                        */
-  SVC_IRQn                    = -5     /*!< 11 Cortex-M0 SV Call Interrupt                          */
-  PendSV_IRQn                 = -2     /*!< 14 Cortex-M0 Pend SV Interrupt                          */
-  SysTick_IRQn                = -1     /*!< 15 Cortex-M0 System Tick Interrupt                      */
+NonMaskableInt_IRQn         = -14    /*!< 2 Non Maskable Interrupt                                */
+HardFault_IRQn              = -13    /*!< 3 Cortex-M0 Hard Fault Interrupt                        */
+SVC_IRQn                    = -5     /*!< 11 Cortex-M0 SV Call Interrupt                          */
+PendSV_IRQn                 = -2     /*!< 14 Cortex-M0 Pend SV Interrupt                          */
+SysTick_IRQn                = -1     /*!< 15 Cortex-M0 System Tick Interrupt                      */
 
 #if defined (STM32F051)
-  WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                               */
-  PVD_IRQn                    = 1      /*!< PVD through EXTI Line detect Interrupt                  */
-  RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                         */
-  FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                         */
-  RCC_IRQn                    = 4      /*!< RCC Interrupt                                           */
-  EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                            */
-  EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                            */
-  EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                            */
-  TS_IRQn                     = 8      /*!< Touch sense controller Interrupt                        */
-  DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                */
-  DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                 */
-  DMA1_Channel4_5_IRQn        = 11     /*!< DMA1 Channel 4 and Channel 5 Interrupts                 */
-  ADC1_COMP_IRQn              = 12     /*!< ADC1 COMP1 and COMP2 Interrupts                        */
-  TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts  */
-  TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                          */
-  TIM2_IRQn                   = 15     /*!< TIM2 Interrupt                                          */
-  TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                          */
-  TIM6_DAC_IRQn               = 17     /*!< TIM6 and DAC Interrupts                                 */
-  TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                         */
-  TIM15_IRQn                  = 20     /*!< TIM15 Interrupt                                         */
-  TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                         */
-  TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                         */
-  I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                          */
-  I2C2_IRQn                   = 24     /*!< I2C2 Interrupt                                          */
-  SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                          */
-  SPI2_IRQn                   = 26     /*!< SPI2 Interrupt                                          */
-  USART1_IRQn                 = 27     /*!< USART1 Interrupt                                        */
-  USART2_IRQn                 = 28     /*!< USART2 Interrupt                                        */
-  CEC_IRQn                    = 30      /*!< CEC Interrupt                                           */
+WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                               */
+PVD_IRQn                    = 1      /*!< PVD through EXTI Line detect Interrupt                  */
+RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                         */
+FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                         */
+RCC_IRQn                    = 4      /*!< RCC Interrupt                                           */
+EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                            */
+EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                            */
+EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                            */
+TS_IRQn                     = 8      /*!< Touch sense controller Interrupt                        */
+DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                */
+DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                 */
+DMA1_Channel4_5_IRQn        = 11     /*!< DMA1 Channel 4 and Channel 5 Interrupts                 */
+ADC1_COMP_IRQn              = 12     /*!< ADC1 COMP1 and COMP2 Interrupts                        */
+TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts  */
+TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                          */
+TIM2_IRQn                   = 15     /*!< TIM2 Interrupt                                          */
+TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                          */
+TIM6_DAC_IRQn               = 17     /*!< TIM6 and DAC Interrupts                                 */
+TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                         */
+TIM15_IRQn                  = 20     /*!< TIM15 Interrupt                                         */
+TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                         */
+TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                         */
+I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                          */
+I2C2_IRQn                   = 24     /*!< I2C2 Interrupt                                          */
+SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                          */
+SPI2_IRQn                   = 26     /*!< SPI2 Interrupt                                          */
+USART1_IRQn                 = 27     /*!< USART1 Interrupt                                        */
+USART2_IRQn                 = 28     /*!< USART2 Interrupt                                        */
+CEC_IRQn                    = 30      /*!< CEC Interrupt                                           */
 #elif defined (STM32F031)
-  WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                               */
-  PVD_IRQn                    = 1      /*!< PVD through EXTI Line detect Interrupt                  */
-  RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                         */
-  FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                         */
-  RCC_IRQn                    = 4      /*!< RCC Interrupt                                           */
-  EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                            */
-  EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                            */
-  EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                            */
-  DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                */
-  DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                 */
-  DMA1_Channel4_5_IRQn        = 11     /*!< DMA1 Channel 4 and Channel 5 Interrupts                 */
-  ADC1_IRQn                   = 12     /*!< ADC1 Interrupt                                          */
-  TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts  */
-  TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                          */
-  TIM2_IRQn                   = 15     /*!< TIM2 Interrupt                                          */
-  TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                          */
-  TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                         */
-  TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                         */
-  TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                         */
-  I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                          */
-  SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                          */
-  USART1_IRQn                 = 27      /*!< USART1 Interrupt                                        */
+WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                               */
+PVD_IRQn                    = 1      /*!< PVD through EXTI Line detect Interrupt                  */
+RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                         */
+FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                         */
+RCC_IRQn                    = 4      /*!< RCC Interrupt                                           */
+EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                            */
+EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                            */
+EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                            */
+DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                */
+DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                 */
+DMA1_Channel4_5_IRQn        = 11     /*!< DMA1 Channel 4 and Channel 5 Interrupts                 */
+ADC1_IRQn                   = 12     /*!< ADC1 Interrupt                                          */
+TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts  */
+TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                          */
+TIM2_IRQn                   = 15     /*!< TIM2 Interrupt                                          */
+TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                          */
+TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                         */
+TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                         */
+TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                         */
+I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                          */
+SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                          */
+USART1_IRQn                 = 27      /*!< USART1 Interrupt                                        */
 #elif defined (STM32F030)
-  WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                               */
-  RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                         */
-  FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                         */
-  RCC_IRQn                    = 4      /*!< RCC Interrupt                                           */
-  EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                            */
-  EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                            */
-  EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                            */
-  DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                */
-  DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                 */
-  DMA1_Channel4_5_IRQn        = 11     /*!< DMA1 Channel 4 and Channel 5 Interrupts                 */
-  ADC1_IRQn                   = 12     /*!< ADC1 Interrupt                                          */
-  TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts  */
-  TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                          */
-  TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                          */
-  TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                         */
-  TIM15_IRQn                  = 20     /*!< TIM15 Interrupt                                         */
-  TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                         */
-  TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                         */
-  I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                          */
-  I2C2_IRQn                   = 24     /*!< I2C2 Interrupt                                          */
-  SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                          */
-  SPI2_IRQn                   = 26     /*!< SPI2 Interrupt                                          */
-  USART1_IRQn                 = 27     /*!< USART1 Interrupt                                        */
-  USART2_IRQn                 = 28      /*!< USART2 Interrupt                                        */
+WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                               */
+RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                         */
+FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                         */
+RCC_IRQn                    = 4      /*!< RCC Interrupt                                           */
+EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                            */
+EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                            */
+EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                            */
+DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                */
+DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                 */
+DMA1_Channel4_5_IRQn        = 11     /*!< DMA1 Channel 4 and Channel 5 Interrupts                 */
+ADC1_IRQn                   = 12     /*!< ADC1 Interrupt                                          */
+TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts  */
+TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                          */
+TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                          */
+TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                         */
+TIM15_IRQn                  = 20     /*!< TIM15 Interrupt                                         */
+TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                         */
+TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                         */
+I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                          */
+I2C2_IRQn                   = 24     /*!< I2C2 Interrupt                                          */
+SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                          */
+SPI2_IRQn                   = 26     /*!< SPI2 Interrupt                                          */
+USART1_IRQn                 = 27     /*!< USART1 Interrupt                                        */
+USART2_IRQn                 = 28      /*!< USART2 Interrupt                                        */
 #elif defined (STM32F072)
-  WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                                     */
-  PVD_VDDIO2_IRQn             = 1      /*!< PVD and VDDIO2 supply comparator through EXTI Line detect Interrupt */
-  RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                               */
-  FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                               */
-  RCC_CRS_IRQn                = 4      /*!< RCC and CRS Interrupts                                        */
-  EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                                  */
-  EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                                  */
-  EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                                  */
-  TSC_IRQn                    = 8      /*!< TSC Interrupt                                                 */
-  DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                      */
-  DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                       */
-  DMA1_Channel4_5_6_7_IRQn    = 11     /*!< DMA1 Channel 4 Channel 5 Channel 6 and Channel 7 Interrupts */
-  ADC1_COMP_IRQn              = 12     /*!< ADC1 COMP1 and COMP2 Interrupts                              */
-  TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts        */
-  TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                                */
-  TIM2_IRQn                   = 15     /*!< TIM2 Interrupt                                                */
-  TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                                */
-  TIM6_DAC_IRQn               = 17     /*!< TIM6 and DAC Interrupts                                       */
-  TIM7_IRQn                   = 18     /*!< TIM7 Interrupts                                               */
-  TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                               */
-  TIM15_IRQn                  = 20     /*!< TIM15 Interrupt                                               */
-  TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                               */
-  TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                               */
-  I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                                */
-  I2C2_IRQn                   = 24     /*!< I2C2 Interrupt                                                */
-  SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                                */
-  SPI2_IRQn                   = 26     /*!< SPI2 Interrupt                                                */
-  USART1_IRQn                 = 27     /*!< USART1 Interrupt                                              */
-  USART2_IRQn                 = 28     /*!< USART2 Interrupt                                              */
-  USART3_4_IRQn               = 29     /*!< USART3 and USART4 Interrupts                                  */
-  CEC_CAN_IRQn                = 30     /*!< CEC and CAN Interrupts                                        */
-  USB_IRQn                    = 31      /*!< USB Low Priority global Interrupt                             */
+WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                                     */
+PVD_VDDIO2_IRQn             = 1      /*!< PVD and VDDIO2 supply comparator through EXTI Line detect Interrupt */
+RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                               */
+FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                               */
+RCC_CRS_IRQn                = 4      /*!< RCC and CRS Interrupts                                        */
+EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                                  */
+EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                                  */
+EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                                  */
+TSC_IRQn                    = 8      /*!< TSC Interrupt                                                 */
+DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                      */
+DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                       */
+DMA1_Channel4_5_6_7_IRQn    = 11     /*!< DMA1 Channel 4 Channel 5 Channel 6 and Channel 7 Interrupts */
+ADC1_COMP_IRQn              = 12     /*!< ADC1 COMP1 and COMP2 Interrupts                              */
+TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts        */
+TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                                */
+TIM2_IRQn                   = 15     /*!< TIM2 Interrupt                                                */
+TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                                */
+TIM6_DAC_IRQn               = 17     /*!< TIM6 and DAC Interrupts                                       */
+TIM7_IRQn                   = 18     /*!< TIM7 Interrupts                                               */
+TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                               */
+TIM15_IRQn                  = 20     /*!< TIM15 Interrupt                                               */
+TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                               */
+TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                               */
+I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                                */
+I2C2_IRQn                   = 24     /*!< I2C2 Interrupt                                                */
+SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                                */
+SPI2_IRQn                   = 26     /*!< SPI2 Interrupt                                                */
+USART1_IRQn                 = 27     /*!< USART1 Interrupt                                              */
+USART2_IRQn                 = 28     /*!< USART2 Interrupt                                              */
+USART3_4_IRQn               = 29     /*!< USART3 and USART4 Interrupts                                  */
+CEC_CAN_IRQn                = 30     /*!< CEC and CAN Interrupts                                        */
+USB_IRQn                    = 31      /*!< USB Low Priority global Interrupt                             */
 #elif defined (STM32F042)
-  WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                                     */
-  PVD_VDDIO2_IRQn             = 1      /*!< PVD and VDDIO2 supply comparator through EXTI Line detect Interrupt */
-  RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                               */
-  FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                               */
-  RCC_CRS_IRQn                = 4      /*!< RCC and CRS Interrupts                                        */
-  EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                                  */
-  EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                                  */
-  EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                                  */
-  TSC_IRQn                    = 8      /*!< TSC Interrupt                                                 */
-  DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                      */
-  DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                       */
-  DMA1_Channel4_5_IRQn        = 11     /*!< DMA1 Channel 4 Channel 5 Interrupts                          */
-  ADC1_IRQn                   = 12     /*!< ADC1 Interrupts                                               */
-  TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts        */
-  TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                                */
-  TIM2_IRQn                   = 15     /*!< TIM2 Interrupt                                                */
-  TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                                */
-  TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                               */
-  TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                               */
-  TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                               */
-  I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                                */
-  SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                                */
-  SPI2_IRQn                   = 26     /*!< SPI2 Interrupt                                                */
-  USART1_IRQn                 = 27     /*!< USART1 Interrupt                                              */
-  USART2_IRQn                 = 28     /*!< USART2 Interrupt                                              */
-  CEC_CAN_IRQn                = 30     /*!< CEC and CAN Interrupts                                        */
-  USB_IRQn                    = 31      /*!< USB Low Priority global Interrupt                             */
-#endif /* STM32F051 */ 
+WWDG_IRQn                   = 0      /*!< Window WatchDog Interrupt                                     */
+PVD_VDDIO2_IRQn             = 1      /*!< PVD and VDDIO2 supply comparator through EXTI Line detect Interrupt */
+RTC_IRQn                    = 2      /*!< RTC through EXTI Line Interrupt                               */
+FLASH_IRQn                  = 3      /*!< FLASH Interrupt                                               */
+RCC_CRS_IRQn                = 4      /*!< RCC and CRS Interrupts                                        */
+EXTI0_1_IRQn                = 5      /*!< EXTI Line 0 and 1 Interrupts                                  */
+EXTI2_3_IRQn                = 6      /*!< EXTI Line 2 and 3 Interrupts                                  */
+EXTI4_15_IRQn               = 7      /*!< EXTI Line 4 to 15 Interrupts                                  */
+TSC_IRQn                    = 8      /*!< TSC Interrupt                                                 */
+DMA1_Channel1_IRQn          = 9      /*!< DMA1 Channel 1 Interrupt                                      */
+DMA1_Channel2_3_IRQn        = 10     /*!< DMA1 Channel 2 and Channel 3 Interrupts                       */
+DMA1_Channel4_5_IRQn        = 11     /*!< DMA1 Channel 4 Channel 5 Interrupts                          */
+ADC1_IRQn                   = 12     /*!< ADC1 Interrupts                                               */
+TIM1_BRK_UP_TRG_COM_IRQn    = 13     /*!< TIM1 Break Update Trigger and Commutation Interrupts        */
+TIM1_CC_IRQn                = 14     /*!< TIM1 Capture Compare Interrupt                                */
+TIM2_IRQn                   = 15     /*!< TIM2 Interrupt                                                */
+TIM3_IRQn                   = 16     /*!< TIM3 Interrupt                                                */
+TIM14_IRQn                  = 19     /*!< TIM14 Interrupt                                               */
+TIM16_IRQn                  = 21     /*!< TIM16 Interrupt                                               */
+TIM17_IRQn                  = 22     /*!< TIM17 Interrupt                                               */
+I2C1_IRQn                   = 23     /*!< I2C1 Interrupt                                                */
+SPI1_IRQn                   = 25     /*!< SPI1 Interrupt                                                */
+SPI2_IRQn                   = 26     /*!< SPI2 Interrupt                                                */
+USART1_IRQn                 = 27     /*!< USART1 Interrupt                                              */
+USART2_IRQn                 = 28     /*!< USART2 Interrupt                                              */
+CEC_CAN_IRQn                = 30     /*!< CEC and CAN Interrupts                                        */
+USB_IRQn                    = 31      /*!< USB Low Priority global Interrupt                             */
+#endif /* STM32F051 */
 
 /**
   * @}
@@ -341,7 +341,7 @@
 
 /** @addtogroup Exported_types
   * @{
-  */  
+  */
 
 RESET = 0
 SET = !RESET
@@ -355,10 +355,10 @@ SUCCESS = !ERROR
 
 /** @addtogroup Peripheral_registers_structures
   * @{
-  */   
+  */
 
-/** 
-  * @brief Analog to Digital Converter  
+/**
+  * @brief Analog to Digital Converter
   */
 
 #define ADC_ISR_OFFSET          0x0000    /*!< ADC Interrupt and Status register,                          Address offset:0x00 */
@@ -375,33 +375,33 @@ SUCCESS = !ERROR
 #define ADC_RESERVED4_OFFSET    0x002C    /*!< Reserved,                                                                  0x2C */
 #define ADC_DR_OFFSET           0x0040    /*!< ADC data register,                                          Address offset:0x40 */
 
-#define ADC_Common_CCR_OFFSET    0x0000    
+#define ADC_Common_CCR_OFFSET    0x0000
 
 
-/** 
-  * @brief Controller Area Network TxMailBox 
+/**
+  * @brief Controller Area Network TxMailBox
   */
 #define CAN_TxMailBox_TIR_OFFSET     0x0000    /*!< CAN TX mailbox identifier register */
 #define CAN_TxMailBox_TDTR_OFFSET    0x0004    /*!< CAN mailbox data length control and time stamp register */
 #define CAN_TxMailBox_TDLR_OFFSET    0x0008    /*!< CAN mailbox data low register */
 #define CAN_TxMailBox_TDHR_OFFSET    0x000C    /*!< CAN mailbox data high register */
 
-/** 
-  * @brief Controller Area Network FIFOMailBox 
+/**
+  * @brief Controller Area Network FIFOMailBox
   */
 #define CAN_FIFOMailBox_RIR_OFFSET     0x0000    /*!< CAN receive FIFO mailbox identifier register */
 #define CAN_FIFOMailBox_RDTR_OFFSET    0x0004    /*!< CAN receive FIFO mailbox data length control and time stamp register */
 #define CAN_FIFOMailBox_RDLR_OFFSET    0x0008    /*!< CAN receive FIFO mailbox data low register */
 #define CAN_FIFOMailBox_RDHR_OFFSET    0x000C    /*!< CAN receive FIFO mailbox data high register */
 
-/** 
-  * @brief Controller Area Network FilterRegister 
+/**
+  * @brief Controller Area Network FilterRegister
   */
 #define CAN_FilterRegister_FR1_OFFSET    0x0000    /*!< CAN Filter bank register 1 */
 #define CAN_FilterRegister_FR2_OFFSET    0x0004    /*!< CAN Filter bank register 1 */
 
-/** 
-  * @brief Controller Area Network 
+/**
+  * @brief Controller Area Network
   */
 #define CAN_MCR_OFFSET                0x0000    /*!< CAN master control register,         Address offset: 0x00          */
 #define CAN_MSR_OFFSET                0x0004    /*!< CAN master status register,          Address offset: 0x04          */
@@ -426,8 +426,8 @@ SUCCESS = !ERROR
 #define CAN_RESERVED5_OFFSET          0x0220    /*!< Reserved, 0x220-0x23F                                              */
 #define CAN_sFilterRegister_OFFSET    0x0240    /*!< CAN Filter Register,                 Address offset: 0x240-0x31C   */
 
-/** 
-  * @brief HDMI-CEC 
+/**
+  * @brief HDMI-CEC
   */
 
 #define CEC_CR_OFFSET      0x0000    /*!< CEC control register,                                       Address offset:0x00 */
@@ -438,14 +438,14 @@ SUCCESS = !ERROR
 #define CEC_IER_OFFSET     0x0014    /*!< CEC interrupt enable register,                              Address offset:0x14 */
 
 /**
-  * @brief Comparator 
+  * @brief Comparator
   */
 
 #define COMP_CSR_OFFSET    0x0000    /*!< COMP comparator control and status register, Address offset: 0x1C */
 
 
-/** 
-  * @brief CRC calculation unit 
+/**
+  * @brief CRC calculation unit
   */
 
 #define CRC_DR_OFFSET           0x0000    /*!< CRC Data register,                           Address offset: 0x00 */
@@ -458,14 +458,14 @@ SUCCESS = !ERROR
 #define CRC_POL_OFFSET          0x0014    /*!< CRC polynomial register,                     Address offset: 0x14 */
 
 /**
-  * @brief Clock Recovery System 
+  * @brief Clock Recovery System
   */
 #define CRS_CR_OFFSET      0x0000    /*!< CRS ccontrol register,              Address offset: 0x00 */
 #define CRS_CFGR_OFFSET    0x0004    /*!< CRS configuration register,         Address offset: 0x04 */
 #define CRS_ISR_OFFSET     0x0008    /*!< CRS interrupt and status register,  Address offset: 0x08 */
 #define CRS_ICR_OFFSET     0x000C    /*!< CRS interrupt flag clear register,  Address offset: 0x0C */
 
-/** 
+/**
   * @brief Digital to Analog Converter
   */
 
@@ -484,7 +484,7 @@ SUCCESS = !ERROR
 #define DAC_DOR2_OFFSET       0x0030    /*!< DAC channel2 data output register,                       Address offset: 0x30 */
 #define DAC_SR_OFFSET         0x0034    /*!< DAC status register,                                     Address offset: 0x34 */
 
-/** 
+/**
   * @brief Debug MCU
   */
 
@@ -493,7 +493,7 @@ SUCCESS = !ERROR
 #define DBGMCU_APB1FZ_OFFSET    0x0008    /*!< Debug MCU APB1 freeze register,              Address offset: 0x08 */
 #define DBGMCU_APB2FZ_OFFSET    0x000C    /*!< Debug MCU APB2 freeze register,              Address offset: 0x0C */
 
-/** 
+/**
   * @brief DMA Controller
   */
 
@@ -505,7 +505,7 @@ SUCCESS = !ERROR
 #define DMA_ISR_OFFSET     0x0000    /*!< DMA interrupt status register,                            Address offset: 0x00 */
 #define DMA_IFCR_OFFSET    0x0004    /*!< DMA interrupt flag clear register,                        Address offset: 0x04 */
 
-/** 
+/**
   * @brief External Interrupt/Event Controller
   */
 
@@ -516,7 +516,7 @@ SUCCESS = !ERROR
 #define EXTI_SWIER_OFFSET    0x0010    /*!<EXTI Software interrupt event register,                   Address offset: 0x10 */
 #define EXTI_PR_OFFSET       0x0014    /*!<EXTI Pending register,                                    Address offset: 0x14 */
 
-/** 
+/**
   * @brief FLASH Registers
   */
 #define FLASH_ACR_OFFSET         0x0000    /*!<FLASH access control register,                 Address offset: 0x00 */
@@ -530,7 +530,7 @@ SUCCESS = !ERROR
 #define FLASH_WRPR_OFFSET        0x0020    /*!<FLASH option bytes register,                   Address offset: 0x20 */
 
 
-/** 
+/**
   * @brief Option Bytes Registers
   */
 #define OB_RDP_OFFSET      0x0000    /*!< FLASH option byte Read protection,             Address offset: 0x00 */
@@ -543,7 +543,7 @@ SUCCESS = !ERROR
 #define OB_WRP3_OFFSET     0x000E    /*!< FLASH option byte write protection 3,          Address offset: 0x0E */
 
 
-/** 
+/**
   * @brief General Purpose IO
   */
 
@@ -562,7 +562,7 @@ SUCCESS = !ERROR
 #define GPIO_BRR_OFFSET          0x0028    /*!< GPIO bit reset register,                                  Address offset: 0x28 */
 #define GPIO_RESERVED3_OFFSET    0x002A    /*!< Reserved,                                                                 0x2A */
 
-/** 
+/**
   * @brief SysTem Configuration
   */
 
@@ -571,7 +571,7 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR_OFFSET      0x0008    /*!< SYSCFG external interrupt configuration register,     Address offset: 0x14-0x08 */
 #define SYSCFG_CFGR2_OFFSET       0x0018    /*!< SYSCFG configuration register 2,                           Address offset: 0x18 */
 
-/** 
+/**
   * @brief Inter-integrated Circuit Interface
   */
 
@@ -588,7 +588,7 @@ SUCCESS = !ERROR
 #define I2C_TXDR_OFFSET        0x0028    /*!< I2C Transmit data register,        Address offset: 0x28 */
 
 
-/** 
+/**
   * @brief Independent WATCHDOG
   */
 #define IWDG_KR_OFFSET      0x0000    /*!< IWDG Key register,       Address offset: 0x00 */
@@ -597,7 +597,7 @@ SUCCESS = !ERROR
 #define IWDG_SR_OFFSET      0x000C    /*!< IWDG Status register,    Address offset: 0x0C */
 #define IWDG_WINR_OFFSET    0x0010    /*!< IWDG Window register,    Address offset: 0x10 */
 
-/** 
+/**
   * @brief Power Control
   */
 
@@ -605,7 +605,7 @@ SUCCESS = !ERROR
 #define PWR_CSR_OFFSET    0x0004    /*!< PWR power control/status register, Address offset: 0x04 */
 
 
-/** 
+/**
   * @brief Reset and Clock Control
   */
 #define RCC_CR_OFFSET          0x0000    /*!< RCC clock control register,                                  Address offset: 0x00 */
@@ -623,7 +623,7 @@ SUCCESS = !ERROR
 #define RCC_CFGR3_OFFSET       0x0030    /*!< RCC clock configuration register 3,                          Address offset: 0x30 */
 #define RCC_CR2_OFFSET         0x0034    /*!< RCC clock control register 2,                                Address offset: 0x34 */
 
-/** 
+/**
   * @brief Real-Time Clock
   */
 
@@ -655,7 +655,7 @@ SUCCESS = !ERROR
 
 #define CAL   CALR
 
-/** 
+/**
   * @brief Serial Peripheral Interface
   */
 
@@ -679,7 +679,7 @@ SUCCESS = !ERROR
 #define SPI_RESERVED8_OFFSET    0x0022    /*!< Reserved, 0x22                                                            */
 
 
-/** 
+/**
   * @brief TIM
   */
 #define TIM_CR1_OFFSET           0x0000    /*!< TIM control register 1,                      Address offset: 0x00 */
@@ -719,7 +719,7 @@ SUCCESS = !ERROR
 #define TIM_OR_OFFSET            0x0050    /*!< TIM option register,                         Address offset: 0x50 */
 #define TIM_RESERVED20_OFFSET    0x0052    /*!< Reserved,                                                    0x52 */
 
-/** 
+/**
   * @brief Touch Sensing Controller (TSC)
   */
 #define TSC_CR_OFFSET           0x0000    /*!< TSC control register,                                     Address offset: 0x00 */
@@ -737,7 +737,7 @@ SUCCESS = !ERROR
 #define TSC_IOGCSR_OFFSET       0x0030    /*!< TSC I/O group control status register,                    Address offset: 0x30 */
 #define TSC_IOGXCR_OFFSET       0x0034    /*!< TSC I/O group x counter register,                         Address offset: 0x34-50 */
 
-/** 
+/**
   * @brief Universal Synchronous Asynchronous Receiver Transmitter
   */
 
@@ -759,7 +759,7 @@ SUCCESS = !ERROR
 #define USART_RESERVED5_OFFSET    0x002A    /*!< Reserved, 0x2A                                                 */
 
 
-/** 
+/**
   * @brief Window WATCHDOG
   */
 #define WWDG_CR_OFFSET     0x0000    /*!< WWDG Control register,       Address offset: 0x00 */
@@ -844,7 +844,7 @@ SUCCESS = !ERROR
 
 /** @addtogroup Peripheral_declaration
   * @{
-  */  
+  */
 
 #define TIM2                (TIM2_BASE)
 #define _TIM2_CR1           (TIM2 + TIM_CR1_OFFSET)           /*!< TIM control register 1,                      Address offset: 0x00 */
@@ -1153,7 +1153,7 @@ SUCCESS = !ERROR
 #define _ADC1_DR           (ADC1 + ADC_DR_OFFSET)           /*!< ADC data register,                                          Address offset:0x40 */
 
 #define ADC                 (ADC_BASE)
-#define _ADC_CCR    (ADC + ADC_Common_CCR_OFFSET)    
+#define _ADC_CCR    (ADC + ADC_Common_CCR_OFFSET)
 
 #define TIM1                (TIM1_BASE)
 #define _TIM1_CR1           (TIM1 + TIM_CR1_OFFSET)           /*!< TIM control register 1,                      Address offset: 0x00 */
@@ -1334,7 +1334,7 @@ SUCCESS = !ERROR
 #define _FLASH_OBR         (FLASH + FLASH_OBR_OFFSET)         /*!<FLASH option bytes register,                   Address offset: 0x1C */
 #define _FLASH_WRPR        (FLASH + FLASH_WRPR_OFFSET)        /*!<FLASH option bytes register,                   Address offset: 0x20 */
 
-#define OB                  (OB_BASE) 
+#define OB                  (OB_BASE)
 #define _OB_RDP      (OB + OB_RDP_OFFSET)      /*!< FLASH option byte Read protection,             Address offset: 0x00 */
 #define _OB_USER     (OB + OB_USER_OFFSET)     /*!< FLASH option byte user options,                Address offset: 0x02 */
 #define _OB_DATA0    (OB + OB_DATA0_OFFSET)    /*!< User data byte 0 (stored in FLASH_OBR[23:16]), Address offset: 0x04 */
@@ -1461,7 +1461,7 @@ SUCCESS = !ERROR
   * @{
   */
 
-  /** @addtogroup Peripheral_Registers_Bits_Definition
+/** @addtogroup Peripheral_Registers_Bits_Definition
   * @{
   */
 
@@ -3856,17 +3856,17 @@ SUCCESS = !ERROR
 #define  RCC_CFGR_PPRE_DIV8                  (0x00000600)        /*!< HCLK divided by 8 */
 #define  RCC_CFGR_PPRE_DIV16                 (0x00000700)        /*!< HCLK divided by 16 */
 
-#define  RCC_CFGR_ADCPRE                     (0x00004000)        /*!< ADC prescaler: Obsolete. Proper ADC clock selection is 
+#define  RCC_CFGR_ADCPRE                     (0x00004000)        /*!< ADC prescaler: Obsolete. Proper ADC clock selection is
                                                                                 done inside the ADC_CFGR2 */
 
 #define  RCC_CFGR_PLLSRC                     (0x00018000)        /*!< PLL entry clock source */
 #define  RCC_CFGR_PLLSRC_0                   (0x00008000)        /*!< Bit 0 (available only in the STM32F072 devices) */
 #define  RCC_CFGR_PLLSRC_1                   (0x00010000)        /*!< Bit 1 */
 
-#define  RCC_CFGR_PLLSRC_PREDIV1             (0x00010000)        /*!< PREDIV1 clock selected as PLL entry clock source; 
+#define  RCC_CFGR_PLLSRC_PREDIV1             (0x00010000)        /*!< PREDIV1 clock selected as PLL entry clock source;
                                                                                 Old PREDIV1 bit definition, maintained for legacy purpose */
 #define  RCC_CFGR_PLLSRC_HSI_DIV2            (0x00000000)        /*!< HSI clock divided by 2 selected as PLL entry clock source */
-#define  RCC_CFGR_PLLSRC_HSI_PREDIV          (0x00008000)        /*!< HSI PREDIV clock selected as PLL entry clock source 
+#define  RCC_CFGR_PLLSRC_HSI_PREDIV          (0x00008000)        /*!< HSI PREDIV clock selected as PLL entry clock source
                                                                                 (This bit and configuration is only available for STM32F072 devices)*/
 #define  RCC_CFGR_PLLSRC_HSE_PREDIV          (0x00010000)        /*!< HSE PREDIV clock selected as PLL entry clock source */
 #define  RCC_CFGR_PLLSRC_HSI48_PREDIV        (0x00018000)        /*!< HSI48 PREDIV clock selected as PLL entry clock source */
@@ -3982,7 +3982,7 @@ SUCCESS = !ERROR
 #define  RCC_APB2RSTR_TIM17RST               (0x00040000)        /*!< TIM17 clock reset */
 #define  RCC_APB2RSTR_DBGMCURST              (0x00400000)        /*!< DBGMCU clock reset */
 
-#define  RCC_APB2RSTR_ADC1RST                RCC_APB2RSTR_ADCRST          
+#define  RCC_APB2RSTR_ADC1RST                RCC_APB2RSTR_ADCRST
 
 #define  RCC_APB1RSTR_TIM2RST                (0x00000001)        /*!< Timer 2 clock reset */
 #define  RCC_APB1RSTR_TIM3RST                (0x00000002)        /*!< Timer 3 clock reset */
@@ -4137,225 +4137,225 @@ SUCCESS = !ERROR
 #define  RCC_CR2_HSI48CAL                    (0xFF000000)        /*!< Internal High Speed 48MHz clock Calibration */
 
 #define RTC_TR_PM                            (0x00400000)
-#define RTC_TR_HT                            (0x00300000)        
-#define RTC_TR_HT_0                          (0x00100000)        
-#define RTC_TR_HT_1                          (0x00200000)        
-#define RTC_TR_HU                            (0x000F0000)        
-#define RTC_TR_HU_0                          (0x00010000)        
-#define RTC_TR_HU_1                          (0x00020000)        
-#define RTC_TR_HU_2                          (0x00040000)        
-#define RTC_TR_HU_3                          (0x00080000)        
-#define RTC_TR_MNT                           (0x00007000)        
-#define RTC_TR_MNT_0                         (0x00001000)        
-#define RTC_TR_MNT_1                         (0x00002000)        
-#define RTC_TR_MNT_2                         (0x00004000)        
-#define RTC_TR_MNU                           (0x00000F00)        
-#define RTC_TR_MNU_0                         (0x00000100)        
-#define RTC_TR_MNU_1                         (0x00000200)        
-#define RTC_TR_MNU_2                         (0x00000400)        
-#define RTC_TR_MNU_3                         (0x00000800)        
-#define RTC_TR_ST                            (0x00000070)        
-#define RTC_TR_ST_0                          (0x00000010)        
-#define RTC_TR_ST_1                          (0x00000020)        
-#define RTC_TR_ST_2                          (0x00000040)        
-#define RTC_TR_SU                            (0x0000000F)        
-#define RTC_TR_SU_0                          (0x00000001)        
-#define RTC_TR_SU_1                          (0x00000002)        
-#define RTC_TR_SU_2                          (0x00000004)        
-#define RTC_TR_SU_3                          (0x00000008)        
+#define RTC_TR_HT                            (0x00300000)
+#define RTC_TR_HT_0                          (0x00100000)
+#define RTC_TR_HT_1                          (0x00200000)
+#define RTC_TR_HU                            (0x000F0000)
+#define RTC_TR_HU_0                          (0x00010000)
+#define RTC_TR_HU_1                          (0x00020000)
+#define RTC_TR_HU_2                          (0x00040000)
+#define RTC_TR_HU_3                          (0x00080000)
+#define RTC_TR_MNT                           (0x00007000)
+#define RTC_TR_MNT_0                         (0x00001000)
+#define RTC_TR_MNT_1                         (0x00002000)
+#define RTC_TR_MNT_2                         (0x00004000)
+#define RTC_TR_MNU                           (0x00000F00)
+#define RTC_TR_MNU_0                         (0x00000100)
+#define RTC_TR_MNU_1                         (0x00000200)
+#define RTC_TR_MNU_2                         (0x00000400)
+#define RTC_TR_MNU_3                         (0x00000800)
+#define RTC_TR_ST                            (0x00000070)
+#define RTC_TR_ST_0                          (0x00000010)
+#define RTC_TR_ST_1                          (0x00000020)
+#define RTC_TR_ST_2                          (0x00000040)
+#define RTC_TR_SU                            (0x0000000F)
+#define RTC_TR_SU_0                          (0x00000001)
+#define RTC_TR_SU_1                          (0x00000002)
+#define RTC_TR_SU_2                          (0x00000004)
+#define RTC_TR_SU_3                          (0x00000008)
 
-#define RTC_DR_YT                            (0x00F00000)        
-#define RTC_DR_YT_0                          (0x00100000)        
-#define RTC_DR_YT_1                          (0x00200000)        
-#define RTC_DR_YT_2                          (0x00400000)        
-#define RTC_DR_YT_3                          (0x00800000)        
-#define RTC_DR_YU                            (0x000F0000)        
-#define RTC_DR_YU_0                          (0x00010000)        
-#define RTC_DR_YU_1                          (0x00020000)        
-#define RTC_DR_YU_2                          (0x00040000)        
-#define RTC_DR_YU_3                          (0x00080000)        
-#define RTC_DR_WDU                           (0x0000E000)        
-#define RTC_DR_WDU_0                         (0x00002000)        
-#define RTC_DR_WDU_1                         (0x00004000)        
-#define RTC_DR_WDU_2                         (0x00008000)        
-#define RTC_DR_MT                            (0x00001000)        
-#define RTC_DR_MU                            (0x00000F00)        
-#define RTC_DR_MU_0                          (0x00000100)        
-#define RTC_DR_MU_1                          (0x00000200)        
-#define RTC_DR_MU_2                          (0x00000400)        
-#define RTC_DR_MU_3                          (0x00000800)        
-#define RTC_DR_DT                            (0x00000030)        
-#define RTC_DR_DT_0                          (0x00000010)        
-#define RTC_DR_DT_1                          (0x00000020)        
-#define RTC_DR_DU                            (0x0000000F)        
-#define RTC_DR_DU_0                          (0x00000001)        
-#define RTC_DR_DU_1                          (0x00000002)        
-#define RTC_DR_DU_2                          (0x00000004)        
-#define RTC_DR_DU_3                          (0x00000008)        
+#define RTC_DR_YT                            (0x00F00000)
+#define RTC_DR_YT_0                          (0x00100000)
+#define RTC_DR_YT_1                          (0x00200000)
+#define RTC_DR_YT_2                          (0x00400000)
+#define RTC_DR_YT_3                          (0x00800000)
+#define RTC_DR_YU                            (0x000F0000)
+#define RTC_DR_YU_0                          (0x00010000)
+#define RTC_DR_YU_1                          (0x00020000)
+#define RTC_DR_YU_2                          (0x00040000)
+#define RTC_DR_YU_3                          (0x00080000)
+#define RTC_DR_WDU                           (0x0000E000)
+#define RTC_DR_WDU_0                         (0x00002000)
+#define RTC_DR_WDU_1                         (0x00004000)
+#define RTC_DR_WDU_2                         (0x00008000)
+#define RTC_DR_MT                            (0x00001000)
+#define RTC_DR_MU                            (0x00000F00)
+#define RTC_DR_MU_0                          (0x00000100)
+#define RTC_DR_MU_1                          (0x00000200)
+#define RTC_DR_MU_2                          (0x00000400)
+#define RTC_DR_MU_3                          (0x00000800)
+#define RTC_DR_DT                            (0x00000030)
+#define RTC_DR_DT_0                          (0x00000010)
+#define RTC_DR_DT_1                          (0x00000020)
+#define RTC_DR_DU                            (0x0000000F)
+#define RTC_DR_DU_0                          (0x00000001)
+#define RTC_DR_DU_1                          (0x00000002)
+#define RTC_DR_DU_2                          (0x00000004)
+#define RTC_DR_DU_3                          (0x00000008)
 
-#define RTC_CR_COE                           (0x00800000)        
-#define RTC_CR_OSEL                          (0x00600000)        
-#define RTC_CR_OSEL_0                        (0x00200000)        
-#define RTC_CR_OSEL_1                        (0x00400000)        
-#define RTC_CR_POL                           (0x00100000)        
-#define RTC_CR_COSEL                         (0x00080000)        
-#define RTC_CR_BKP                           (0x00040000)        
-#define RTC_CR_SUB1H                         (0x00020000)        
-#define RTC_CR_ADD1H                         (0x00010000)        
-#define RTC_CR_TSIE                          (0x00008000)        
+#define RTC_CR_COE                           (0x00800000)
+#define RTC_CR_OSEL                          (0x00600000)
+#define RTC_CR_OSEL_0                        (0x00200000)
+#define RTC_CR_OSEL_1                        (0x00400000)
+#define RTC_CR_POL                           (0x00100000)
+#define RTC_CR_COSEL                         (0x00080000)
+#define RTC_CR_BKP                           (0x00040000)
+#define RTC_CR_SUB1H                         (0x00020000)
+#define RTC_CR_ADD1H                         (0x00010000)
+#define RTC_CR_TSIE                          (0x00008000)
 #define RTC_CR_WUTIE                         (0x00004000)
-#define RTC_CR_ALRAIE                        (0x00001000)        
-#define RTC_CR_TSE                           (0x00000800)        
-#define RTC_CR_WUTE                          (0x00000400)        
-#define RTC_CR_ALRAE                         (0x00000100)        
-#define RTC_CR_FMT                           (0x00000040)        
-#define RTC_CR_BYPSHAD                       (0x00000020)        
-#define RTC_CR_REFCKON                       (0x00000010)        
-#define RTC_CR_TSEDGE                        (0x00000008)        
-#define RTC_CR_WUCKSEL                       (0x00000007)        
-#define RTC_CR_WUCKSEL_0                     (0x00000001)        
-#define RTC_CR_WUCKSEL_1                     (0x00000002)        
-#define RTC_CR_WUCKSEL_2                     (0x00000004)        
+#define RTC_CR_ALRAIE                        (0x00001000)
+#define RTC_CR_TSE                           (0x00000800)
+#define RTC_CR_WUTE                          (0x00000400)
+#define RTC_CR_ALRAE                         (0x00000100)
+#define RTC_CR_FMT                           (0x00000040)
+#define RTC_CR_BYPSHAD                       (0x00000020)
+#define RTC_CR_REFCKON                       (0x00000010)
+#define RTC_CR_TSEDGE                        (0x00000008)
+#define RTC_CR_WUCKSEL                       (0x00000007)
+#define RTC_CR_WUCKSEL_0                     (0x00000001)
+#define RTC_CR_WUCKSEL_1                     (0x00000002)
+#define RTC_CR_WUCKSEL_2                     (0x00000004)
 
 #define RTC_CR_BCK                           RTC_CR_BKP
 #define RTC_CR_CALSEL                        RTC_CR_COSEL
 
-#define RTC_ISR_RECALPF                      (0x00010000)        
-#define RTC_ISR_TAMP3F                       (0x00008000)        
-#define RTC_ISR_TAMP2F                       (0x00004000)        
-#define RTC_ISR_TAMP1F                       (0x00002000)        
-#define RTC_ISR_TSOVF                        (0x00001000)        
-#define RTC_ISR_TSF                          (0x00000800)        
-#define RTC_ISR_WUTF                         (0x00000400)        
-#define RTC_ISR_ALRAF                        (0x00000100)        
-#define RTC_ISR_INIT                         (0x00000080)        
-#define RTC_ISR_INITF                        (0x00000040)        
-#define RTC_ISR_RSF                          (0x00000020)        
-#define RTC_ISR_INITS                        (0x00000010)        
-#define RTC_ISR_SHPF                         (0x00000008)        
-#define RTC_ISR_WUTWF                        (0x00000004)        
-#define RTC_ISR_ALRAWF                       (0x00000001)        
+#define RTC_ISR_RECALPF                      (0x00010000)
+#define RTC_ISR_TAMP3F                       (0x00008000)
+#define RTC_ISR_TAMP2F                       (0x00004000)
+#define RTC_ISR_TAMP1F                       (0x00002000)
+#define RTC_ISR_TSOVF                        (0x00001000)
+#define RTC_ISR_TSF                          (0x00000800)
+#define RTC_ISR_WUTF                         (0x00000400)
+#define RTC_ISR_ALRAF                        (0x00000100)
+#define RTC_ISR_INIT                         (0x00000080)
+#define RTC_ISR_INITF                        (0x00000040)
+#define RTC_ISR_RSF                          (0x00000020)
+#define RTC_ISR_INITS                        (0x00000010)
+#define RTC_ISR_SHPF                         (0x00000008)
+#define RTC_ISR_WUTWF                        (0x00000004)
+#define RTC_ISR_ALRAWF                       (0x00000001)
 
-#define RTC_PRER_PREDIV_A                    (0x007F0000)        
-#define RTC_PRER_PREDIV_S                    (0x00007FFF)        
+#define RTC_PRER_PREDIV_A                    (0x007F0000)
+#define RTC_PRER_PREDIV_S                    (0x00007FFF)
 
 #define RTC_WUTR_WUT                         (0x0000FFFF)
 
-#define RTC_ALRMAR_MSK4                      (0x80000000)        
-#define RTC_ALRMAR_WDSEL                     (0x40000000)        
-#define RTC_ALRMAR_DT                        (0x30000000)        
-#define RTC_ALRMAR_DT_0                      (0x10000000)        
-#define RTC_ALRMAR_DT_1                      (0x20000000)        
-#define RTC_ALRMAR_DU                        (0x0F000000)        
-#define RTC_ALRMAR_DU_0                      (0x01000000)        
-#define RTC_ALRMAR_DU_1                      (0x02000000)        
-#define RTC_ALRMAR_DU_2                      (0x04000000)        
-#define RTC_ALRMAR_DU_3                      (0x08000000)        
-#define RTC_ALRMAR_MSK3                      (0x00800000)        
-#define RTC_ALRMAR_PM                        (0x00400000)        
-#define RTC_ALRMAR_HT                        (0x00300000)        
-#define RTC_ALRMAR_HT_0                      (0x00100000)        
-#define RTC_ALRMAR_HT_1                      (0x00200000)        
-#define RTC_ALRMAR_HU                        (0x000F0000)        
-#define RTC_ALRMAR_HU_0                      (0x00010000)        
-#define RTC_ALRMAR_HU_1                      (0x00020000)        
-#define RTC_ALRMAR_HU_2                      (0x00040000)        
-#define RTC_ALRMAR_HU_3                      (0x00080000)        
-#define RTC_ALRMAR_MSK2                      (0x00008000)        
-#define RTC_ALRMAR_MNT                       (0x00007000)        
-#define RTC_ALRMAR_MNT_0                     (0x00001000)        
-#define RTC_ALRMAR_MNT_1                     (0x00002000)        
-#define RTC_ALRMAR_MNT_2                     (0x00004000)        
-#define RTC_ALRMAR_MNU                       (0x00000F00)        
-#define RTC_ALRMAR_MNU_0                     (0x00000100)        
-#define RTC_ALRMAR_MNU_1                     (0x00000200)        
-#define RTC_ALRMAR_MNU_2                     (0x00000400)        
-#define RTC_ALRMAR_MNU_3                     (0x00000800)        
-#define RTC_ALRMAR_MSK1                      (0x00000080)        
-#define RTC_ALRMAR_ST                        (0x00000070)        
-#define RTC_ALRMAR_ST_0                      (0x00000010)        
-#define RTC_ALRMAR_ST_1                      (0x00000020)        
-#define RTC_ALRMAR_ST_2                      (0x00000040)        
-#define RTC_ALRMAR_SU                        (0x0000000F)        
-#define RTC_ALRMAR_SU_0                      (0x00000001)        
-#define RTC_ALRMAR_SU_1                      (0x00000002)        
-#define RTC_ALRMAR_SU_2                      (0x00000004)        
-#define RTC_ALRMAR_SU_3                      (0x00000008)        
+#define RTC_ALRMAR_MSK4                      (0x80000000)
+#define RTC_ALRMAR_WDSEL                     (0x40000000)
+#define RTC_ALRMAR_DT                        (0x30000000)
+#define RTC_ALRMAR_DT_0                      (0x10000000)
+#define RTC_ALRMAR_DT_1                      (0x20000000)
+#define RTC_ALRMAR_DU                        (0x0F000000)
+#define RTC_ALRMAR_DU_0                      (0x01000000)
+#define RTC_ALRMAR_DU_1                      (0x02000000)
+#define RTC_ALRMAR_DU_2                      (0x04000000)
+#define RTC_ALRMAR_DU_3                      (0x08000000)
+#define RTC_ALRMAR_MSK3                      (0x00800000)
+#define RTC_ALRMAR_PM                        (0x00400000)
+#define RTC_ALRMAR_HT                        (0x00300000)
+#define RTC_ALRMAR_HT_0                      (0x00100000)
+#define RTC_ALRMAR_HT_1                      (0x00200000)
+#define RTC_ALRMAR_HU                        (0x000F0000)
+#define RTC_ALRMAR_HU_0                      (0x00010000)
+#define RTC_ALRMAR_HU_1                      (0x00020000)
+#define RTC_ALRMAR_HU_2                      (0x00040000)
+#define RTC_ALRMAR_HU_3                      (0x00080000)
+#define RTC_ALRMAR_MSK2                      (0x00008000)
+#define RTC_ALRMAR_MNT                       (0x00007000)
+#define RTC_ALRMAR_MNT_0                     (0x00001000)
+#define RTC_ALRMAR_MNT_1                     (0x00002000)
+#define RTC_ALRMAR_MNT_2                     (0x00004000)
+#define RTC_ALRMAR_MNU                       (0x00000F00)
+#define RTC_ALRMAR_MNU_0                     (0x00000100)
+#define RTC_ALRMAR_MNU_1                     (0x00000200)
+#define RTC_ALRMAR_MNU_2                     (0x00000400)
+#define RTC_ALRMAR_MNU_3                     (0x00000800)
+#define RTC_ALRMAR_MSK1                      (0x00000080)
+#define RTC_ALRMAR_ST                        (0x00000070)
+#define RTC_ALRMAR_ST_0                      (0x00000010)
+#define RTC_ALRMAR_ST_1                      (0x00000020)
+#define RTC_ALRMAR_ST_2                      (0x00000040)
+#define RTC_ALRMAR_SU                        (0x0000000F)
+#define RTC_ALRMAR_SU_0                      (0x00000001)
+#define RTC_ALRMAR_SU_1                      (0x00000002)
+#define RTC_ALRMAR_SU_2                      (0x00000004)
+#define RTC_ALRMAR_SU_3                      (0x00000008)
 
-#define RTC_WPR_KEY                          (0x000000FF)        
+#define RTC_WPR_KEY                          (0x000000FF)
 
-#define RTC_SSR_SS                           (0x0003FFFF)        
+#define RTC_SSR_SS                           (0x0003FFFF)
 
-#define RTC_SHIFTR_SUBFS                     (0x00007FFF)        
-#define RTC_SHIFTR_ADD1S                     (0x80000000)        
+#define RTC_SHIFTR_SUBFS                     (0x00007FFF)
+#define RTC_SHIFTR_ADD1S                     (0x80000000)
 
-#define RTC_TSTR_PM                          (0x00400000)        
-#define RTC_TSTR_HT                          (0x00300000)        
-#define RTC_TSTR_HT_0                        (0x00100000)        
-#define RTC_TSTR_HT_1                        (0x00200000)        
-#define RTC_TSTR_HU                          (0x000F0000)        
-#define RTC_TSTR_HU_0                        (0x00010000)        
-#define RTC_TSTR_HU_1                        (0x00020000)        
-#define RTC_TSTR_HU_2                        (0x00040000)        
-#define RTC_TSTR_HU_3                        (0x00080000)        
-#define RTC_TSTR_MNT                         (0x00007000)        
-#define RTC_TSTR_MNT_0                       (0x00001000)        
-#define RTC_TSTR_MNT_1                       (0x00002000)        
-#define RTC_TSTR_MNT_2                       (0x00004000)        
-#define RTC_TSTR_MNU                         (0x00000F00)        
-#define RTC_TSTR_MNU_0                       (0x00000100)        
-#define RTC_TSTR_MNU_1                       (0x00000200)        
-#define RTC_TSTR_MNU_2                       (0x00000400)        
-#define RTC_TSTR_MNU_3                       (0x00000800)        
-#define RTC_TSTR_ST                          (0x00000070)        
-#define RTC_TSTR_ST_0                        (0x00000010)        
-#define RTC_TSTR_ST_1                        (0x00000020)        
-#define RTC_TSTR_ST_2                        (0x00000040)        
-#define RTC_TSTR_SU                          (0x0000000F)        
-#define RTC_TSTR_SU_0                        (0x00000001)        
-#define RTC_TSTR_SU_1                        (0x00000002)        
-#define RTC_TSTR_SU_2                        (0x00000004)        
-#define RTC_TSTR_SU_3                        (0x00000008)        
+#define RTC_TSTR_PM                          (0x00400000)
+#define RTC_TSTR_HT                          (0x00300000)
+#define RTC_TSTR_HT_0                        (0x00100000)
+#define RTC_TSTR_HT_1                        (0x00200000)
+#define RTC_TSTR_HU                          (0x000F0000)
+#define RTC_TSTR_HU_0                        (0x00010000)
+#define RTC_TSTR_HU_1                        (0x00020000)
+#define RTC_TSTR_HU_2                        (0x00040000)
+#define RTC_TSTR_HU_3                        (0x00080000)
+#define RTC_TSTR_MNT                         (0x00007000)
+#define RTC_TSTR_MNT_0                       (0x00001000)
+#define RTC_TSTR_MNT_1                       (0x00002000)
+#define RTC_TSTR_MNT_2                       (0x00004000)
+#define RTC_TSTR_MNU                         (0x00000F00)
+#define RTC_TSTR_MNU_0                       (0x00000100)
+#define RTC_TSTR_MNU_1                       (0x00000200)
+#define RTC_TSTR_MNU_2                       (0x00000400)
+#define RTC_TSTR_MNU_3                       (0x00000800)
+#define RTC_TSTR_ST                          (0x00000070)
+#define RTC_TSTR_ST_0                        (0x00000010)
+#define RTC_TSTR_ST_1                        (0x00000020)
+#define RTC_TSTR_ST_2                        (0x00000040)
+#define RTC_TSTR_SU                          (0x0000000F)
+#define RTC_TSTR_SU_0                        (0x00000001)
+#define RTC_TSTR_SU_1                        (0x00000002)
+#define RTC_TSTR_SU_2                        (0x00000004)
+#define RTC_TSTR_SU_3                        (0x00000008)
 
-#define RTC_TSDR_WDU                         (0x0000E000)        
-#define RTC_TSDR_WDU_0                       (0x00002000)        
-#define RTC_TSDR_WDU_1                       (0x00004000)        
-#define RTC_TSDR_WDU_2                       (0x00008000)        
-#define RTC_TSDR_MT                          (0x00001000)        
-#define RTC_TSDR_MU                          (0x00000F00)        
-#define RTC_TSDR_MU_0                        (0x00000100)        
-#define RTC_TSDR_MU_1                        (0x00000200)        
-#define RTC_TSDR_MU_2                        (0x00000400)        
-#define RTC_TSDR_MU_3                        (0x00000800)        
-#define RTC_TSDR_DT                          (0x00000030)        
-#define RTC_TSDR_DT_0                        (0x00000010)        
-#define RTC_TSDR_DT_1                        (0x00000020)        
-#define RTC_TSDR_DU                          (0x0000000F)        
-#define RTC_TSDR_DU_0                        (0x00000001)        
-#define RTC_TSDR_DU_1                        (0x00000002)        
-#define RTC_TSDR_DU_2                        (0x00000004)        
-#define RTC_TSDR_DU_3                        (0x00000008)        
+#define RTC_TSDR_WDU                         (0x0000E000)
+#define RTC_TSDR_WDU_0                       (0x00002000)
+#define RTC_TSDR_WDU_1                       (0x00004000)
+#define RTC_TSDR_WDU_2                       (0x00008000)
+#define RTC_TSDR_MT                          (0x00001000)
+#define RTC_TSDR_MU                          (0x00000F00)
+#define RTC_TSDR_MU_0                        (0x00000100)
+#define RTC_TSDR_MU_1                        (0x00000200)
+#define RTC_TSDR_MU_2                        (0x00000400)
+#define RTC_TSDR_MU_3                        (0x00000800)
+#define RTC_TSDR_DT                          (0x00000030)
+#define RTC_TSDR_DT_0                        (0x00000010)
+#define RTC_TSDR_DT_1                        (0x00000020)
+#define RTC_TSDR_DU                          (0x0000000F)
+#define RTC_TSDR_DU_0                        (0x00000001)
+#define RTC_TSDR_DU_1                        (0x00000002)
+#define RTC_TSDR_DU_2                        (0x00000004)
+#define RTC_TSDR_DU_3                        (0x00000008)
 
 #define RTC_TSSSR_SS                         (0x0003FFFF)
 
-#define RTC_CALR_CALP                         (0x00008000)        
-#define RTC_CALR_CALW8                        (0x00004000)        
-#define RTC_CALR_CALW16                       (0x00002000)        
-#define RTC_CALR_CALM                         (0x000001FF)        
-#define RTC_CALR_CALM_0                       (0x00000001)        
-#define RTC_CALR_CALM_1                       (0x00000002)        
-#define RTC_CALR_CALM_2                       (0x00000004)        
-#define RTC_CALR_CALM_3                       (0x00000008)        
-#define RTC_CALR_CALM_4                       (0x00000010)        
-#define RTC_CALR_CALM_5                       (0x00000020)        
-#define RTC_CALR_CALM_6                       (0x00000040)        
-#define RTC_CALR_CALM_7                       (0x00000080)        
+#define RTC_CALR_CALP                         (0x00008000)
+#define RTC_CALR_CALW8                        (0x00004000)
+#define RTC_CALR_CALW16                       (0x00002000)
+#define RTC_CALR_CALM                         (0x000001FF)
+#define RTC_CALR_CALM_0                       (0x00000001)
+#define RTC_CALR_CALM_1                       (0x00000002)
+#define RTC_CALR_CALM_2                       (0x00000004)
+#define RTC_CALR_CALM_3                       (0x00000008)
+#define RTC_CALR_CALM_4                       (0x00000010)
+#define RTC_CALR_CALM_5                       (0x00000020)
+#define RTC_CALR_CALM_6                       (0x00000040)
+#define RTC_CALR_CALM_7                       (0x00000080)
 #define RTC_CALR_CALM_8                       (0x00000100)
 
-#define RTC_CAL_CALP                         RTC_CALR_CALP  
-#define RTC_CAL_CALW8                        RTC_CALR_CALW8 
+#define RTC_CAL_CALP                         RTC_CALR_CALP
+#define RTC_CAL_CALW8                        RTC_CALR_CALW8
 #define RTC_CAL_CALW16                       RTC_CALR_CALW16
-#define RTC_CAL_CALM                         RTC_CALR_CALM  
+#define RTC_CAL_CALM                         RTC_CALR_CALM
 #define RTC_CAL_CALM_0                       RTC_CALR_CALM_0
 #define RTC_CAL_CALM_1                       RTC_CALR_CALM_1
 #define RTC_CAL_CALM_2                       RTC_CALR_CALM_2
@@ -4371,45 +4371,45 @@ SUCCESS = !ERROR
 #define RTC_TAFCR_PC14MODE                   (0x00200000)
 #define RTC_TAFCR_PC14VALUE                  (0x00100000)
 #define RTC_TAFCR_PC13MODE                   (0x00080000)
-#define RTC_TAFCR_PC13VALUE                  (0x00040000)        
-#define RTC_TAFCR_TAMPPUDIS                  (0x00008000)        
-#define RTC_TAFCR_TAMPPRCH                   (0x00006000)        
-#define RTC_TAFCR_TAMPPRCH_0                 (0x00002000)        
-#define RTC_TAFCR_TAMPPRCH_1                 (0x00004000)        
-#define RTC_TAFCR_TAMPFLT                    (0x00001800)        
-#define RTC_TAFCR_TAMPFLT_0                  (0x00000800)        
-#define RTC_TAFCR_TAMPFLT_1                  (0x00001000)        
-#define RTC_TAFCR_TAMPFREQ                   (0x00000700)        
-#define RTC_TAFCR_TAMPFREQ_0                 (0x00000100)        
-#define RTC_TAFCR_TAMPFREQ_1                 (0x00000200)        
-#define RTC_TAFCR_TAMPFREQ_2                 (0x00000400)        
-#define RTC_TAFCR_TAMPTS                     (0x00000080)        
-#define RTC_TAFCR_TAMP3EDGE                  (0x00000040)        
-#define RTC_TAFCR_TAMP3E                     (0x00000020)        
-#define RTC_TAFCR_TAMP2EDGE                  (0x00000010)        
-#define RTC_TAFCR_TAMP2E                     (0x00000008)        
-#define RTC_TAFCR_TAMPIE                     (0x00000004)        
-#define RTC_TAFCR_TAMP1TRG                   (0x00000002)        
-#define RTC_TAFCR_TAMP1E                     (0x00000001)        
+#define RTC_TAFCR_PC13VALUE                  (0x00040000)
+#define RTC_TAFCR_TAMPPUDIS                  (0x00008000)
+#define RTC_TAFCR_TAMPPRCH                   (0x00006000)
+#define RTC_TAFCR_TAMPPRCH_0                 (0x00002000)
+#define RTC_TAFCR_TAMPPRCH_1                 (0x00004000)
+#define RTC_TAFCR_TAMPFLT                    (0x00001800)
+#define RTC_TAFCR_TAMPFLT_0                  (0x00000800)
+#define RTC_TAFCR_TAMPFLT_1                  (0x00001000)
+#define RTC_TAFCR_TAMPFREQ                   (0x00000700)
+#define RTC_TAFCR_TAMPFREQ_0                 (0x00000100)
+#define RTC_TAFCR_TAMPFREQ_1                 (0x00000200)
+#define RTC_TAFCR_TAMPFREQ_2                 (0x00000400)
+#define RTC_TAFCR_TAMPTS                     (0x00000080)
+#define RTC_TAFCR_TAMP3EDGE                  (0x00000040)
+#define RTC_TAFCR_TAMP3E                     (0x00000020)
+#define RTC_TAFCR_TAMP2EDGE                  (0x00000010)
+#define RTC_TAFCR_TAMP2E                     (0x00000008)
+#define RTC_TAFCR_TAMPIE                     (0x00000004)
+#define RTC_TAFCR_TAMP1TRG                   (0x00000002)
+#define RTC_TAFCR_TAMP1E                     (0x00000001)
 
 #define RTC_TAFCR_ALARMOUTTYPE               RTC_TAFCR_PC13VALUE
 
-#define RTC_ALRMASSR_MASKSS                  (0x0F000000)        
-#define RTC_ALRMASSR_MASKSS_0                (0x01000000)        
-#define RTC_ALRMASSR_MASKSS_1                (0x02000000)        
-#define RTC_ALRMASSR_MASKSS_2                (0x04000000)        
-#define RTC_ALRMASSR_MASKSS_3                (0x08000000)        
-#define RTC_ALRMASSR_SS                      (0x00007FFF)        
+#define RTC_ALRMASSR_MASKSS                  (0x0F000000)
+#define RTC_ALRMASSR_MASKSS_0                (0x01000000)
+#define RTC_ALRMASSR_MASKSS_1                (0x02000000)
+#define RTC_ALRMASSR_MASKSS_2                (0x04000000)
+#define RTC_ALRMASSR_MASKSS_3                (0x08000000)
+#define RTC_ALRMASSR_SS                      (0x00007FFF)
 
-#define RTC_BKP0R                            (0xFFFFFFFF)        
+#define RTC_BKP0R                            (0xFFFFFFFF)
 
-#define RTC_BKP1R                            (0xFFFFFFFF)        
+#define RTC_BKP1R                            (0xFFFFFFFF)
 
-#define RTC_BKP2R                            (0xFFFFFFFF)        
+#define RTC_BKP2R                            (0xFFFFFFFF)
 
-#define RTC_BKP3R                            (0xFFFFFFFF)        
+#define RTC_BKP3R                            (0xFFFFFFFF)
 
-#define RTC_BKP4R                            (0xFFFFFFFF)        
+#define RTC_BKP4R                            (0xFFFFFFFF)
 
 #define  SPI_CR1_CPHA                        (0x0001)            /*!< Clock Phase */
 #define  SPI_CR1_CPOL                        (0x0002)            /*!< Clock Polarity */
@@ -4460,7 +4460,7 @@ SUCCESS = !ERROR
 #define  SPI_SR_FRLVL_1                      (0x0400)            /*!< Bit 1 */
 #define  SPI_SR_FTLVL                        (0x1800)            /*!< FIFO Transmission Level */
 #define  SPI_SR_FTLVL_0                      (0x0800)            /*!< Bit 0 */
-#define  SPI_SR_FTLVL_1                      (0x1000)            /*!< Bit 1 */  
+#define  SPI_SR_FTLVL_1                      (0x1000)            /*!< Bit 1 */
 
 #define  SPI_DR_DR                           (0xFFFF)            /*!< Data Register */
 
@@ -4521,8 +4521,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR1_EXTI2            (0x0F00) /*!< EXTI 2 configuration */
 #define SYSCFG_EXTICR1_EXTI3            (0xF000) /*!< EXTI 3 configuration */
 
-/** 
-  * @brief  EXTI0 configuration  
+/**
+  * @brief  EXTI0 configuration
   */
 #define SYSCFG_EXTICR1_EXTI0_PA         (0x0000) /*!< PA[0] pin */
 #define SYSCFG_EXTICR1_EXTI0_PB         (0x0001) /*!< PB[0] pin */
@@ -4531,9 +4531,9 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR1_EXTI0_PE         (0x0004) /*!< PE[0] pin */
 #define SYSCFG_EXTICR1_EXTI0_PF         (0x0005) /*!< PF[0] pin */
 
-/** 
-  * @brief  EXTI1 configuration  
-  */ 
+/**
+  * @brief  EXTI1 configuration
+  */
 #define SYSCFG_EXTICR1_EXTI1_PA         (0x0000) /*!< PA[1] pin */
 #define SYSCFG_EXTICR1_EXTI1_PB         (0x0010) /*!< PB[1] pin */
 #define SYSCFG_EXTICR1_EXTI1_PC         (0x0020) /*!< PC[1] pin */
@@ -4541,8 +4541,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR1_EXTI1_PE         (0x0040) /*!< PE[1] pin */
 #define SYSCFG_EXTICR1_EXTI1_PF         (0x0050) /*!< PF[1] pin */
 
-/** 
-  * @brief  EXTI2 configuration  
+/**
+  * @brief  EXTI2 configuration
   */
 #define SYSCFG_EXTICR1_EXTI2_PA         (0x0000) /*!< PA[2] pin */
 #define SYSCFG_EXTICR1_EXTI2_PB         (0x0100) /*!< PB[2] pin */
@@ -4551,8 +4551,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR1_EXTI2_PE         (0x0400) /*!< PE[2] pin */
 #define SYSCFG_EXTICR1_EXTI2_PF         (0x0500) /*!< PF[2] pin */
 
-/** 
-  * @brief  EXTI3 configuration  
+/**
+  * @brief  EXTI3 configuration
   */
 #define SYSCFG_EXTICR1_EXTI3_PA         (0x0000) /*!< PA[3] pin */
 #define SYSCFG_EXTICR1_EXTI3_PB         (0x1000) /*!< PB[3] pin */
@@ -4566,8 +4566,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR2_EXTI6            (0x0F00) /*!< EXTI 6 configuration */
 #define SYSCFG_EXTICR2_EXTI7            (0xF000) /*!< EXTI 7 configuration */
 
-/** 
-  * @brief  EXTI4 configuration  
+/**
+  * @brief  EXTI4 configuration
   */
 #define SYSCFG_EXTICR2_EXTI4_PA         (0x0000) /*!< PA[4] pin */
 #define SYSCFG_EXTICR2_EXTI4_PB         (0x0001) /*!< PB[4] pin */
@@ -4576,8 +4576,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR2_EXTI4_PE         (0x0004) /*!< PE[4] pin */
 #define SYSCFG_EXTICR2_EXTI4_PF         (0x0005) /*!< PF[4] pin */
 
-/** 
-  * @brief  EXTI5 configuration  
+/**
+  * @brief  EXTI5 configuration
   */
 #define SYSCFG_EXTICR2_EXTI5_PA         (0x0000) /*!< PA[5] pin */
 #define SYSCFG_EXTICR2_EXTI5_PB         (0x0010) /*!< PB[5] pin */
@@ -4586,8 +4586,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR2_EXTI5_PE         (0x0040) /*!< PE[5] pin */
 #define SYSCFG_EXTICR2_EXTI5_PF         (0x0050) /*!< PF[5] pin */
 
-/** 
-  * @brief  EXTI6 configuration  
+/**
+  * @brief  EXTI6 configuration
   */
 #define SYSCFG_EXTICR2_EXTI6_PA         (0x0000) /*!< PA[6] pin */
 #define SYSCFG_EXTICR2_EXTI6_PB         (0x0100) /*!< PB[6] pin */
@@ -4596,8 +4596,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR2_EXTI6_PE         (0x0400) /*!< PE[6] pin */
 #define SYSCFG_EXTICR2_EXTI6_PF         (0x0500) /*!< PF[6] pin */
 
-/** 
-  * @brief  EXTI7 configuration  
+/**
+  * @brief  EXTI7 configuration
   */
 #define SYSCFG_EXTICR2_EXTI7_PA         (0x0000) /*!< PA[7] pin */
 #define SYSCFG_EXTICR2_EXTI7_PB         (0x1000) /*!< PB[7] pin */
@@ -4611,8 +4611,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR3_EXTI10           (0x0F00) /*!< EXTI 10 configuration */
 #define SYSCFG_EXTICR3_EXTI11           (0xF000) /*!< EXTI 11 configuration */
 
-/** 
-  * @brief  EXTI8 configuration  
+/**
+  * @brief  EXTI8 configuration
   */
 #define SYSCFG_EXTICR3_EXTI8_PA         (0x0000) /*!< PA[8] pin */
 #define SYSCFG_EXTICR3_EXTI8_PB         (0x0001) /*!< PB[8] pin */
@@ -4620,8 +4620,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR3_EXTI8_PD         (0x0003) /*!< PD[8] pin */
 #define SYSCFG_EXTICR3_EXTI8_PE         (0x0004) /*!< PE[8] pin */
 
-/** 
-  * @brief  EXTI9 configuration  
+/**
+  * @brief  EXTI9 configuration
   */
 #define SYSCFG_EXTICR3_EXTI9_PA         (0x0000) /*!< PA[9] pin */
 #define SYSCFG_EXTICR3_EXTI9_PB         (0x0010) /*!< PB[9] pin */
@@ -4630,8 +4630,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR3_EXTI9_PE         (0x0040) /*!< PE[9] pin */
 #define SYSCFG_EXTICR3_EXTI9_PF         (0x0050) /*!< PF[9] pin */
 
-/** 
-  * @brief  EXTI10 configuration  
+/**
+  * @brief  EXTI10 configuration
   */
 #define SYSCFG_EXTICR3_EXTI10_PA        (0x0000) /*!< PA[10] pin */
 #define SYSCFG_EXTICR3_EXTI10_PB        (0x0100) /*!< PB[10] pin */
@@ -4640,8 +4640,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR3_EXTI10_PE        (0x0400) /*!< PD[10] pin */
 #define SYSCFG_EXTICR3_EXTI10_PF        (0x0500) /*!< PF[10] pin */
 
-/** 
-  * @brief  EXTI11 configuration  
+/**
+  * @brief  EXTI11 configuration
   */
 #define SYSCFG_EXTICR3_EXTI11_PA        (0x0000) /*!< PA[11] pin */
 #define SYSCFG_EXTICR3_EXTI11_PB        (0x1000) /*!< PB[11] pin */
@@ -4654,8 +4654,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR4_EXTI14           (0x0F00) /*!< EXTI 14 configuration */
 #define SYSCFG_EXTICR4_EXTI15           (0xF000) /*!< EXTI 15 configuration */
 
-/** 
-  * @brief  EXTI12 configuration  
+/**
+  * @brief  EXTI12 configuration
   */
 #define SYSCFG_EXTICR4_EXTI12_PA        (0x0000) /*!< PA[12] pin */
 #define SYSCFG_EXTICR4_EXTI12_PB        (0x0001) /*!< PB[12] pin */
@@ -4663,8 +4663,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR4_EXTI12_PD        (0x0003) /*!< PD[12] pin */
 #define SYSCFG_EXTICR4_EXTI12_PE        (0x0004) /*!< PE[12] pin */
 
-/** 
-  * @brief  EXTI13 configuration  
+/**
+  * @brief  EXTI13 configuration
   */
 #define SYSCFG_EXTICR4_EXTI13_PA        (0x0000) /*!< PA[13] pin */
 #define SYSCFG_EXTICR4_EXTI13_PB        (0x0010) /*!< PB[13] pin */
@@ -4672,8 +4672,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR4_EXTI13_PD        (0x0030) /*!< PD[13] pin */
 #define SYSCFG_EXTICR4_EXTI13_PE        (0x0040) /*!< PE[13] pin */
 
-/** 
-  * @brief  EXTI14 configuration  
+/**
+  * @brief  EXTI14 configuration
   */
 #define SYSCFG_EXTICR4_EXTI14_PA        (0x0000) /*!< PA[14] pin */
 #define SYSCFG_EXTICR4_EXTI14_PB        (0x0100) /*!< PB[14] pin */
@@ -4681,8 +4681,8 @@ SUCCESS = !ERROR
 #define SYSCFG_EXTICR4_EXTI14_PD        (0x0300) /*!< PD[14] pin */
 #define SYSCFG_EXTICR4_EXTI14_PE        (0x0400) /*!< PE[14] pin */
 
-/** 
-  * @brief  EXTI15 configuration  
+/**
+  * @brief  EXTI15 configuration
   */
 #define SYSCFG_EXTICR4_EXTI15_PA        (0x0000) /*!< PA[15] pin */
 #define SYSCFG_EXTICR4_EXTI15_PB        (0x1000) /*!< PB[15] pin */
@@ -5135,9 +5135,9 @@ SUCCESS = !ERROR
   * @}
   */
 
- /**
+/**
   * @}
-  */ 
+  */
 
 #ifdef USE_STDPERIPH_DRIVER
 #endif
@@ -5158,7 +5158,7 @@ SUCCESS = !ERROR
   * @}
   */
 
-  /**
+/**
   * @}
   */
 

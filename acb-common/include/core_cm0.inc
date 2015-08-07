@@ -11,30 +11,30 @@
  ******************************************************************************/
 /* Copyright (c) 2009 - 2013 ARM LIMITED
 
-   All rights reserved.
-   Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions are met:
-   - Redistributions of source code must retain the above copyright
+All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain the above copyright
      notice, this list of conditions and the following disclaimer.
-   - Redistributions in binary form must reproduce the above copyright
+- Redistributions in binary form must reproduce the above copyright
      notice, this list of conditions and the following disclaimer in the
      documentation and/or other materials provided with the distribution.
-   - Neither the name of ARM nor the names of its contributors may be used
+- Neither the name of ARM nor the names of its contributors may be used
      to endorse or promote products derived from this software without
      specific prior written permission.
    *
-   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICAR PURPOSE
-   ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
-   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-   POSSIBILITY OF SUCH DAMAGE.
-   ---------------------------------------------------------------------------*/
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDERS AND CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+---------------------------------------------------------------------------*/
 
 #ifndef __CORE_CM0_H_GENERIC
 #define __CORE_CM0_H_GENERIC
@@ -51,63 +51,63 @@
 
 @ ASPR bits
 
-V = 28																@ Overflow flag
-C = 29																@ Carry flag
-Z = 30																@ Zero flag
-N = 31																@ Negative flag
+V = 28                                                              @ Overflow flag
+C = 29                                                              @ Carry flag
+Z = 30                                                              @ Zero flag
+N = 31                                                              @ Negative flag
 
 @ IPSR bits
 
-ISR = 0																@ Exception number
+ISR = 0                                                             @ Exception number
 
 @ ESPR bits
 
-T = 24																@ Thumb state
+T = 24                                                              @ Thumb state
 
 @ CONTROL bits
 
-SPSEL = 1															@ Stack to be used
+SPSEL = 1                                                           @ Stack to be used
 
 @ Memory mapping of Cortex-M0 Hardware
-SCS_BASE =           (0xE000E000)									@ System Control Space Base Address
-SysTick_BASE =       (SCS_BASE + 0x0010)							@ SysTick Base Address
-NVIC_BASE =          (SCS_BASE + 0x0100)							@ NVIC Base Address
-SCB_BASE =           (SCS_BASE + 0x0D00)							@ System Control Block Base Address
+SCS_BASE =           (0xE000E000)                                   @ System Control Space Base Address
+SysTick_BASE =       (SCS_BASE + 0x0010)                            @ SysTick Base Address
+NVIC_BASE =          (SCS_BASE + 0x0100)                            @ NVIC Base Address
+SCB_BASE =           (SCS_BASE + 0x0D00)                            @ System Control Block Base Address
 
 @ NVIC registers
 
-NVIC_ISER = NVIC_BASE												@ Interrupt Set Enable Register
-NVIC_ICER = NVIC_BASE + 0x008										@ Interrupt Clear Enable Register
-NVIC_ISPR = NVIC_BASE + 0x100										@ Interrupt Set Pending Register
-NVIC_ICPR = NVIC_BASE + 0x180										@ Interrupt Clear Pending Register
-NVIC_IP0 =  NVIC_BASE + 0x300										@ Interrupt Priority Register 0
-NVIC_IP1 =  NVIC_BASE + 0x304										@ Interrupt Priority Register 1
-NVIC_IP2 =  NVIC_BASE + 0x308										@ Interrupt Priority Register 2
-NVIC_IP3 =  NVIC_BASE + 0x30C										@ Interrupt Priority Register 3
-NVIC_IP4 =  NVIC_BASE + 0x310										@ Interrupt Priority Register 4
-NVIC_IP5 =  NVIC_BASE + 0x314										@ Interrupt Priority Register 5
-NVIC_IP6 =  NVIC_BASE + 0x318										@ Interrupt Priority Register 6
-NVIC_IP7 =  NVIC_BASE + 0x31C										@ Interrupt Priority Register 7
+NVIC_ISER = NVIC_BASE                                               @ Interrupt Set Enable Register
+NVIC_ICER = NVIC_BASE + 0x008                                       @ Interrupt Clear Enable Register
+NVIC_ISPR = NVIC_BASE + 0x100                                       @ Interrupt Set Pending Register
+NVIC_ICPR = NVIC_BASE + 0x180                                       @ Interrupt Clear Pending Register
+NVIC_IP0 =  NVIC_BASE + 0x300                                       @ Interrupt Priority Register 0
+NVIC_IP1 =  NVIC_BASE + 0x304                                       @ Interrupt Priority Register 1
+NVIC_IP2 =  NVIC_BASE + 0x308                                       @ Interrupt Priority Register 2
+NVIC_IP3 =  NVIC_BASE + 0x30C                                       @ Interrupt Priority Register 3
+NVIC_IP4 =  NVIC_BASE + 0x310                                       @ Interrupt Priority Register 4
+NVIC_IP5 =  NVIC_BASE + 0x314                                       @ Interrupt Priority Register 5
+NVIC_IP6 =  NVIC_BASE + 0x318                                       @ Interrupt Priority Register 6
+NVIC_IP7 =  NVIC_BASE + 0x31C                                       @ Interrupt Priority Register 7
 
 @ System Control Block (SCB) registers
 
-SCB_CPUID = SCB_BASE												@ CPUID Base Register
-SCB_ICSR = SCB_BASE + 0x004											@ Interrupt Control and State Register
-SCB_AIRCR = SCB_BASE + 0x00C										@ Application Interrupt and Reset Control Register
-SCB_SCR = SCB_BASE + 0x010											@ System Control Register
-SCB_CCR = SCB_BASE + 0x014											@ Configuration Control Register
-SCB_SHP2 = SCB_BASE + 0x01C											@ System Handlers Priority Register 2
-SCB_SHP3 = SCB_BASE + 0x020											@ System Handlers Priority Register 3
-SCB_SHCSR = SCB_BASE + 0x024										@ System Handler Control and State Register
+SCB_CPUID = SCB_BASE                                                @ CPUID Base Register
+SCB_ICSR = SCB_BASE + 0x004                                         @ Interrupt Control and State Register
+SCB_AIRCR = SCB_BASE + 0x00C                                        @ Application Interrupt and Reset Control Register
+SCB_SCR = SCB_BASE + 0x010                                          @ System Control Register
+SCB_CCR = SCB_BASE + 0x014                                          @ Configuration Control Register
+SCB_SHP2 = SCB_BASE + 0x01C                                         @ System Handlers Priority Register 2
+SCB_SHP3 = SCB_BASE + 0x020                                         @ System Handlers Priority Register 3
+SCB_SHCSR = SCB_BASE + 0x024                                        @ System Handler Control and State Register
 
 @ SCB bit defintions
 
 @ SCB CPUID Register Definitions
-SCB_CPUID_IMPLEMENTER_Pos =  24										@ SCB CPUID: IMPLEMENTER Position
+SCB_CPUID_IMPLEMENTER_Pos =  24                                     @ SCB CPUID: IMPLEMENTER Position
 SCB_CPUID_IMPLEMENTER_Msk =  (0xFF << SCB_CPUID_IMPLEMENTER_Pos)    @ SCB CPUID: IMPLEMENTER Mask
-SCB_CPUID_VARIANT_Pos =      20								        @ SCB CPUID: VARIANT Position
+SCB_CPUID_VARIANT_Pos =      20                                     @ SCB CPUID: VARIANT Position
 SCB_CPUID_VARIANT_Msk =      (0xF << SCB_CPUID_VARIANT_Pos)         @ SCB CPUID: VARIANT Mask
-SCB_CPUID_ARCHITECTURE_Pos = 16										@ SCB CPUID: ARCHITECTURE Position
+SCB_CPUID_ARCHITECTURE_Pos = 16                                     @ SCB CPUID: ARCHITECTURE Position
 SCB_CPUID_ARCHITECTURE_Msk = (0xF << SCB_CPUID_ARCHITECTURE_Pos)    @ SCB CPUID: ARCHITECTURE Mask
 SCB_CPUID_PARTNO_Pos =       4                                      @ SCB CPUID: PARTNO Position
 SCB_CPUID_PARTNO_Msk =       (0xFFF << SCB_CPUID_PARTNO_Pos)        @ SCB CPUID: PARTNO Mask
@@ -130,11 +130,11 @@ SCB_ICSR_ISRPREEMPT_Msk =  (1 << SCB_ICSR_ISRPREEMPT_Pos)           @ SCB ICSR: 
 SCB_ICSR_ISRPENDING_Pos =  22                                       @ SCB ICSR: ISRPENDING Position
 SCB_ICSR_ISRPENDING_Msk =  (1 << SCB_ICSR_ISRPENDING_Pos)           @ SCB ICSR: ISRPENDING Mask
 SCB_ICSR_VECTPENDING_Pos = 12                                       @ SCB ICSR: VECTPENDING Position
-SCB_ICSR_VECTPENDING_Msk = (0x1FF << SCB_ICSR_VECTPENDING_Pos)		@ SCB ICSR: VECTPENDING Mask
+SCB_ICSR_VECTPENDING_Msk = (0x1FF << SCB_ICSR_VECTPENDING_Pos)      @ SCB ICSR: VECTPENDING Mask
 SCB_ICSR_VECTACTIVE_Pos =  0                                        @ SCB ICSR: VECTACTIVE Position
 SCB_ICSR_VECTACTIVE_Msk =  (0x1FF << SCB_ICSR_VECTACTIVE_Pos)       @ SCB ICSR: VECTACTIVE Mask
 
-@ SCB Application Interrupt and Reset Control Register Definitions 
+@ SCB Application Interrupt and Reset Control Register Definitions
 SCB_AIRCR_VECTKEY_Pos =       16                                    @ SCB AIRCR: VECTKEY Position
 SCB_AIRCR_VECTKEY_Msk =       (0xFFFF << SCB_AIRCR_VECTKEY_Pos)     @ SCB AIRCR: VECTKEY Mask
 SCB_AIRCR_VECTKEYSTAT_Pos =   16                                    @ SCB AIRCR: VECTKEYSTAT Position
@@ -166,10 +166,10 @@ SCB_SHCSR_SVCALLPENDED_Msk = (1 << SCB_SHCSR_SVCALLPENDED_Pos)      @ SCB SHCSR:
 
 @ System Timer (SysTick) registers
 
-SysTick_CTRL  = SysTick_BASE										@ SysTick Control and Status Register
-SysTick_LOAD  = SysTick_BASE + 0x004								@ SysTick Reload Value Register
-SysTick_VA    = SysTick_BASE + 0x008								@ SysTick Current Value Register
-SysTick_CALIB = SysTick_BASE + 0x00C								@ SysTick Calibration Register
+SysTick_CTRL  = SysTick_BASE                                        @ SysTick Control and Status Register
+SysTick_LOAD  = SysTick_BASE + 0x004                                @ SysTick Reload Value Register
+SysTick_VA    = SysTick_BASE + 0x008                                @ SysTick Current Value Register
+SysTick_CALIB = SysTick_BASE + 0x00C                                @ SysTick Calibration Register
 
 @ SysTick bit defintions
 

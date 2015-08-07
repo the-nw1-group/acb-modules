@@ -210,7 +210,7 @@
     <acronym>RQMN</acronym>
     <opcode>0x11</opcode>
     <description>Request module name</description>
-    <documentation>Sent by a node to request the name of the type of module that is in setup 	mode. The module in setup mode will reply with opcode NAME. See OpCode 0xE2.</documentation>
+    <documentation>Sent by a node to request the name of the type of module that is in setup mode. The module in setup mode will reply with opcode NAME. See OpCode 0xE2.</documentation>
     <annotation></annotation>
     <function>
       <key>event</key>
@@ -631,7 +631,7 @@
       <bytedesc>Freeform status byte for debugging during CBUS module development</bytedesc>
     </data1>
     <description>Debug with one data byte</description>
-    <documentation>Not 	used during normal operation.</documentation>
+    <documentation>Not used during normal operation.</documentation>
     <annotation></annotation>
     <function>
       <key>misc</key>
@@ -1087,7 +1087,7 @@
       <bytedesc>Byte value is the function number - 0 to 27.</bytedesc>
     </data2>
     <description>Set Engine function off</description>
-    <documentation>Sent by a cab to turn off a specific loco function. This provides an alternative method to 	DFUN for controlling loco functions. A command station must implement both methods.</documentation>
+    <documentation>Sent by a cab to turn off a specific loco function. This provides an alternative method to DFUN for controlling loco functions. A command station must implement both methods.</documentation>
     <annotation></annotation>
     <function>
       <key>dcc</key>
@@ -1201,7 +1201,7 @@
       <bytedesc>Byte value is low byte of nodenumber.</bytedesc>
     </data2>
     <description>Request node number</description>
-    <documentation>Sent by a node that is in setup/configuration mode and requests assignment of a node 	number (NN). The node allocating node numbers responds with (SNN) which contains the 	newly assigned node number. NNHI and NNLO are the existing node number, if the node has one. If it does not yet have a node number, these bytes should be set to zero.</documentation>
+    <documentation>Sent by a node that is in setup/configuration mode and requests assignment of a node number (NN). The node allocating node numbers responds with (SNN) which contains the newly assigned node number. NNHI and NNLO are the existing node number, if the node has one. If it does not yet have a node number, these bytes should be set to zero.</documentation>
     <annotation></annotation>
     <function>
       <key>misc</key>
@@ -1410,7 +1410,7 @@
       <bytedesc>Byte value is low byte of device number.</bytedesc>
     </data2>
     <description>Request device data - short mode</description>
-    <documentation>To request a "data set" from a device using the short event 	method Where DN is the device number. Response is 0xFB (DDRS).</documentation>
+    <documentation>To request a "data set" from a device using the short event method Where DN is the device number. Response is 0xFB (DDRS).</documentation>
     <annotation></annotation>
     <function>
       <key>event</key>
@@ -1532,7 +1532,7 @@
       <bytedesc>Byte value contains flag bits as follows: Bit 0: Set for "Steal" mode, Bit 1: Set for "Share" mode.</bytedesc>
     </data3>
     <description>Get engine session</description>
-    <documentation>Both bits set to 0 is exactly equivalent to an RLOC request. Both bits set to 1 is invalid, because the 2 modes are mutually exclusive. The command station responds with (PLOC) if the request is successful. Otherwise responds with (ERR): engine in use. (ERR:) stack full or (ERR) no session. 			The latter indicates that there is no current session to steal/share depending on the flag bits set in the request. GLOC with all flag bits set to zero is exactly equivalent to RLOC, but command stations must continue to support RLOC for backwards compatibility.</documentation>
+    <documentation>Both bits set to 0 is exactly equivalent to an RLOC request. Both bits set to 1 is invalid, because the 2 modes are mutually exclusive. The command station responds with (PLOC) if the request is successful. Otherwise responds with (ERR): engine in use. (ERR:) stack full or (ERR) no session. The latter indicates that there is no current session to steal/share depending on the flag bits set in the request. GLOC with all flag bits set to zero is exactly equivalent to RLOC, but command stations must continue to support RLOC for backwards compatibility.</documentation>
     <annotation></annotation>
     <function>
       <key>dcc</key>
@@ -5000,7 +5000,7 @@
       <bytedesc>additional data byte 2</bytedesc>
     </data6>
     <description>Accessory Short OFF</description>
-    <documentation>Indicates an "OFF" event using the short event number of 2 LS bytes with two added data 	bytes.</documentation>
+    <documentation>Indicates an "OFF" event using the short event number of 2 LS bytes with two added data bytes.</documentation>
     <annotation></annotation>
     <function>
       <key>event</key>
@@ -5484,7 +5484,7 @@
       <bytedesc></bytedesc>
     </data7>
     <description></description>
-    <documentation>	</documentation>
+    <documentation></documentation>
     <annotation></annotation>
     <function>
       <key>free</key>

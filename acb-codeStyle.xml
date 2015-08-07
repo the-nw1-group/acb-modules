@@ -110,7 +110,7 @@
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_comma_in_template_parameters" value="insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_before_closing_paren_in_if" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.alignment_for_conditional_expression_chain" value="18"/>
-<setting id="org.eclipse.cdt.core.formatter.tabulation.char" value="tab"/>
+<setting id="org.eclipse.cdt.core.formatter.tabulation.char" value="space"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_new_line_after_template_declaration" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_new_line_before_colon_in_constructor_initializer_list" value="do not insert"/>
 <setting id="org.eclipse.cdt.core.formatter.insert_space_after_comma_in_enum_declarations" value="insert"/>

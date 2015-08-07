@@ -37,24 +37,22 @@
    ---------------------------------------------------------------------------*/
 
 #include "core_cm0.inc"
-#include "moduleInfo.inc"
-#include "acb_common.inc"
+#include "acb_functionHeaders.inc"
 
-	module(core_cm0)
+    module(core_cm0)
 
-	public_function(NVIC_SystemReset)
+    public_function(NVIC_SystemReset)
 
 @ The function initiates a system reset request to reset the MCU.
 
 NVIC_SystemReset:
-																	@ no need to save r6 or r7 as this function never returns
+                                                                    @ no need to save r6 or r7 as this function never returns
 
-					dsb												@ Ensure all outstanding memory accesses included buffered write are completed before reset
-					ldr				r6, = #SCB_AIRCR
-					ldr				r7, = #((0x5FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk)
-					str				r7, [r6]
-					dsb												@ Ensure completion of memory access
-1:
-					b				1b								@ wait until reset
+                    dsb                                            @ Ensure all outstanding memory accesses included buffered write are completed before reset
+                    ldr             r6, = #SCB_AIRCR
+                    ldr             r7, = #((0x5FA << SCB_AIRCR_VECTKEY_Pos) | SCB_AIRCR_SYSRESETREQ_Msk)
+                    str             r7, [r6]
+                    dsb                                             @ Ensure completion of memory access
+                    b               .                               @ wait until reset
 
-	.end
+    .end
