@@ -7,6 +7,10 @@
  *
  */
 
+#include "core_cm0.inc"
+#include "stm32f0xx.inc"
+#include "acb_functionHeaders.inc"
+
 /*
  * Private ACB-4TC include file
  *

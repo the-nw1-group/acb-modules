@@ -7,16 +7,14 @@
  *
  */
 
-#include "core_cm0.inc"
-#include "stm32f0xx.inc"
 #include "moduleInfo.inc"
-#include "acb_functionHeaders.inc"
 #include "acb_can.inc"
-#include "cbus_defs.inc"
 
 @ main code for ACB-4TC (4 Turnout control)
 
     module(Main)
+
+    .extern         Setup_setup                                     @ setup hardware and peripherals
 
     public_function(main)
 
@@ -24,6 +22,7 @@
 @   main code for module
 
 main:
+                    bl              Setup_setup
                     b               .                               @ do nothing for now
 
     .end
