@@ -34,6 +34,8 @@
     .type           fnname, %function;\
     .size           fnname, .-fnname;\
     .balign         2;\
+    .align          2;\
+    .code           16;\
     .thumb_func;
 
 /*   */
