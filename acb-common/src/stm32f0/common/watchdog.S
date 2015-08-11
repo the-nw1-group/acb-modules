@@ -9,9 +9,7 @@
 
 @ watch dog access functions
 
-#include "stm32f0xx.inc"
 #include "moduleInfo.inc"
-#include "acb_functionHeaders.inc"
 
     module(Watchdog)
 

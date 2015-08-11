@@ -52,9 +52,7 @@
 
 @ Translated from auto generated code from MCD Application Team
 
-#include "stm32f0xx.inc"
 #include "moduleInfo.inc"
-#include "acb_functionHeaders.inc"
 
     module(System)
 

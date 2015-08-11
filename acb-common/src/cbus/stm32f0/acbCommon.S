@@ -7,10 +7,8 @@
  *
  */
 
-#include "core_cm0.inc"
-#include "stm32f0xx.inc"
+
 #include "moduleInfo.inc"
-#include "acb_functionHeaders.inc"
 #include "acb_common.inc"
 
 

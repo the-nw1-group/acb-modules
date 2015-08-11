@@ -98,7 +98,7 @@
     <xsl:text> </xsl:text><xsl:value-of select="gendate"/>
 @ Revision History<xsl:apply-templates select="revisionHistory/revision"/>
 
-#include "acb_functionHeaders.inc"
+#include "moduleInfo.inc"
 #include "acb_common.inc"
 
     module(cbus_messages)

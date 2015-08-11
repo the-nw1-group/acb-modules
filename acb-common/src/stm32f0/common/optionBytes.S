@@ -9,9 +9,7 @@
 
 @ option byte setting routines
 
-#include "stm32f0xx.inc"
 #include "moduleInfo.inc"
-#include "acb_functionHeaders.inc"
 
     module(OptionByte)
 

@@ -8,8 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "stm32f0xx.inc"
-#include "acb_functionHeaders.inc"
 
 @ flash writing and reading routines
 
