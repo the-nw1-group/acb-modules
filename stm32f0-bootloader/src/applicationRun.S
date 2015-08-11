@@ -7,9 +7,7 @@
  *
  */
 
-#include "core_cm0.inc"
-#include "stm32f0xx.inc"
-#include "acb_functionHeaders.inc"
+#include "moduleInfo.inc"
 
 @ copy the application program vector table to the start of the SRAM, tell the controller to use that vector table
 @ and redirect to the applications reset handler
