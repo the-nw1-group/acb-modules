@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Acb Modules by the-nw1-group</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Acb Modules</h1>
+        <p>Another-Control-Bus modules for model railways</p>
+
+        <p class="view"><a href="https://github.com/the-nw1-group/acb-modules">View the Project on GitHub <small>the-nw1-group/acb-modules</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/the-nw1-group/acb-modules/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/the-nw1-group/acb-modules/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/the-nw1-group/acb-modules">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="another-control-bus" class="anchor" href="#another-control-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Another Control Bus</h1>
+
+<p>or Accessory Control Bus - a CBUS like control bus for model railway accessories such as control panels, servos,
+signals and the like. More details on CBUS can be found on the <a href="http://www.merg.org.uk/merg_resources/cbus.php">http://www.merg.org.uk/merg_resources/cbus.php</a> website.
+These modules should be compatible with CBUS as described in the Developers Guide version 6a to CBUS 4.0 Specification 
+Revision 8c. The modules only support FLiM (The Full Layout implementation Model)</p>
+
+<h2>
+<a id="the-modules" class="anchor" href="#the-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Modules</h2>
+
+<p>The modules are based around either STM32F042 ARM Cortex-M0 microcontroller, or various PIC24/dsPIC33 microcontrollers. 
+All of the boards have been designed, with only the ACB-16IO requiring the Gerbers to be drawn. </p>
+
+<table>
+<thead>
+<tr>
+<th>Module</th>
+<th>Microcontroller</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ACB-4TC</td>
+<td>STM32F042K6</td>
+<td>For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving</td>
+</tr>
+<tr>
+<td>ACB-8IOMV</td>
+<td>STM32F042F6</td>
+<td>8 configuration input or outputs, configurable for various voltages and other options</td>
+</tr>
+<tr>
+<td>ACB-8IO</td>
+<td>STM32F042F6</td>
+<td>8 configurable open drain inputs or outputs, 5V tolerant</td>
+</tr>
+<tr>
+<td>ACB-16IO</td>
+<td>STM32F042F6</td>
+<td>16 configurable open drain inputs or outputs, 5V tolerant</td>
+</tr>
+<tr>
+<td>ACB-16LED</td>
+<td>STM32F042F6</td>
+<td>16 constant current LED outputs</td>
+</tr>
+<tr>
+<td>ACB-MATRIX</td>
+<td>STM32F042C6</td>
+<td>10x7 LED matrix driver</td>
+</tr>
+<tr>
+<td>ACB-RF</td>
+<td>STM32F042F6</td>
+<td>Wireless link</td>
+</tr>
+<tr>
+<td>ACB-ETH100</td>
+<td>PIC24HJ128GP504</td>
+<td>CAN to Ethernet bridge</td>
+</tr>
+<tr>
+<td>ACB-BRIDGE</td>
+<td>PIC24EP512GP806</td>
+<td>CAN to CAN bridge</td>
+</tr>
+</tbody>
+</table>
+
+<p>Most of the code is written in assembler - yeah I know...  </p>
+
+<h2>
+<a id="building-and-debugging" class="anchor" href="#building-and-debugging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building and Debugging</h2>
+
+<p>You'll need the following tools to build the source code:</p>
+
+<ul>
+<li>Eclipse CDT - I'm using Eclipse Mars Release (4.5.0) Build id: 20150621-1200</li>
+<li>GNU ARM Eclipse plug-in - I'm using version 2.9.1.201508011813 </li>
+<li>Pre-built GNU toolchain from ARM Cortex-M &amp; Cortex-R processors - I'm using version 4.9-2015-q2-update</li>
+<li>OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team</li>
+<li>GNU build tools (for Windows) - again, I'm using the one prebuilt by the GNU ARM Eclipse plug-in team</li>
+<li>Saxon XSLT and XQuery Processor - I'm using version Saxon-HE 9-6-0-6J</li>
+</ul>
+
+<p>You might need to add the following 2 substitution strings (Windows &gt; Preferences &gt; Run/Debug &gt; String Substitution),
+as I think these are workspace, rather than project settings:</p>
+
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>saxon_xslt_jar</td>
+<td>saxon9he.jar</td>
+<td>Name of Saxon XSTL Jar</td>
+</tr>
+<tr>
+<td>saxon_xslt_path</td>
+<td><em>path to JAR file</em></td>
+<td>Path to Saxon XSLT Jar</td>
+</tr>
+</tbody>
+</table>
+
+<p>Note: On Windows systems, in saxon_xslt_path use forward slashes rather than backslashes.</p>
+
+<p>For debugging and for burning the boot loader, you need:</p>
+
+<ul>
+<li>ST-LINK/V2  in-circuit debugger/programmer for STM8 and STM32 - either a stand-alone version, 
+or from a ST-Discovery board</li>
+<li>STM-32 ST-LINK Utility - I'm using version v3.6.0</li>
+</ul>
+
+<p>For programming via the bootloader, you need:</p>
+
+<ul>
+<li>A CAN to Serial, or CAN to USB convertor, such as MERG's CAN-USB2, 3 or 4. I'm using CAN-USB2. Details can be found
+on the  <a href="http://www.merg.org.uk/kits.php">http://www.merg.org.uk/kits.php</a> website</li>
+</ul>
+
+<p>I'm using Gitflow, so the most up-to-date version will be on the <code>develop</code> branch, rather than on <code>master</code>, which
+will only be updated periodically. <a href="http://nvie.com/posts/a-successful-git-branching-model/">http://nvie.com/posts/a-successful-git-branching-model/</a> has a brilliant description
+of working with Gitflow.</p>
+
+<p>Hopefully they should build after a clone from GIT, but if I've missed something, please let me know, and I'll try to 
+correct it. </p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/the-nw1-group">the-nw1-group</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
