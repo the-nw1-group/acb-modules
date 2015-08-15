@@ -37,8 +37,8 @@ Pin functions are
 | 26  | PB3      | I/O  | (OUT) Servo Power Enable* |
 | 27  | PB4      | I/O  | (OUT) Servo 1             |
 | 28  | PB5      | I/O  | (OUT) Servo 2             |
-| 29  | PB7      | I/O  | I2C SCL - EEPROM          |
-| 30  | PB8      | I/O  | I2C SDA - EEPROM          |
+| 29  | PB6      | I/O  | I2C SCL - EEPROM          |
+| 30  | PB7      | I/O  | I2C SDA - EEPROM          |
 | 31  | PB8      | I/O  | (IN) FLiM Switch          |
 | 32  | VSS      | S    | Ground                    |
 
