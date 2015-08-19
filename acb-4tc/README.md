@@ -53,4 +53,5 @@ Other notable IC's on the board
 | TPS62160    | 3-17V 1A Step-Down Converter                                                                   |
 | SN74LVC2T45 | Dual-Bit Dual-Supply Bus Transceiver With Configurable Voltage Translation and 3-State Outputs |
 | PMGD175XN   | 30 V, dual N-channel Trench MOSFET                                                             | 
- 
+
+Further documentation can be found <http://the-nw1-group.github.io/acb-modules/acb-4tc.html>.
