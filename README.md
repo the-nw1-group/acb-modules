@@ -6,6 +6,8 @@ signals and the like. More details on CBUS can be found on the <http://www.merg.
 These modules should be compatible with CBUS as described in the Developers Guide version 6a to CBUS 4.0 Specification 
 Revision 8c. The modules only support FLiM (The Full Layout implementation Model)
 
+Further documentation can be found <http://the-nw1-group.github.io/acb-modules>.
+
 The Modules
 -----------
 

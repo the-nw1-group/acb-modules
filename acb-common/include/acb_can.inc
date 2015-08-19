@@ -69,3 +69,21 @@
 #else
 #define ACB_CAN_AFR_TXPIN (ACB_CAN_TXPIN)
 #endif
+
+/*
+ * Definitions of extra fields in ACB_MSG
+ */
+
+#define ACB_MSG_INFO_STID_OFFSET        ACB_MSG_INFO_RES2_OFFSET
+#define ACB_MSG_RTR_OFFSET              ACB_MSG_RESERVED_OFFSET
+#define ACB_MSG_RTR_SIZE                ACB_MSG_RESERVED_SIZE
+#define ACB_MSG_RTR_MASK                ACB_MSG_RESERVED_MASK
+
+/*
+ * Definitions of extra fields in ACB_MSGEX
+ */
+
+#define ACB_MSGEX_INFO_EXID_OFFSET      ACB_MSGEX_INFO_RES2_OFFSET
+#define ACB_MSGEX_RTR_OFFSET            ACB_MSG_RESERVED_OFFSET
+#define ACB_MSGEX_RTR_SIZE              ACB_MSG_RESERVED_SIZE
+#define ACB_MSGEX_RTR_MASK              ACB_MSG_RESERVED_MASK

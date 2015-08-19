@@ -33,7 +33,7 @@ msgBuffer:          .space      ACB_MSGEX_SIZE
 
 @ bootloader response (MSGEX structure)
 bootLoaderResponse: .int        0x00080004                          @ msgex.info.exid - matches value from CBUS modules
-                    .byte       (1<<ACB_MSG_DLC_OFFSET)|(1<<ACB_MSG_IDE_OFFSET) @ msgex.info.dlc_status IDE=1, DLC=1
+                    .byte       (1<<ACB_MSG_LEN_OFFSET)|(1<<ACB_MSG_IDE_OFFSET) @ msgex.info.dlc_status IDE=1, DLC=1
                     .space      3, 0                                @ msgex.info.reserved
 txMessageData:      .space      8, 0                                @ msgex.data
 

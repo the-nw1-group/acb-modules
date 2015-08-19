@@ -12,6 +12,7 @@
 
 #include "moduleInfo.inc"
 #include "acb_common.inc"
+#include "acb_can.inc"
 
     module(Bootloader)
 
@@ -150,8 +151,8 @@ Bootloader_init:                                                    @ init varia
 Bootloader_dispatchMsg:
                     push            {r7, lr}
 __blCheckMsgSize:                                                   @ make sure the message has at least 1 byte
-                    ldrb            r3, [r0, #ACB_MSGEX_INFO_DLC_OFFSET]
-                    movs            r1, #ACB_MSG_DLC_MASK
+                    ldrb            r3, [r0, #ACB_MSGEX_INFO_LEN_OFFSET]
+                    movs            r1, #ACB_MSG_LEN_MASK
                     ands            r1, r1, r3
                     beq             __blReturn
 __blCheckMsgType:

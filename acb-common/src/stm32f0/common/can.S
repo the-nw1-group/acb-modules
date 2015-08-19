@@ -88,7 +88,7 @@ Can_getMsgEx:
                     movs            r7, #CAN_RDT0R_DLC
                     ands            r2, r2, r7
                     orrs            r2, r2, r1
-                    str             r2, [r0, #(ACB_MSGEX_INFO_OFFSET + ACB_MSGEX_INFO_DLC_OFFSET)]
+                    str             r2, [r0, #(ACB_MSGEX_INFO_OFFSET + ACB_MSGEX_INFO_LEN_OFFSET)]
 
                     adds            r6, r6, #8                      @ load the data bytes
                     adds            r0, r0, #ACB_MSGEX_DATA_OFFSET
@@ -115,13 +115,76 @@ Can_getMsgEx:
 
 Can_sendMessageEx:
                     push            {r7, lr}
+                    ldr             r1, = Can_postMessageEx
+                    bl              Can_postMessageWrapper
+                    pop             {r7, pc}
+
+    public_function(Can_sendMessage)
+
+@ void Can_sendMessage(MSG* msg)
+@   transmits an standard frame CAN message - blocking, doesn't return until the message has been queued for
+@   sending with the CAN peripheral
+
+Can_sendMessage:
+                    push            {r7, lr}
+                    ldr             r1, = Can_postMessage
+                    bl              Can_postMessageWrapper
+                    pop             {r7, pc}
+
+    private_function(Can_postMessageWrapper)
+
+@ void Can_postMessageWrapper(void* msg, void* fnToCall)
+@   wraps a postMessage[Ex] call - blocking, doesn't return until the message has been queued for
+@   sending with the CAN peripheral
+
+Can_postMessageWrapper:
+                    push            {r5-r7, lr}
                     movs            r7, r0                          @ take a copy of the msg
+                    movs            r6, r1                          @ take a copy of the function to call
 0:
-                    bl              Can_postMessageEx               @ try to send the message
+                    blx             r6                              @ try to send the message
                     cmp             r0, #SUCCESS                    @ if it worked, just return
                     beq             1f
                     mov             r0, r7                          @ otherwise try again, and again, and again...
                     b               0b
+1:
+                    pop             {r5-r7, pc}
+
+    public_function(Can_postMessage)
+
+@ bool Can_postMessage(MSG* msg)
+@   transmits an standard frame CAN message - non-blocking, returns true if message is queued for transmission, otherwise returns false
+@   if the message is queued, the msg parameter can be freed. Only to be used for standard or RTR frames.
+
+Can_postMessage:
+                    push            {r7, lr}
+                    movs            r7, r0
+                    bl              Can_getNextFreeTxBuffer         @ find the next free buffer
+                    cmp             r0, #0                          @ no free buffer?
+                    beq             1f                              @ return false
+                                                                    @ copy over the data bytes into the tx box
+                    ldr             r1, [r7, #ACB_MSG_DATA_OFFSET]
+                    str             r1, [r0, #CAN_TxMailBox_TDLR_OFFSET]
+                    ldr             r1, [r7, #(ACB_MSG_DATA_OFFSET+4)]
+                    str             r1, [r0, #CAN_TxMailBox_TDHR_OFFSET]
+                                                                    @ copy DLC
+                    ldrb            r1, [r7, #ACB_MSG_INFO_LEN_OFFSET]
+                    movs            r2, #ACB_MSG_LEN_MASK           @ mask out just DLC
+                    ands            r1, r1, r2
+                    str             r1, [r0, #CAN_TxMailBox_TDTR_OFFSET]
+                                                                    @ copy STDID | RTR, and request transmit
+                    ldr             r1, [r7, #(ACB_MSG_INFO_OFFSET + ACB_MSG_INFO_STID_OFFSET)]
+                    lsls            r1, #21
+                    ldrb            r2, [r7, #(ACB_MSG_INFO_OFFSET + ACB_MSG_INFO_LEN_OFFSET)]
+                    lsrs            r2, #3
+                    orrs            r1, r1, r2
+                    movs            r2, #CAN_TI0R_IDE
+                    bics            r1, r1, r2                      @ ensure IDE is clear
+                    movs            r2, #CAN_TI0R_TXRQ
+                    orrs            r1, r1, r2
+                    str             r1, [r0, #CAN_TxMailBox_TIR_OFFSET]
+0:
+                    movs            r0, #SUCCESS                    @ message queued, return true
 1:
                     pop             {r7, pc}
 
@@ -143,17 +206,17 @@ Can_postMessageEx:
                     ldr             r1, [r7, #(ACB_MSGEX_DATA_OFFSET+4)]
                     str             r1, [r0, #CAN_TxMailBox_TDHR_OFFSET]
                                                                     @ copy DLC
-                    ldrb            r1, [r7, #ACB_MSGEX_INFO_DLC_OFFSET]
-                    movs            r2, #ACB_MSG_DLC_MASK           @ mask out just DLC
+                    ldrb            r1, [r7, #ACB_MSGEX_INFO_LEN_OFFSET]
+                    movs            r2, #ACB_MSG_LEN_MASK           @ mask out just DLC
                     ands            r1, r1, r2
                     str             r1, [r0, #CAN_TxMailBox_TDTR_OFFSET]
                                                                     @ copy EXID | IDE | RTR, and request transmit
                     ldr             r1, [r7, #(ACB_MSGEX_INFO_OFFSET + ACB_MSGEX_INFO_EXID_OFFSET)]
                     lsls            r1, #3
-                    ldrb            r2, [r7, #(ACB_MSGEX_INFO_OFFSET + ACB_MSGEX_INFO_DLC_OFFSET)]
+                    ldrb            r2, [r7, #(ACB_MSGEX_INFO_OFFSET + ACB_MSGEX_INFO_LEN_OFFSET)]
                     lsrs            r2, #3
                     orrs            r1, r1, r2
-                    movs            r2, #CAN_TI0R_TXRQ
+                    movs            r2, #(CAN_TI0R_IDE | CAN_TI0R_TXRQ) @ ensure IDE is set, and request transmit
                     orrs            r1, r1, r2
                     str             r1, [r0, #CAN_TxMailBox_TIR_OFFSET]
 0:
@@ -219,6 +282,16 @@ Can_setupPeripheral:
                     str             r0, [r3]
 
                     ldr             r3, = #CAN_BASE
+                    movs            r1, #CAN_MCR_SLEEP              @ turn off SLEEP mode
+                    ldr             r0, [r3, #CAN_MCR_OFFSET]
+                    bics            r0, r0, r1
+                    str             r0, [r3, #CAN_MCR_OFFSET]
+                    movs            r1, #CAN_MSR_SLAK
+0:
+                    ldr             r0, [r3, #CAN_MSR_OFFSET]       @ wait into bcCAN has left sleep mode
+                    tst             r0, r1
+                    beq             0b
+
                     ldr             r0, [r3, #CAN_MCR_OFFSET]       @ enter CAN init mode
                     movs            r1, #CAN_MCR_INRQ
                     orrs            r0, r0, r1
@@ -228,11 +301,6 @@ Can_setupPeripheral:
                     ldr             r0, [r3, #CAN_MSR_OFFSET]       @ wait into bcCAN has entered init mode
                     tst             r0, r1
                     beq             0b
-
-                    movs            r1, #CAN_MCR_SLEEP              @ turn off SLEEP mode
-                    ldr             r0, [r3, #CAN_MCR_OFFSET]
-                    bics            r0, r0, r1
-                    str             r0, [r3, #CAN_MCR_OFFSET]
 
                     ldr             r0, [r3, #CAN_BTR_OFFSET]       @ set baud rate and loopback mode
                     ldr             r1, = #(CAN_BTR_LBKM | CAN_BTR_BRP | CAN_BTR_TS1 | CAN_BTR_TS2 | CAN_BTR_SJW)
