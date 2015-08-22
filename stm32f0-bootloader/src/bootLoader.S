@@ -11,14 +11,14 @@
 @ this is based on Microchip's AN247 (since withdrawn) - modified by MERG for their CBUS modules
 
 #include "moduleInfo.inc"
-#include "acb_common.inc"
-#include "acb_can.inc"
+#include "acb/common.inc"
+#include "acb/can.inc"
 
     module(Bootloader)
 
     .extern         Can_sendMessageEx                               @ transmits an extended frame CAN message - blocking
     .extern         OptionByte_write                                @ write a value to the option bytes
-    .extern         NVIC_SystemReset                                @ initiates a system reset request to reset the MCU
+    .extern         NVIC_systemReset                                @ initiates a system reset request to reset the MCU
     .extern         Flash_unlockWrite                               @ unlock writing to the flash area
     .extern         Flash_lockWrite                                 @ lock writing to the flash area
     .extern         Flash_erase                                     @ erase an area of flash memory
@@ -220,7 +220,7 @@ __hcDoCommand:
                     movs            r1, #1<<BOOTLOAD_OPTION_BIT
                     movs            r2, r1
                     bl              OptionByte_write                @ doesn't return if the option byte is changed
-                    bl              NVIC_SystemReset                @ otherwise reset anyhow
+                    bl              NVIC_systemReset                @ otherwise reset anyhow
 2:
                     cmp             r0, #BL_CMD_RST_CHKSM           @ reset checksum command
                     bne             3f

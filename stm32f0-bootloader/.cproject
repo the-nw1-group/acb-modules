@@ -177,7 +177,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry excluding="m0/|xml/|xslt/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-cbus"/>
-						<entry excluding="startup.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-common"/>
+						<entry excluding="startup.S|eepom*.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="acb-common-m0"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
@@ -361,7 +361,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-cbus"/>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-common"/>
+						<entry excluding="eepom*.S|startup.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-m0"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>

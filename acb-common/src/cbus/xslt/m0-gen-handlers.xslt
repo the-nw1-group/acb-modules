@@ -115,7 +115,7 @@
 @ Revision History<xsl:apply-templates select="revisionHistory/revision"/>
 
 #include "moduleInfo.inc"
-#include "acb_common.inc"
+#include "acb/common.inc"
 
     module(cbus_messages)
     <xsl:call-template name="vector-map"/>

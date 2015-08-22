@@ -60,11 +60,11 @@
                                                                     @ clock. Default implementation stalls the processor
     .extern         __aeabi_uidiv
 
-
-
 @ public variables
 
     public_data(system_globals)
+    .global         SystemCoreClock
+    .global         System_coreClock
 
 SystemCoreClock:
 System_coreClock:   .word           48000000

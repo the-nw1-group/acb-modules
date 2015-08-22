@@ -8,6 +8,13 @@
  */
 
 /*
+ * General very commmon definitions
+ */
+
+FALSE = 0
+TRUE  = 1
+
+/*
  * Easy to use module, function and data pseudo functions
  * Note: ; replaces newline which is hard to generate in standard C macros
  */

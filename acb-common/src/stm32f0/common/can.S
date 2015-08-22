@@ -8,8 +8,8 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb_common.inc"
-#include "acb_can.inc"
+#include "acb/common.inc"
+#include "acb/can.inc"
 
 @ public CAN routines, for sending, and receiving messages over the CAN bus
 
@@ -264,7 +264,9 @@ Can_setupPort:
                     orrs            r0, r0, r1
                     str             r0, [r3, #GPIO_OSPEEDR_OFFSET]  @ enable high speed for these bits
 
+                    ldr             r1, [r3, #ACB_CAN_GPIO_AFR_OFFSET]
                     ldr             r0, = #(4<<(ACB_CAN_AFR_RXPIN<<2))|(4<<(ACB_CAN_AFR_TXPIN<<2))
+                    orrs            r0, r0, r1
                     str             r0, [r3, #ACB_CAN_GPIO_AFR_OFFSET]  @ select CANTX (AF4) / CANRX (AF4)
                     bx              lr
 

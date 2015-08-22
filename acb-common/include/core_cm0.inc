@@ -68,6 +68,10 @@ T = 24                                                              @ Thumb stat
 
 SPSEL = 1                                                           @ Stack to be used
 
+#ifndef __NVIC_PRIO_BITS
+  #define __NVIC_PRIO_BITS          2
+#endif
+
 @ Memory mapping of Cortex-M0 Hardware
 SCS_BASE =           (0xE000E000)                                   @ System Control Space Base Address
 SysTick_BASE =       (SCS_BASE + 0x0010)                            @ SysTick Base Address
@@ -166,10 +170,15 @@ SCB_SHCSR_SVCALLPENDED_Msk = (1 << SCB_SHCSR_SVCALLPENDED_Pos)      @ SCB SHCSR:
 
 @ System Timer (SysTick) registers
 
-SysTick_CTRL  = SysTick_BASE                                        @ SysTick Control and Status Register
-SysTick_LOAD  = SysTick_BASE + 0x004                                @ SysTick Reload Value Register
-SysTick_VA    = SysTick_BASE + 0x008                                @ SysTick Current Value Register
-SysTick_CALIB = SysTick_BASE + 0x00C                                @ SysTick Calibration Register
+SysTick_CTRL_OFFSET = 0x000
+SysTick_LOAD_OFFSET = 0x004
+SysTick_VA_OFFSET   = 0x008
+SysTick_CALIB       = 0x00C
+
+SysTick_CTRL  = SysTick_BASE + SysTick_CTRL_OFFSET                  @ SysTick Control and Status Register
+SysTick_LOAD  = SysTick_BASE + SysTick_LOAD_OFFSET                  @ SysTick Reload Value Register
+SysTick_VA    = SysTick_BASE + SysTick_VA_OFFSET                    @ SysTick Current Value Register
+SysTick_CALIB = SysTick_BASE + SysTick_CALIB                        @ SysTick Calibration Register
 
 @ SysTick bit defintions
 

@@ -9,7 +9,7 @@
 
 
 #include "moduleInfo.inc"
-#include "acb_common.inc"
+#include "acb/common.inc"
 
 
 @ public ACB common routines
