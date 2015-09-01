@@ -29,9 +29,9 @@
 #error Unsupported ACB_EEPROM_TYPE type
 #endif
 
-#if !defined(ACB_EEPROM_I2C_AHBENR) || !defined(ACB_EEPROM_I2C_GPIOBASE) || !defined(ACB_EEPROM_I2C_SDA)
-    || !defined(ACB_EEPROM_I2C_SCL) || !defined(ACB_EEPROM_I2C_GPIO_AFR_OFFSET) || !defined(ACB_EEPROM_I2C_TIMING)
-#error ACB_EEPROM_I2C_AHBENR, ACB_EEPROM_I2C_GPIOBASE, ACB_EEPROM_I2C_SDA, ACB_EEPROM_I2C_SCL, ACB_EEPROM_I2C_GPIO_AFR_OFFSET and ACB_EEPROM_I2C_TIMING must all be defined to use this file
+#if !defined(ACB_EEPROM_I2C_AHBENR) || !defined(ACB_EEPROM_I2C_GPIOBASE) || !defined(ACB_EEPROM_I2C_SDA)\
+    || !defined(ACB_EEPROM_I2C_SCL) || !defined(ACB_EEPROM_I2C_TIMING)
+#error ACB_EEPROM_I2C_AHBENR, ACB_EEPROM_I2C_GPIOBASE, ACB_EEPROM_I2C_SDA, ACB_EEPROM_I2C_SCL and ACB_EEPROM_I2C_TIMING must all be defined to use this file
 #endif
 
 #if ACB_EEPROM_I2C_SCL > 7
@@ -50,9 +50,10 @@
 #define ACB_EEPROM_I2C_AFR_SDA_OFFSET   (GPIO_AFR_OFFSET)
 #endif
 
-#define EepromDrv_init              EepromI2C_init
-#define EepromDrv_readByte          EepromI2C_readByte
-#define EepromDrv_writeByte         EepromI2C_writeByte
-#define EepromDrv_readBlock         EepromI2C_readBlock
-#define EepromDrv_writeBlock        EepromI2C_writeBlock
-#define EepromDrv_asyncInProgress   EepromI2C_asyncInProgress
+#define EepromDrv_init               EepromI2C_init
+#define EepromDrv_readByte           EepromI2C_readByte
+#define EepromDrv_writeByte          EepromI2C_writeByte
+#define EepromDrv_readBlock          EepromI2C_readBlock
+#define EepromDrv_writeBlock         EepromI2C_writeBlock
+#define EepromDrv_asyncInProgress    EepromI2C_asyncInProgress
+#define EepromDrv_getLastAsyncStatus EepromI2C_getLastAsyncStatus

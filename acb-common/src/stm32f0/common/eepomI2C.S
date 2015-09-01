@@ -25,6 +25,7 @@ EepromI2C_status:   .byte           0                               @ status
 
 ASYNC_IN_PROGRESS = 0                                               @ Async read or write
 WRITE_IN_PROGRESS = 1
+LAST_ASYNC_STATUS = 2
 
     public_function(EepromI2C_init)
 
@@ -239,6 +240,19 @@ EepromI2C_asyncInProgress:
                     ldr             r0, = #EepromI2C_status
                     ldrb            r0, [r0]
                     movs            r1, #1<<ASYNC_IN_PROGRESS
+                    ands            r0, r0, r1
+                    bx              lr
+
+    public_function(EepromI2C_getLastAsyncStatus)
+
+@ bool Eeprom_getLastAsyncStatus()
+@   returns SUCCESS if the last asynchronous call completed successfully, otherwise error.
+
+EepromI2C_getLastAsyncStatus:
+                    ldr             r0, = #EepromI2C_status
+                    ldrb            r0, [r0]
+                    lsrs            r0, r0, #LAST_ASYNC_STATUS
+                    movs            r1, #1
                     ands            r0, r0, r1
                     bx              lr
 
