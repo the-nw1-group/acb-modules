@@ -23,8 +23,15 @@
     .extern         Acb_init                                        @ init the ACB library
     .extern         Acb_showLeds                                    @ show Leds
 
-@ private variables - NOTE the bootloader doesn't have code to automatically initialise any RAM based
-@ values
+@ public variables
+
+    public_data(main_vars)
+
+applicationBaseAddress:
+                    .word       _application_orgin                  @ Base address of application
+                    .global     applicationBaseAddress
+
+@ private variables
 
     private_data(main_vars)
 
@@ -65,6 +72,16 @@ __mainCalcPageSize:                                                 @ page size 
                     b               __initBootloader                @ page, 10 bits = 1K
 __main2kPageSize:
                     ldr             r1, = #11                       @ 11 bits = 2K
+                    ldr             r0, = #applicationBaseAddress   @ for devices with 2K sized pages, the application
+                    ldr             r3, [r0]                        @ origin must start at a 2K page boundary
+                    ldr             r2, = #(1<<11)-1
+                    tst             r3, r2
+                    beq             __initBootloader                @ if it's already 2K page-aligned then nothing to do
+                    adds            r2, r2, #1                      @ otherwise, round up page to the next 2K boundary
+                    adds            r3, r3, r2
+                    ldr             r2, =#0xFFFFFFFF << 11
+                    ands            r3, r3, r2
+                    str             r3, [r0]
 __initBootloader:
                     bl              Bootloader_init                 @ initialise the boot loader "class"
 __mainSetupGPIOA:

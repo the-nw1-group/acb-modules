@@ -26,7 +26,7 @@
     .extern         Flash_disableFlashProgramming                   @ disable programming to the flash
     .extern         Flash_waitForOperation                          @ wait for a flash operation to finish
 
-    .extern         _application_orgin                              @ where the application starts
+    .extern         applicationBaseAddress                          @ where the application starts
 
 /*
  *
@@ -301,8 +301,9 @@ __hdUpdateChecksum:                                                 @ add the da
                     subs            r0, r0, #1
                     bge             0b
                     strh            r2, [r1]
-__hdCheckAddressRange:                                              @ check address range, if less then _application_orgin
-                    ldr             r0, = #_application_orgin       @ or greater than memoryMaxAddress then just return
+__hdCheckAddressRange:                                              @ check address range, if less then applicationBaseAddress
+                    ldr             r0, = #applicationBaseAddress   @ or greater than memoryMaxAddress then just return
+                    ldr             r0, [r0]
                     cmp             r7, r0
                     bmi             __hdReturn
                     ldr             r0, = #memoryMaxAddress
