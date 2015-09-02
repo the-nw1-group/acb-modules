@@ -36,7 +36,8 @@
 #define ACB_CAN_USEPORTB 1
 #define ACB_CAN_USEOTHER 2
 
-#define ACB_CANPORT ACB_CAN_USEPORTA
+#define ACB_CANPORT                     ACB_CAN_USEPORTA
+#define ACB_CAN_REQUIRES_SYSCONFIG      1
 
 /*
  * The bootloader doesn't use the FLiM switch, so turn it off here

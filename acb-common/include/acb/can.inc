@@ -31,6 +31,8 @@
  *                           ACB_CAN_USEPORTB, 1, to use PB8 and PB9
  *                        or ACB_CAN_USEROTHER, 2, and define the constants in your header file
  *
+ * Define ACB_CAN_REQUIRES_SYSCONFIG if the device requires PA11/PA12 to be remapped from PA9/PA10
+ *
  */
 
 #if ACB_CANPORT == ACB_CAN_USEPORTA
@@ -40,7 +42,6 @@
 #define ACB_CAN_RXPIN               11
 #define ACB_CAN_TXPIN               12
 #define ACB_CAN_GPIO_AFR_OFFSET     (GPIO_AFR_OFFSET+4)
-#define ACB_CAN_REQUIRES_SYSCONFIG  1
 
 #elif ACB_CANPORT == ACB_CAN_USEPORTB
 
@@ -49,7 +50,6 @@
 #define ACB_CAN_RXPIN               8
 #define ACB_CAN_TXPIN               9
 #define ACB_CAN_GPIO_AFR_OFFSET     (GPIO_AFR_OFFSET+4)
-#define ACB_CAN_REQUIRES_SYSCONFIG  0
 
 #elif (ACB_CANPORT == ACB_CAN_USEOTHER) && (!defined(ACB_CAN_AHBENR) || !defined(ACB_CAN_GPIOBASE) || !defined(ACB_CAN_RXPIN) ||\
        !defined(ACB_CAN_TXPIN) || !defined(ACB_CAN_GPIO_AFR_OFFSET) || !defined(ACB_CAN_REQUIRES_SYSCONFIG))
