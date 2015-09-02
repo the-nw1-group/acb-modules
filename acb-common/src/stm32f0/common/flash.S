@@ -112,7 +112,11 @@ __fEraseStart:                                                      @ start eras
                     str             r0, [r7, #FLASH_CR_OFFSET]
                                                                     @ check for write protect errors
                     ldr             r0, [r7, #FLASH_SR_OFFSET]
+#if !defined(FLASH_SR_WRPERR)
                     movs            r1, #FLASH_SR_WRPRTERR
+#else
+                    movs            r1, #FLASH_SR_WRPERR
+#endif
                     tst             r0, r1
                     bne             __fEraseError
                     movs            r0, #SUCCESS
