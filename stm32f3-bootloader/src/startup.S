@@ -30,22 +30,71 @@
 
 ___vectorMap:
     .word           __stack                                         @ first location is the top of the stack
-    .word           resetHandler                                    @ reset handler
-    .word           nmiHandler
-    .word           hardFaultHandler
+    .word           __resetHandler                                  @ reset handler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
     .word           0
     .word           0
     .word           0
     .word           0
+    .word           defaultHandler
+    .word           defaultHandler
     .word           0
-    .word           0
-    .word           0
-    .word           svcHandler
-    .word           0
-    .word           0
-    .word           pendSVHandler
-    .word           sysTickHandler
-
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
+    .word           defaultHandler
     .word           defaultHandler
     .word           defaultHandler
     .word           defaultHandler
@@ -79,19 +128,6 @@ ___vectorMap:
     .word           defaultHandler
     .word           defaultHandler
 __vectorMapEnd:
-
-@ provide weak aliases for all the exception handlers
-
-    .weak           nmiHandler
-    .thumb_set      nmiHandler, defaultHandler
-    .weak           hardFaultHandler
-    .thumb_set      hardFaultHandler, defaultHandler
-    .weak           svcHandler
-    .thumb_set      svcHandler, defaultHandler
-    .weak           pendSVHandler
-    .thumb_set      pendSVHandler, defaultHandler
-    .weak           sysTickHandler
-    .thumb_set      sysTickHandler, defaultHandler
 
 @ default handler
 

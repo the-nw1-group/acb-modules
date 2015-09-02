@@ -1,7 +1,7 @@
-STM32F0x2 CAN Based Bootloader
+STM32F30x CAN Based Bootloader
 ==============================
 
-A Cortex-M0 CAN based bootloader, that uses less than 3K. It's based on the AN247
+A Cortex-M4 CAN based bootloader, that uses less than 4K. It's based on the AN247
 application note, now withdrawn, from Microchip. The bootloader has also been
 modified to work in a similar manner to the MERG version of the bootloader for PIC18F devices.
 The changes are:
@@ -84,5 +84,5 @@ Responses to CMD\_CHK_RUN and CMD\_BOOT_TEST
 
 Only writing to FLASH is supported, specifically writing to configuration/option bytes and EEPROM is not supported.
 
-The user program must start at address `0x08000C00` and the size reduced by 3K, and the RAM region must start from 
-`0x200000C0` and the size reduced by 192 bytes
+The user program must start at address `0x08001000` and the size reduced by 4K. The RAM region is unaffected by
+the bootloader.
