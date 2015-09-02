@@ -119,10 +119,10 @@
 
 #if !defined  (HSI_VALUE) 
  #define HSI_VALUE  (8000000)
-#endif /* HSI_VALUE */                      /*!< Value of the Internal High Speed oscillator in Hz.
+#endif /* HSI_VALUE */                      /*!< Value of the Internal High Speed oscillator in Hz. */
 #if !defined  (LSI_VALUE) 
  #define LSI_VALUE  (40000)    
-#endif /* LSI_VALUE */                      /*!< Value of the Internal Low Speed oscillator in Hz
+#endif /* LSI_VALUE */                      /*!< Value of the Internal Low Speed oscillator in Hz */
 #if !defined  (LSE_VALUE)
  #define LSE_VALUE  (32768)    /*!< Value of the External Low Speed oscillator in Hz */
 #endif /* LSE_VALUE */     
@@ -497,12 +497,10 @@ SUCCESS = !ERROR
 #define ADC_DIFSEL_OFFSET       0x00B0    /*!< ADC  Differential Mode Selection Register,         Address offset: 0xB0 */
 #define ADC_CALFACT_OFFSET      0x00B4    /*!< ADC  Calibration Factors,                          Address offset: 0xB4 */
 
-  __IO uint32_t CDR;            /*!< ADC common regular data register for dual
-                                     modes,                                       Address offset: ADC1/3 base address + 0x30A */
 #define ADC_Common_CSR_OFFSET         0x0000    /*!< ADC Common status register,                  Address offset: ADC1/3 base address + 0x300 */
 #define ADC_Common_RESERVED_OFFSET    0x0004    /*!< Reserved, ADC1/3 base address + 0x304                                                    */
 #define ADC_Common_CCR_OFFSET         0x0008    /*!< ADC common control register,                 Address offset: ADC1/3 base address + 0x308 */
-#define ADC_Common_CDR_OFFSET         0x000C    /*!< ADC common regular data register for dual
+#define ADC_Common_CDR_OFFSET         0x000C    /*!< ADC common regular data register for dual */
 
 
 /** 
@@ -2169,12 +2167,12 @@ SUCCESS = !ERROR
 #define ADC1_2              (ADC1_2_BASE)
 #define _ADC1_2_CSR         (ADC1_2 + ADC_Common_CSR_OFFSET)         /*!< ADC Common status register,                  Address offset: ADC1/3 base address + 0x300 */
 #define _ADC1_2_CCR         (ADC1_2 + ADC_Common_CCR_OFFSET)         /*!< ADC common control register,                 Address offset: ADC1/3 base address + 0x308 */
-#define _ADC1_2_CDR         (ADC1_2 + ADC_Common_CDR_OFFSET)         /*!< ADC common regular data register for dual
+#define _ADC1_2_CDR         (ADC1_2 + ADC_Common_CDR_OFFSET)         /*!< ADC common regular data register for dual */
 
 #define ADC3_4              (ADC3_4_BASE)
 #define _ADC3_4_CSR         (ADC3_4 + ADC_Common_CSR_OFFSET)         /*!< ADC Common status register,                  Address offset: ADC1/3 base address + 0x300 */
 #define _ADC3_4_CCR         (ADC3_4 + ADC_Common_CCR_OFFSET)         /*!< ADC common control register,                 Address offset: ADC1/3 base address + 0x308 */
-#define _ADC3_4_CDR         (ADC3_4 + ADC_Common_CDR_OFFSET)         /*!< ADC common regular data register for dual
+#define _ADC3_4_CDR         (ADC3_4 + ADC_Common_CDR_OFFSET)         /*!< ADC common regular data register for dual */
 
 #define FMC_Bank1           (FMC_Bank1_R_BASE)
 #define _FMC_Bank1_BTCR    (FMC_Bank1 + FMC_Bank1_BTCR_OFFSET)    /*!< NOR/PSRAM chip-select control register(BCR) and chip-select timing register(BTR), Address offset: 0x00-1C */

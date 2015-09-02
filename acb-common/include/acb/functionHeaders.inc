@@ -36,14 +36,17 @@ TRUE  = 1
 
 #elif (__CORTEX_M == 0x04)
 
+#if (__FPU_PRESENT == 1)
+#define FPU_TYPE fpv4-sp-d16                                        /* device has single precision FPU */
+#else
+#define FPU_TYPE softvfp                                            /* device does not have a hardware FPU */
+#endif
+
+
 #define module(name)\
     .syntax         unified;                                        @ use unified ARM and Thumb syntax\
     .cpu            cortex-m4;                                      @ targeting cortex-m0\
-#if (__FPU_PRESENT == 1)
-    .fpu            fpv4-sp;                                        @ device does single precision FPU\
-#else
-    .fpu            softvfp;                                        @ device does not have a hardware FPU\
-#endif
+    .fpu            FPU_TYPE
     .thumb;                                                         @ cortex only support thumb mode\
     .list;                                                          @ produce a list file\
     .eabi_attribute Tag_ABI_align_needed, 1;\
