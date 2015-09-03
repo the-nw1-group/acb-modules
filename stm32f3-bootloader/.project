@@ -26,29 +26,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>acb-common-cbus</name>
+			<name>acb-common</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/acb-common/src/cbus</locationURI>
-		</link>
-		<link>
-			<name>acb-common-common</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/acb-common/src/stm32f0/common</locationURI>
-		</link>
-		<link>
-			<name>acb-common-m0</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/acb-common/src/m0</locationURI>
-		</link>
-		<link>
-			<name>acb-common-m4</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/acb-common/src/m4</locationURI>
-		</link>
-		<link>
-			<name>acb-common-stm32f30</name>
-			<type>2</type>
-			<locationURI>WORKSPACE_LOC/acb-common/src/stm32f30</locationURI>
+			<locationURI>WORKSPACE_LOC/acb-common/src</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

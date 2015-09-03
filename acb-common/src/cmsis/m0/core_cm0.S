@@ -37,7 +37,7 @@
    ---------------------------------------------------------------------------*/
 
 #include "moduleInfo.inc"
-#include "core_cm0.inc"
+#include "cmsis/core_cm0.inc"
 #include "acb/functionHeaders.inc"
 
     module(core_cm0)
