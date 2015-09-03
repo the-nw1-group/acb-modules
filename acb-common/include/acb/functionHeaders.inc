@@ -23,6 +23,8 @@ TRUE  = 1
  * macro to define a source module - name currently unused
  */
 
+#if (__CORTEX_M == 0x00)
+
 #define module(name)\
     .syntax         unified;                                        @ use unified ARM and Thumb syntax\
     .cpu            cortex-m0;                                      @ targeting cortex-m0\
@@ -31,6 +33,27 @@ TRUE  = 1
     .list;                                                          @ produce a list file\
     .eabi_attribute Tag_ABI_align_needed, 1;\
     .eabi_attribute Tag_ABI_align_preserved, 1;
+
+#elif (__CORTEX_M == 0x04)
+
+#if (__FPU_PRESENT == 1)
+#define FPU_TYPE fpv4-sp-d16                                        /* device has single precision FPU */
+#else
+#define FPU_TYPE softvfp                                            /* device does not have a hardware FPU */
+#endif
+
+
+#define module(name)\
+    .syntax         unified;                                        @ use unified ARM and Thumb syntax\
+    .cpu            cortex-m4;                                      @ targeting cortex-m0\
+    .fpu            FPU_TYPE
+    .thumb;                                                         @ cortex only support thumb mode\
+    .list;                                                          @ produce a list file\
+    .eabi_attribute Tag_ABI_align_needed, 1;\
+    .eabi_attribute Tag_ABI_align_preserved, 1;
+#else
+#error Define processor type before including this file. Hint include core_cmX.inc before including this file
+#endif
 
 /*
  * macro to define a function

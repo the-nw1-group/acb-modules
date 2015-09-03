@@ -7,8 +7,8 @@
  *
  */
 
-#include "cmsis/core_cm0.inc"
-#include "stm32f0xx.inc"
+#include "stm32f30x.inc"
+#include "cmsis/core_cm4.inc"
 #include "acb/functionHeaders.inc"
 
 /*
@@ -19,9 +19,11 @@
  *      1   normal operation
  *      0   bootload
  *
+ * Oddly Data0 is marked as reserved in the header file, even though it's present in the reference manual
+ *
  */
 
-#define BOOTLOAD_OPTION_BYTE    (_OB_DATA0)
+#define BOOTLOAD_OPTION_BYTE    (OB_BASE + OB_RESERVED0_OFFSET)
 #define BOOTLOAD_OPTION_BIT     0
 
 /*
@@ -36,8 +38,7 @@
 #define ACB_CAN_USEPORTB 1
 #define ACB_CAN_USEOTHER 2
 
-#define ACB_CANPORT                     ACB_CAN_USEPORTA
-#define ACB_CAN_REQUIRES_SYSCONFIG      1
+#define ACB_CANPORT ACB_CAN_USEPORTA
 
 /*
  * The bootloader doesn't use the FLiM switch, so turn it off here
@@ -47,7 +48,7 @@
 #define ACB_FLIMSW_USE 0
 
 /*
- * Other defines - device electronic signature (which is missing from stm32f0xx.inc file)
+ * Other defines - device electronic signature (which is missing from stm32f30x.inc file)
  */
 
 #define DES_UID_BASE        0x1FFFF7AC
@@ -63,12 +64,3 @@
 #define DES_SIZE            (DES_SIZE_BASE)
 #define _DES_SIZE           (DES_SIZE + DES_SIZE_OFFSET)
 
-/*
- * Other defines - device ID codes
- */
-
-#define DEVICE_ID_STM32F03x 0x444
-#define DEVICE_ID_STM32F04x 0x445
-#define DEVICE_ID_STM32F05x 0x440
-#define DEVICE_ID_STM32F07x 0x448
-#define DEVICE_ID_STM32F09x 0x442
