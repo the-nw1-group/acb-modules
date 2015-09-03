@@ -17,6 +17,18 @@
 
     public_function(Can_initForStandardFrames)
 
+@ for now default to using CAN1
+#if !defined(CAN_BASE)
+#define CAN_BASE CAN1_BASE
+
+#define _CAN_sFIFOMailBox       _CAN1_sFIFOMailBox
+#define _CAN_sFilterRegister    _CAN1_sFilterRegister
+#define _CAN_sTxMailBox         _CAN1_sTxMailBox
+#define _CAN_FMR                _CAN1_FMR
+
+#define RCC_APB1ENR_CANEN RCC_APB1ENR_CAN1EN
+#endif
+
 @ void CAN_initForStandardFrames()
 @   initialise the CAN peripheral hardware and configure to only accept standard frames
 @       if required, reconfigure PA9/PA10 to PA11/PA12

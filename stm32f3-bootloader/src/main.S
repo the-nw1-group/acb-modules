@@ -49,21 +49,7 @@ __mainCalcMaxFlash:
                     lsls            r0, #10                         @ size is stored in K, we need it in bytes
                     ldr             r2, = #FLASH_BASE
                     adds            r0, r0, r2
-__mainCalcPageSize:                                                 @ page size is based on device type STM32F03x,
-                    ldr             r2, = #_DBGMCU_IDCODE           @ STM32F04x and STM32F05x pages are 1K, whereas
-                    ldr             r2, [r2]                        @ STM32F07x and STM32F09x pages are 2K (and we can't
-                    uxth            r2, r2                          @ make a guess based on memory size as there is a 7x
-                    ldr             r1, = 0x0FFF                    @ device with just 64K
-                    ands            r2, r2, r1
-                    ldr             r1, = #DEVICE_ID_STM32F07x
-                    cmp             r1, r2
-                    beq             __main2kPageSize
-                    ldr             r1, = #DEVICE_ID_STM32F09x
-                    cmp             r1, r2
-                    beq             __main2kPageSize
-                    ldr             r1, = #10                       @ value is number of bits to shift right to get
-                    b               __initBootloader                @ page, 10 bits = 1K
-__main2kPageSize:
+__mainCalcPageSize:                                                 @ page size is always 2K
                     ldr             r1, = #11                       @ 11 bits = 2K
 __initBootloader:
                     bl              Bootloader_init                 @ initialise the boot loader "class"

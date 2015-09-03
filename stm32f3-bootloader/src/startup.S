@@ -138,9 +138,9 @@ defaultHandler:                                                     @ drop into 
 
 @ reset handler
 
-    private_function(resetHandler)
+    private_function(__resetHandler)
 
-resetHandler:
+__resetHandler:
                     ldr             r0, = #__stack                  @ initialize the Stack Pointer
                     mov             sp, r0
 

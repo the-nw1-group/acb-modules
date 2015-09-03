@@ -19,9 +19,11 @@
  *      1   normal operation
  *      0   bootload
  *
+ * Oddly Data0 is marked as reserved in the header file, even though it's present in the reference manual
+ *
  */
 
-#define BOOTLOAD_OPTION_BYTE    (_OB_DATA0)
+#define BOOTLOAD_OPTION_BYTE    (OB_BASE + OB_RESERVED0_OFFSET)
 #define BOOTLOAD_OPTION_BIT     0
 
 /*
@@ -46,9 +48,9 @@
 #define ACB_FLIMSW_USE 0
 
 /*
- * Other defines - device electronic signature (which is missing from stm32f0xx.inc file)
+ * Other defines - device electronic signature (which is missing from stm32f30x.inc file)
  */
-/*
+
 #define DES_UID_BASE        0x1FFFF7AC
 #define DES_UID_OFFSET      0x0000
 #define DES_UID2_OFFSET     0x0004
@@ -61,14 +63,4 @@
 
 #define DES_SIZE            (DES_SIZE_BASE)
 #define _DES_SIZE           (DES_SIZE + DES_SIZE_OFFSET)
-*/
-/*
- * Other defines - device ID codes
- */
-/*
-#define DEVICE_ID_STM32F03x 0x444
-#define DEVICE_ID_STM32F04x 0x445
-#define DEVICE_ID_STM32F05x 0x440
-#define DEVICE_ID_STM32F07x 0x448
-#define DEVICE_ID_STM32F09x 0x442
-*/
+

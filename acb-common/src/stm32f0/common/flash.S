@@ -18,6 +18,12 @@
 @ bool Flash_unlockWrite(void)
 @   unlock writing to the flash area. Returns true on success or false (ERROR) on failure
 
+@ STM32F30x header defines these differently from the STM32F0xx header
+#if !defined(FLASH_FKEY1)
+#define FLASH_FKEY1 FLASH_KEY1
+#define FLASH_FKEY2 FLASH_KEY2
+#endif
+
 Flash_unlockWrite:
                     ldr             r3, = #FLASH_R_BASE
                     ldr             r0, [r3, #FLASH_CR_OFFSET]      @ does the flash access need unlocking?

@@ -220,6 +220,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nobuiltin.1448640632.819208856" name="Disable builtin (-fno-builtin)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nobuiltin.1448640632"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.353725827.1178592399" name="Float ABI" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.abi.353725827"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.unit.727221854.1619900663" name="FPU Type" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.fpu.unit.727221854"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1905339390" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.195704899">
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.1972174651" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -238,9 +239,11 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="m0/|xml/|xslt/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-cbus"/>
-						<entry excluding="startup.S|eepom*.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-common"/>
+						<entry excluding="m0/|xslt/|xml/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-cbus"/>
+						<entry excluding="eepom*.S|startup.S|system.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-common"/>
 						<entry excluding="core_cm0.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-m0"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="acb-common-m4"/>
+						<entry excluding="startup.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-stm32f30"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
@@ -423,7 +426,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-cbus"/>
-						<entry excluding="eepom*.S|startup.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-common"/>
+						<entry excluding="eepom*.S|startup.S|system.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common-m0"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
