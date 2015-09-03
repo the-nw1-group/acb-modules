@@ -102,8 +102,8 @@ System_init:
                     str             r3, [r7, #RCC_CFGR_OFFSET]
                                                                     @ reset PREDIV1[3:0] bits
                     ldr             r0, [r7, #RCC_CFGR2_OFFSET]
-                    ldr             r1, = #~(RCC_CFGR2_PREDIV1)
-                    ands            r0, r0, r1
+                    movs            r1, #RCC_CFGR2_PREDIV1
+                    bics            r0, r0, r1
                     str             r0, [r7, #RCC_CFGR2_OFFSET]
                                                                     @ reset USARTSW[1:0], I2CSW, CECSW and ADCSW bits
                     ldr             r0, [r7, #RCC_CFGR3_OFFSET]
@@ -151,7 +151,7 @@ System_onClockFail:
 
 SystemCoreClockUpdate:
 System_coreClockUpdate:
-                    push            {r7, lr}
+                    push            {r5-r7, lr}
                     ldr             r7, = #RCC_BASE                 @ get the clock source
                     ldr             r0, [r7, #RCC_CFGR_OFFSET]
                     movs            r1, #RCC_CFGR_SWS_PLL
@@ -190,14 +190,14 @@ _ccu_PLL:                                                           @ calcuates 
                     muls            r1, r1, r3
                     b               _ccu_calcHCLK
 _ccu_notHSI2:                                                       @ value = (HSE_VALUE / prediv1factor) * pllmull
-                    movs            r3, r1                          @ prediv1factor = r1
+                    movs            r6, r1                          @ prediv1factor = r1
                     ldr             r0, [r7, #RCC_CFGR2_OFFSET]     @ pllmull moved from r1 into r3
                     movs            r2, #RCC_CFGR2_PREDIV1
                     ands            r0, r0, r2
                     adds            r1, r0, #1
                     ldr             r0, = #HSE_VALUE
                     bl              __aeabi_uidiv
-                    muls            r0, r0, r3
+                    muls            r0, r0, r6
                     mov             r1, r0
 _ccu_calcHCLK:                                                      @ calc HCLK, incoming value is in r1
                     movs            r2, #RCC_CFGR_HPRE
@@ -209,7 +209,7 @@ _ccu_calcHCLK:                                                      @ calc HCLK,
                     ldr             r7, = #System_coreClock
                     str             r1, [r7]
 
-                    pop             {r7, pc}
+                    pop             {r5-r7, pc}
 
     private_function(_setSysClock)
 
