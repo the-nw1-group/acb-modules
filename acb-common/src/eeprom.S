@@ -9,6 +9,7 @@
 
 #include "moduleInfo.inc"
 #include "acb/eeprom.inc"
+#include "acb/common.inc"
 
 @ public EEPROM routines, for reading and writing bytes and blocks of bytes
 
@@ -110,7 +111,6 @@ EepromImpl_asyncInProgress:
 
 EepromImpl_getLastAsyncStatus:
                     b               EepromDrv_getLastAsyncStatus    @ just call driver
-                    bx              lr
 
     public_function(EepromImpl_readBlockEx)
 
@@ -122,7 +122,17 @@ EepromImpl_getLastAsyncStatus:
 @   block until that call is complete.
 
 EepromImpl_readBlockEx:
-                    bx              lr
+                    push            {r7, lr}
+                    bl              EepromImpl_readBlock
+                    cmp             r0, #PENDING
+                    bne             0f
+0:
+                    bl              EepromImpl_asyncInProgress
+                    cmp             r0, #FALSE
+                    bne             0b
+                    bl              EepromImpl_getLastAsyncStatus
+1:
+                    pop             {r7, pc}
 
     public_function(EepromImpl_writeBlockEx)
 
@@ -133,7 +143,17 @@ EepromImpl_readBlockEx:
 @   block until that call is complete.
 
 EepromImpl_writeBlockEx:
-                    bx              lr
+                    push            {r7, lr}
+                    bl              EepromImpl_writeBlock
+                    cmp             r0, #PENDING
+                    bne             0f
+0:
+                    bl              EepromImpl_asyncInProgress
+                    cmp             r0, #FALSE
+                    bne             0b
+                    bl              EepromImpl_getLastAsyncStatus
+1:
+                    pop             {r7, pc}
 
     public_function(EepromImpl_setHint)
 
@@ -142,7 +162,6 @@ EepromImpl_writeBlockEx:
 
 EepromImpl_setHint:
                     bx              lr
-
 
     .end
 

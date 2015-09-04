@@ -142,3 +142,5 @@
  */
 
 OB_USER_BOOT_SEL =  (1<<23)                                         @ BOOT_SEL bit in the user option byte
+PENDING          =  2                                               @ Pending status, returned from async calls
+
