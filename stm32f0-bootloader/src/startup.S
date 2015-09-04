@@ -114,6 +114,7 @@ __checkForBootloaderMode:
                     ldr             r1, = #(1<<(16+BOOTLOAD_OPTION_BIT))    @ boot mode
                     tst             r0, r1
                     beq             __bootloaderBoot
+                    bl              Main_calcApplicationBaseAddress @ get application base address
                     bl              AppRun_boot                     @ normal boot
 
 __bootloaderBoot:

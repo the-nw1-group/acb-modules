@@ -28,7 +28,7 @@
     public_data(main_vars)
 
 applicationBaseAddress:
-                    .word       _application_orgin                  @ Base address of application
+                    .int        _application_orgin                  @ Base address of application
                     .global     applicationBaseAddress
 
 @ private variables
@@ -44,12 +44,16 @@ bootLoaderResponse: .int        0x00080004                          @ msgex.info
                     .space      3, 0                                @ msgex.info.reserved
 txMessageData:      .space      8, 0                                @ msgex.data
 
-    public_function(main)
+    public_function(Main_calcApplicationBaseAddress)
 
-@ void main() - doesn't return
-@   main code for bootloader. Setup ports/CAN, and waits for messages and then dispatches them
+@ int main_calcApplicationBaseAddress()
+@   adjust for 072/091 devices that have 2K page boundaries; stores result in applicationBaseAddress
+@   returns pageSize significant bits (10 for 1K page boundaries, and 11 for 2K)
 
-main:
+Main_calcApplicationBaseAddress:
+                    ldr             r0, = #applicationBaseAddress   @ set the default as the data may not have been
+                    ldr             r1, = #_application_orgin       @ copied over from flash ram at this point
+                    str             r1, [r0]
 __mainCalcMaxFlash:
                     ldr             r0, = #_DES_SIZE
                     ldrh            r0, [r0]
@@ -68,20 +72,30 @@ __mainCalcPageSize:                                                 @ page size 
                     ldr             r1, = #DEVICE_ID_STM32F09x
                     cmp             r1, r2
                     beq             __main2kPageSize
-                    ldr             r1, = #10                       @ value is number of bits to shift right to get
-                    b               __initBootloader                @ page, 10 bits = 1K
+                    ldr             r0, = #10                       @ value is number of bits to shift right to get
+                    b               __mainReturn                    @ page, 10 bits = 1K
 __main2kPageSize:
-                    ldr             r1, = #11                       @ 11 bits = 2K
-                    ldr             r0, = #applicationBaseAddress   @ for devices with 2K sized pages, the application
-                    ldr             r3, [r0]                        @ origin must start at a 2K page boundary
+                    ldr             r0, = #11                       @ 11 bits = 2K
+                    ldr             r1, = #applicationBaseAddress   @ for devices with 2K sized pages, the application
+                    ldr             r3, [r1]                        @ origin must start at a 2K page boundary
                     ldr             r2, = #(1<<11)-1
                     tst             r3, r2
-                    beq             __initBootloader                @ if it's already 2K page-aligned then nothing to do
+                    beq             __mainReturn                    @ if it's already 2K page-aligned then nothing to do
                     adds            r2, r2, #1                      @ otherwise, round up page to the next 2K boundary
                     adds            r3, r3, r2
                     ldr             r2, =#0xFFFFFFFF << 11
                     ands            r3, r3, r2
-                    str             r3, [r0]
+                    str             r3, [r1]
+__mainReturn:
+                    bx              lr
+
+    public_function(main)
+
+@ void main() - doesn't return
+@   main code for bootloader. Setup ports/CAN, and waits for messages and then dispatches them
+
+main:
+                    bl              Main_calcApplicationBaseAddress
 __initBootloader:
                     bl              Bootloader_init                 @ initialise the boot loader "class"
 __mainSetupGPIOA:

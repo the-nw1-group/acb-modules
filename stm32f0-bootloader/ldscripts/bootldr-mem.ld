@@ -24,5 +24,4 @@ _boot_ram_length 	= LENGTH(RAM);
 _boot_flash_orgin	= ORIGIN(FLASH);
 _boot_flash_length 	= LENGTH(FLASH);
 
-_application_flash_orgin 	= ORIGIN(RAM) + LENGTH(RAM);
 _application_orgin			= ORIGIN(FLASH) + LENGTH(FLASH); 

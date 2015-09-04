@@ -63,6 +63,8 @@ SECTIONS
         . = ALIGN(4);
     } >FLASH
 
+PROVIDE ( _vector_table_size = SIZEOF(.isr_vector) ) ;
+
     .inits :
     {
         . = ALIGN(4);

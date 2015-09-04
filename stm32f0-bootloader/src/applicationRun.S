@@ -16,7 +16,7 @@
 
     .extern         applicationBaseAddress                          @ where the application main code resides (from linker script)
     .extern         _boot_ram_orgin                                 @ where the boot ram starts (from linker script)
-    .extern         _boot_ram_length                                @ boot ram size aka vector table size, (from linker script)
+    .extern         _vector_table_size                              @ start of the vector table, (from linker script)
 
     public_function(AppRun_boot)
 
@@ -29,7 +29,7 @@ AppRun_boot:
                     ldr             r0, = #applicationBaseAddress   @ location of alt vector map
                     ldr             r0, [r0]
                     ldr             r1, = #_boot_ram_orgin          @ where to copy into memory
-                    ldr             r2, = #_boot_ram_length         @ number of 4 words to copy
+                    ldr             r2, = #_vector_table_size       @ number of 4 words to copy
                     lsrs            r2, #4                          @ (can't >> on a value from the linker)
 0:
                     ldm             r0!, {r3-r6}                    @ load 4 words from source
