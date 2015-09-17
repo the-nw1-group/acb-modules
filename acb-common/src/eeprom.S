@@ -83,6 +83,22 @@ EepromImpl_writeByte:
 @   call is complete.
 
 EepromImpl_readBlock:
+                    ldr             r3, = #ACB_EEPROM_SIZE          @ check if the read is out of range
+                    cmp             r0, r3
+                    bhi             0f
+                    mov             r12, r2
+                    adds            r2, r1, r0
+                    cmp             r2, r3
+                    bhi             0f
+                    mov             r2, r12
+                    cmp             r1, #0                          @ read zero, or less bytes? just return OK
+                    ble             1f
+                    b               EepromDrv_readBlock
+0:
+                    movs            r0, #ERROR
+                    bx              lr
+1:
+                    movs            r0, #SUCCESS
                     bx              lr
 
     public_function(EepromImpl_writeBlock)
@@ -94,6 +110,22 @@ EepromImpl_readBlock:
 @   that call is complete.
 
 EepromImpl_writeBlock:
+                    ldr             r3, = #ACB_EEPROM_SIZE          @ check if the write is out of range
+                    cmp             r0, r3
+                    bhi             0f
+                    mov             r12, r2
+                    adds            r2, r1, r0
+                    cmp             r2, r3
+                    bhi             0f
+                    mov             r2, r12
+                    cmp             r1, #0                          @ write zero, or less bytes? just return OK
+                    ble             1f
+                    b               EepromDrv_writeBlock
+0:
+                    movs            r0, #ERROR
+                    bx              lr
+1:
+                    movs            r0, #SUCCESS
                     bx              lr
 
     public_function(EepromImpl_asyncInProgress)
@@ -125,7 +157,7 @@ EepromImpl_readBlockEx:
                     push            {r7, lr}
                     bl              EepromImpl_readBlock
                     cmp             r0, #PENDING
-                    bne             0f
+                    bne             1f
 0:
                     bl              EepromImpl_asyncInProgress
                     cmp             r0, #FALSE
@@ -146,7 +178,7 @@ EepromImpl_writeBlockEx:
                     push            {r7, lr}
                     bl              EepromImpl_writeBlock
                     cmp             r0, #PENDING
-                    bne             0f
+                    bne             1f
 0:
                     bl              EepromImpl_asyncInProgress
                     cmp             r0, #FALSE
