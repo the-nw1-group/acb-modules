@@ -257,16 +257,16 @@ EepromI2C_readBlock:
                     beq             0f
 
                     pop             {r0-r3}                         @ save details for DMA interrupt
-                    ldr             r3, = #EepromI2C_asyncAddress
-                    str             r0, [r3]
-                    str             r2, [r3, #EI2C_asyncBufferOffset]
-                    strh            r1, [r3, #EI2C_asyncLengthOffset]
-                    ldrb            r5, [r3, #EI2C_statusOffset]
-                    movs            r6, #1<<ASYNC_IN_PROGRESS
+                    ldr             r7, = #EepromI2C_asyncAddress
+                    str             r0, [r7]
+                    str             r2, [r7, #EI2C_asyncBufferOffset]
+                    strh            r1, [r7, #EI2C_asyncLengthOffset]
+                    ldrb            r5, [r7, #EI2C_statusOffset]    @ indicate ASYNC is in progress, and clear the status
+                    movs            r6, #1<<ASYNC_IN_PROGRESS       @ of the last run
                     orrs            r5, r5, r6
                     movs            r6, #1<<LAST_ASYNC_STATUS
                     bics            r5, r5, r6
-                    strb            r5, [r3, #EI2C_statusOffset]
+                    strb            r5, [r7, #EI2C_statusOffset]
 
                     ldr             r1, = #DMA1_Channel3            @ set up the DMA channel with number of bytes to read
                     ldr             r0, = #_I2C1_RXDR               @ set up peripheral address
@@ -276,20 +276,27 @@ readBlockDmaSettings = (DMA_CCR_PL_0 | DMA_CCR_MINC | DMA_CCR_TEIE)
                     str             r0, [r1, #DMA_Channel_CCR_OFFSET] @ increment mode, and error interrupts
 
 readI2CSettings = (I2C_CR1_ERRIE | I2C_CR1_TCIE | I2C_CR1_STOPIE | I2C_CR1_NACKIE | I2C_CR1_TXIE | I2C_CR1_RXDMAEN)
-                    ldr             r1, = #I2C1_BASE                @ enable all interrupts accept address match and
+                    ldr             r6, = #I2C1_BASE                @ enable all interrupts accept address match and
                     ldr             r0, = #(I2C_ICR_OVRCF | I2C_ICR_ARLOCF | I2C_ICR_BERRCF | I2C_ICR_STOPCF | I2C_ICR_NACKCF | I2C_ICR_ADDRCF)
-                    str             r0, [r1, #I2C_ICR_OFFSET]       @ receive (not required when using DMA)
-                    ldr             r0, [r1, #I2C_CR1_OFFSET]       @ clear any pending ISR flags, otherwise we'll just
+                    str             r0, [r6, #I2C_ICR_OFFSET]       @ receive (not required when using DMA)
+                    ldr             r0, [r6, #I2C_CR1_OFFSET]       @ clear any pending ISR flags, otherwise we'll just
                     ldr             r2, = #readI2CSettings
                     orrs            r2, r2, r0                      @ cause an interrupt straight away
-                    str             r2, [r1, #I2C_CR1_OFFSET]
+                    str             r2, [r6, #I2C_CR1_OFFSET]
 
                     movs            r0, #DMA1_Channel2_3_IRQn       @ enable DMA channel 2/3 interrupt
                     bl              NVIC_enableIRQ
                     movs            r0, #I2C1_IRQn                  @ enable I2C1 interrupts
                     bl              NVIC_enableIRQ
 
-                    bl              EepromI2C_doReadBlockStart
+                    ldr             r1, [r7]                        @ get the block address
+                    lsrs            r1, r1, #7
+                    movs            r3, #ACB_EEPROM_ADDRESS
+                    orrs            r3, r3, r1
+                    ldr             r1, = #(1<<16) | I2C_CR2_START  @ write 1 byte and issue start
+                    orrs            r3, r3, r1
+                    str             r3, [r6, #I2C_CR2_OFFSET]
+
                     movs            r0, #PENDING
                     pop             {r5-r7, pc}
 0:                                                                  @ setting up transfer failed...
@@ -369,7 +376,7 @@ __i2c1IRQHandler:
                     movs            r1, #I2C_ISR_TXIS               @ send of START sequence (in this case)
                     tst             r0, r1
                     bne             __i2c1irq_sendAddress
-                    movs            r1, #I2C_ISR_TC                 @ finished sending address?
+                    movs            r1, #(I2C_ISR_TC|I2C_ISR_TCR)   @ need to read the first or other block of data?
                     tst             r0, r1
                     bne             EepromI2C_doReadBlock
                     movs            r1, #I2C_ISR_STOPF
@@ -435,60 +442,28 @@ EepromI2C_blockFinishedReport:
                     strb            r0, [r1, #EI2C_statusOffset]    @ keep WRITE_IN_PROGRESS status
                     pop             {r7, pc}
 
-    private_function(EepromI2C_doReadBlockStart)
-
-@ void EepromI2C_doReadBlockStart(void)
-@   initiate a read of a block of data from the EEPROM using a DMA read, by sending the initial START
-@   the result is captured through the interrupt handler
-@   TODO: Do we need a timout as well? or will we get a NACK instead?
-
-EepromI2C_doReadBlockStart:
-                    ldr             r0, = #EepromI2C_asyncAddress   @ check to see if all of the data has been transfered
-                    ldr             r1, [r0]
-                    lsrs            r1, r1, #7                      @ get the block address
-                    movs            r3, #ACB_EEPROM_ADDRESS
-                    orrs            r3, r3, r1
-                    ldr             r1, = #(1<<16) | I2C_CR2_START  @ write 1 byte and issue start
-                    orrs            r3, r3, r1
-                    ldr             r1, = #_I2C1_CR2
-                    str             r3, [r1]
-0:
-                    bx              lr
 
     private_function(EepromI2C_doReadBlock)
 
-@ void EepromI2C_doReadBlock(void)
-@   initiate a read of a block of data from the EEPROM using a DMA read
+@ void EepromI2C_doReadBlock(int isr)
+@   initiate a read of a block of data from the EEPROM using a DMA read. The parameter ISR is the content of IC2_ISR
+@   register
 
 EepromI2C_doReadBlock:
-                    ldr              r3, = #I2C1_BASE               @ check if we need to read from the next page, which
-                    ldr              r3, [r3, #I2C_CR2_OFFSET]      @ requires a new (re)START sequence
-                    lsrs             r3, r3, #1                     @ get the last page address from the last slave
-                    movs             r2, #7                         @ address used
-                    ands             r2, r2, r3
-                    ldr              r3, = #EepromI2C_asyncAddress  @ get page address from the next address to read
-                    ldr              r3, [r3]
-                    lsrs             r3, r3, #8
-                    cmp              r3, r2                         @ if different do a start
-                    beq              0f
-                    b                EepromI2C_doReadBlockStart
-0:
                     push            {r5-r7, lr}
-                    movs            r6, #0
+                    ldr             r6, = #I2C_CR2_RELOAD           @ don't issue a (re)START at the end of a transfer
+                    movs            r1, #I2C_ISR_TC
+                    tst             r0, r1
+                    beq             0f
+                    ldr             r0, = #I2C_CR2_START
+                    orrs            r6, r6, r0                      @ turn off the FIRST_ASYNC_READ flag
+0:
                     ldr             r7, = #EepromI2C_asyncAddress
-                    ldr             r0, [r7]                        @ calculate the address within the page to start the read
-                    movs            r3, #0xff
-                    ands            r0, r0, r3
-                    adds            r2, r3, #1                      @ calculate how bytes to read in this transfer
-                    subs            r1, r2, r0
+                    ldrh            r1, [r7, #EI2C_asyncLengthOffset] @ load number of bytes to read
+                    movs            r2, r1
                     cmp             r1, #0xff                       @ max. number of bytes we can read in one DMA transfer
                     ble             0f                              @ is 255 (yes one less than the EEPROM page size :-(
                     movs            r1, #0xff
-0:
-                    ldrh            r2, [r7, #EI2C_asyncLengthOffset] @ check that the number of bytes to read isn't greater
-                    cmp             r1, r2                          @ than the number of bytes left to read
-                    ble             0f
-                    movs            r1, r2
 0:
                     subs            r2, r2, r1                      @ store the number of bytes to read for the next call
                     strh            r2, [r7, #EI2C_asyncLengthOffset] @ back
@@ -516,8 +491,8 @@ EepromI2C_doReadBlock:
                     ldr             r0, [r7, #I2C_CR2_OFFSET]       @ start the read
                     ldr             r2, = #0x3ff                    @ keep the slave address
                     ands            r0, r0, r2
-                    ldr             r2, = #I2C_CR2_RD_WRN | I2C_CR2_START @ set read mode and (re)start
-                    orrs            r2, r2, r6                      @ add any AUTOEND flag
+                    ldr             r2, = #I2C_CR2_RD_WRN           @ set read mode and (re)start
+                    orrs            r2, r2, r6                      @ add any AUTOEND or RELOAD or START flags
                     orrs            r0, r0, r2
                     lsls            r1, r1, #16                     @ and the number of bytes to read
                     orrs            r0, r0, r1
