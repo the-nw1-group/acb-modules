@@ -16,3 +16,7 @@ MEMORY
   RAM (xrw) : ORIGIN = 0x200000C0, LENGTH = 5952
   FLASH (rx) : ORIGIN = 0x08000C00, LENGTH = 29K
 }
+
+_ram_origin = ORIGIN(RAM);
+_ram_length = LENGTH(RAM);
+_ram_lastLocation = _ram_origin + _ram_length;

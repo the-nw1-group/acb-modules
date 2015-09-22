@@ -32,16 +32,25 @@ EEpromI2C_asyncBuffer:
 EepromI2C_asyncLength:
                     .short          0                               @ async number of bytes left to read/write
 EepromI2C_status:   .byte           0                               @ status
+EepromI2C_writeBuffer:
+EepromI2C_writeBufferAddress:
+                    .byte           0                               @ address of write
+EepromI2C_writeBufferData:
+                    .space          ACB_EEPROM_WRITE_BUFFER         @ temp write buffer
 
 EI2C_asyncAddressOffset = EepromI2C_asyncAddress - EepromI2C_asyncAddress
 EI2C_asyncBufferOffset  = EEpromI2C_asyncBuffer - EepromI2C_asyncAddress
 EI2C_asyncLengthOffset  = EepromI2C_asyncLength - EepromI2C_asyncAddress
 EI2C_statusOffset       = EepromI2C_status - EepromI2C_asyncAddress
 
-
 ASYNC_IN_PROGRESS       = 0                                         @ Async read or write
 WRITE_IN_PROGRESS       = 1
 LAST_ASYNC_STATUS       = 2
+
+ASYNC_WRITE_ALARM_SLOT  = 0
+#if ASYNC_WRITE_ALARM_SLOT > ACB_ALARM_SLOTS
+#error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
+#endif
 
     public_function(EepromI2C_init)
 
@@ -313,10 +322,59 @@ readI2CSettings = (I2C_CR1_ERRIE | I2C_CR1_TCIE | I2C_CR1_STOPIE | I2C_CR1_NACKI
 @   that call is complete.
 
 EepromI2C_writeBlock:
+                    push            {r0-r3, r5-r7, lr}
+
+                    lsrs            r1, r0, #7                      @ get the block address
+                    movs            r0, #ACB_EEPROM_ADDRESS
+                    orrs            r0, r0, r1
+                    ldr             r1, = #(0<<16) | I2C_CR2_AUTOEND
+                    bl              EepromI2C_doStart               @ do a start to ensure we're in the correct state
+                    cmp             r0, #ERROR
+                    beq             0f
+                    movs            r0, #I2C_ISR_STOPF              @ wait for transfer complete
+                    bl              EepromI2C_waitForStatus
+                    cmp             r0, #ERROR
+                    beq             0f
+
+                    pop             {r0-r3}                         @ save details for DMA interrupt
+                    ldr             r7, = #EepromI2C_asyncAddress
+                    str             r0, [r7]
+                    str             r2, [r7, #EI2C_asyncBufferOffset]
+                    strh            r1, [r7, #EI2C_asyncLengthOffset]
+                    ldrb            r5, [r7, #EI2C_statusOffset]    @ indicate ASYNC WRITE is in progress, and clear the
+                    movs            r6, #(1<<ASYNC_IN_PROGRESS | 1<<WRITE_IN_PROGRESS) @ status of the last run
+                    orrs            r5, r5, r6
+                    movs            r6, #1<<LAST_ASYNC_STATUS
+                    bics            r5, r5, r6
+                    strb            r5, [r7, #EI2C_statusOffset]
+
+                    ldr             r1, = #DMA1_Channel2            @ set up the DMA channel with number of bytes to read
+                    ldr             r0, = #_I2C1_TXDR               @ set up peripheral address
+                    str             r0, [r1, #DMA_Channel_CPAR_OFFSET]
+writeBlockDmaSettings = (DMA_CCR_MINC | DMA_CCR_DIR | DMA_CCR_TEIE)
+                    ldr             r0, = #writeBlockDmaSettings    @ set up DMA channel 2 to low priority, memory
+                    str             r0, [r1, #DMA_Channel_CCR_OFFSET] @ increment mode, read from mewmory and error interrupts
 
 writeI2CSettings = (I2C_CR1_ERRIE | I2C_CR1_TCIE | I2C_CR1_STOPIE | I2C_CR1_NACKIE | I2C_CR1_TXDMAEN)
+                    ldr             r6, = #I2C1_BASE                @ enable all interrupts accept address match and
+                    ldr             r0, = #(I2C_ICR_OVRCF | I2C_ICR_ARLOCF | I2C_ICR_BERRCF | I2C_ICR_STOPCF | I2C_ICR_NACKCF | I2C_ICR_ADDRCF)
+                    str             r0, [r6, #I2C_ICR_OFFSET]       @ receive
+                    ldr             r0, [r6, #I2C_CR1_OFFSET]       @ clear any pending ISR flags, otherwise we'll just
+                    ldr             r2, = #writeI2CSettings
+                    orrs            r2, r2, r0                      @ cause an interrupt straight away
+                    str             r2, [r6, #I2C_CR1_OFFSET]
 
-                    bx              lr
+                    movs            r0, #DMA1_Channel2_3_IRQn       @ enable DMA channel 2/3 interrupt
+                    bl              NVIC_enableIRQ
+                    movs            r0, #I2C1_IRQn                  @ enable I2C1 interrupts
+                    bl              NVIC_enableIRQ
+                    bl              EepromI2C_doWritePage           @ start the first write
+                    movs            r0, #PENDING
+                    pop             {r5-r7, pc}
+0:                                                                  @ setting up transfer failed...
+                    pop             {r0-r3, r5-r7}
+                    movs            r0, #ERROR
+                    pop             {pc}
 
     public_function(EepromI2C_asyncInProgress)
 
@@ -354,12 +412,6 @@ __dma1Channel23IRQHandler:
                     ldr             r1, = #DMA_ISR_GIF3
                     tst             r0, r1
                     bne             __dma3irq_error
-
-        @TODO: Write interrupts
-
-    nop
-    nop
-    nop
                     bx              lr
 __dma3irq_error:
                     str             r1, [r3, #(_DMA1_IFCR-_DMA1_ISR)] @ clear error flag
@@ -381,7 +433,9 @@ __i2c1IRQHandler:
                     bne             EepromI2C_doReadBlock
                     movs            r1, #I2C_ISR_STOPF
                     tst             r0, r1
-                    bne             EepromI2C_blockFinished
+                    bne             __i2c1irq_gotStop
+                    movs            r1, #I2C_ISR_NACKF
+                    bne             __i2c1irq_gotNAK
                     b               EepromI2C_blockError            @ otherwise it must be an error
 __i2c1irq_sendAddress:
                     ldr             r0, = #EepromI2C_asyncAddress   @ send the address
@@ -390,6 +444,22 @@ __i2c1irq_sendAddress:
                     ands            r0, r0, r1
                     str             r0, [r3, #I2C_TXDR_OFFSET]
                     bx              lr
+__i2c1irq_gotStop:                                                  @ handle a STOP, for a read this means we've
+                    ldr             r0, = #EepromI2C_status         @ finished, for a write it means that we've finished
+                    ldrb            r0, [r0]                        @ writing one page.
+                    movs            r2, #1<<WRITE_IN_PROGRESS
+                    tst             r2, r0
+                    beq             EepromI2C_blockFinished         @ reading, so finished
+                    str             r1, [r3, #I2C_ICR_OFFSET]       @ clear the STOP interrupt flag
+                    b               EepromI2C_writePageSent         @ writing, so set handle STOP
+__i2c1irq_gotNAK:                                                   @ handle a NAK, for a read this is an error, for a
+                    ldr             r0, = #EepromI2C_status         @ write, it means the device might not be ready yet
+                    ldrb            r0, [r0]
+                    movs            r2, #1<<WRITE_IN_PROGRESS
+                    tst             r2, r0
+                    beq             EepromI2C_blockError            @ reading, so finished
+                    str             r1, [r3, #I2C_ICR_OFFSET]       @ clear the NAK interrupt flag
+                    b               EepromI2C_handleNAK             @ writing, so handle NAK
 
     private_function(EepromI2C_blockError)
 
@@ -442,7 +512,6 @@ EepromI2C_blockFinishedReport:
                     strb            r0, [r1, #EI2C_statusOffset]    @ keep WRITE_IN_PROGRESS status
                     pop             {r7, pc}
 
-
     private_function(EepromI2C_doReadBlock)
 
 @ void EepromI2C_doReadBlock(int isr)
@@ -478,12 +547,14 @@ EepromI2C_doReadBlock:
                     str             r3, [r7, #EI2C_asyncBufferOffset]
 
                     ldr             r7, = #DMA1_Channel3            @ set up the DMA channel with number of bytes to read
+                    movs            r0, #DMA_ISR_GIF2               @ clear any DMA interrupts
+                    str             r0, [r7, #DMA_IFCR_OFFSET]
                     ldr             r0, [r7, #DMA_Channel_CCR_OFFSET] @ disable DMA channel, as we can't write to CMAR
                     movs            r3, #DMA_CCR_EN                 @ with it enabled
                     bics            r0, r0, r3
                     str             r0, [r7, #DMA_Channel_CCR_OFFSET]
-                    str             r1, [r7, #DMA_Channel_CNDTR_OFFSET] @ and where to store the received data
-                    str             r2, [r7, #DMA_Channel_CMAR_OFFSET]
+                    str             r1, [r7, #DMA_Channel_CNDTR_OFFSET] @ the number of bytes to read
+                    str             r2, [r7, #DMA_Channel_CMAR_OFFSET]  @ and where to store the received data
                     orrs            r0, r0, r3                      @ re-enable the DMA channel
                     str             r0, [r7, #DMA_Channel_CCR_OFFSET]
 
@@ -498,6 +569,128 @@ EepromI2C_doReadBlock:
                     orrs            r0, r0, r1
                     str             r0, [r7, #I2C_CR2_OFFSET]
                     pop             {r5-r7, pc}
+
+    private_function(EepromI2C_doWritePage)
+
+@ void EepromI2C_doWritePage(void)
+@   initiate a write of a page of data into the EEPROM using a DMA write.
+
+EepromI2C_doWritePage:
+                    ldr             r1, = #EepromI2C_asyncAddress   @ check if we've got to the end of the data?
+                    ldrh            r0, [r1, #EI2C_asyncLengthOffset]
+                    cmp             r0, #0
+                    beq             EepromI2C_blockFinished         @ if so, then success
+
+                    push            {r3-r7, lr}
+                    ldr             r2, [r1]                        @ get the next address to write, ensuring that
+                    movs            r4, r2
+                    movs            r3, #(ACB_EEPROM_WRITE_BUFFER-1) @ we only write to one page
+                    bics            r2, r2, r3
+                    adds            r2, r2, #ACB_EEPROM_WRITE_BUFFER
+                    subs            r3, r2, r4                      @ write up to ACB_EEPROM_WRITE_BUFFER bytes at a
+                    cmp             r3, r0                          @ time, in page sizes of ACB_EEPROM_WRITE_BUFFER
+                    blt             0f
+                    movs            r3, r0
+0:
+                    subs            r0, r0, r3                      @ dec. the length for the next write
+                    strh            r0, [r1, #EI2C_asyncLengthOffset]
+                    adds            r0, r4, r3                      @ inc. the address for the next write
+                    str             r0, [r1]
+                    ldr             r0, [r1, #EI2C_asyncBufferOffset] @ inc. the buffer point for the next write
+                    adds            r7, r0, r3
+                    str             r7, [r1, #EI2C_asyncBufferOffset]
+                    movs            r2, r4
+
+#if ((EepromI2C_writeBufferData) & 0x03) != 0
+#error EepromI2C_writeBufferData must be word aligned
+#endif
+                    ldr             r7, = #EepromI2C_writeBuffer    @ copy the address and data into one buffer
+                    strb            r2, [r7]                        @ store the address
+                    adds            r7, r7, #1
+                    ldm             r0!, {r1, r4-r6}                @ copy the data from the asyncBuffer to the temp
+                    stm             r7!, {r1, r4-r6}                @ buffer
+                    subs            r7, r7, #17
+                    movs            r0, r7                          @ this all ASSUMES there is always a whole page of
+
+                    ldr             r7, = #DMA1_Channel2            @ set up the DMA channel with number of bytes to write
+                    ldr             r1, [r7, #DMA_Channel_CCR_OFFSET] @ disable DMA channel, as we can't write to CMAR
+                    movs            r6, #DMA_CCR_EN                 @ with it enabled
+                    bics            r1, r1, r6
+                    str             r1, [r7, #DMA_Channel_CCR_OFFSET]
+                    adds            r3, r3, #1                      @ include the address in the number of bytes to transfer
+                    str             r3, [r7, #DMA_Channel_CNDTR_OFFSET] @ the number of bytes to write
+                    str             r0, [r7, #DMA_Channel_CMAR_OFFSET]  @ and where the data to write is
+                    orrs            r1, r1, r6                      @ re-enable the DMA channel
+                    str             r1, [r7, #DMA_Channel_CCR_OFFSET]
+
+                    ldr             r7, = #I2C1_BASE                @ start the write
+                    ldr             r0, [r7, #I2C_CR2_OFFSET]
+                    lsrs            r1, r2, #7                      @ get the block address
+                    movs            r0, #ACB_EEPROM_ADDRESS
+                    orrs            r0, r0, r1
+                    lsls            r3, r3, #16                     @ start address
+                    orrs            r0, r0, r3
+                    ldr             r2, = #I2C_CR2_AUTOEND | I2C_CR2_START @ AUTOEND and START
+                    orrs            r0, r0, r2
+                    str             r0, [r7, #I2C_CR2_OFFSET]
+                    pop             {r3-r7, pc}
+
+    private_function(EepromI2C_writePageSent)
+
+@ void EepromI2C_writePageSent(void)
+@   A page write has been transmitted to the device. Set the appropraite time for the write to complete, and set an
+@   alarm, to try the next write operation. Not done at the end of the page write, as we only want to update this value
+@   and set an alarm, if the write completed OK.
+
+EepromI2C_writePageSent:
+                    push            {r7, lr}
+                    ldr             r0, = #MsCounter_milliseconds   @ store the max time when this operation will
+                    ldr             r0, [r0]                        @ finish - add on half again to the defined amount
+                    adds            r0, r0, #(ACB_EEPROM_WRITETIME+ACB_EEPROM_WRITETIME/2)
+                    ldr             r1, =#EepromI2C_writeComplete
+                    str             r0, [r1]
+                    movs            r0, #ASYNC_WRITE_ALARM_SLOT     @ set an alarm in ACB_EEPROM_WRITETIME time
+                    movs            r1, #ACB_EEPROM_WRITETIME
+                    ldr             r2, = #(EepromI2C_doWritePage+1)
+                    bl              MsCounter_alarmIn
+                    pop             {r7, pc}
+
+    private_function(EepromI2C_handleNAK)
+
+@ void EepromI2C_handleNAK(void)
+@   Handle when a NAK is received whilst attempting to write a page. This occurs when the device is still busy, or there
+@   is an error condition. This method checks we are still within an appropraite time for writing, and then attemps to
+@   do the write again in 1ms time. For this, it needs to adjust the async data back to how it was before the write.
+@   Otherwise, if outside the appropraite time for a write, report an error
+
+EepromI2C_handleNAK:
+                    ldr             r0, = #MsCounter_milliseconds   @ we got a NAK whilst writing, that might mean that
+                    ldr             r0, [r0]                        @ the device isn't ready, so check if we are before
+                    ldr             r1, = #EepromI2C_writeComplete  @ the right complete time
+                    ldr             r1, [r1]
+                    cmp             r0, r1                          @ if we are after the write complete time then
+                    ble             0f                              @ signal an error, otherwise, retry the last operation
+                    b               EepromI2C_blockError            @ is a millisecond's time
+0:
+                    push            {r7, lr}
+                    ldr             r7, = #DMA1_Channel2            @ we need to readjust the async data so that we
+                    ldr             r0, [r7, #DMA_Channel_CNDTR_OFFSET] @ resend the same data that has just failed
+                    subs            r0, r0, #1                      @ the DMA CNDTR still contains the number of bytes
+                    ldr             r3, = #EepromI2C_asyncAddress   @ sent (+1 for the address)
+                    ldr             r1, [r3, #EI2C_asyncAddressOffset]
+                    subs            r1, r1, r0
+                    str             r1, [r3, #EI2C_asyncAddressOffset]
+                    ldr             r1, [r3, #EI2C_asyncBufferOffset]
+                    subs            r1, r1, r0
+                    str             r1, [r3, #EI2C_asyncBufferOffset]
+                    ldrh            r1, [r3, #EI2C_asyncLengthOffset]
+                    adds            r1, r1, r0
+                    strh            r1, [r3, #EI2C_asyncLengthOffset]
+                    movs            r0, #ASYNC_WRITE_ALARM_SLOT     @ set an alarm in ACB_EEPROM_WRITETIME time
+                    movs            r1, #1                          @ to retry write in a millisecond time
+                    ldr             r2, = #(EepromI2C_doWritePage+1)
+                    bl              MsCounter_alarmIn
+                    pop             {r7, pc}
 
     private_function(EepromI2C_doStart)
 

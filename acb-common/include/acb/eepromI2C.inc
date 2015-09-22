@@ -21,10 +21,10 @@
 #if !defined(ACB_EEPROM_TYPE)
 #error ACB_EEPROM_TYPE must be defined before including this file
 #elif ACB_EEPROM_TYPE == ACB_EEPROM_24AA16
-#define ACB_EEPROM_SIZE         2048
-#define ACB_EEPROM_WRITE_BUFFER 16
-#define ACB_EEPROM_ADDRESS      0xA0
-#define ACB_EEPROM_WRITETIME    5
+#define ACB_EEPROM_SIZE                 2048
+#define ACB_EEPROM_WRITE_BUFFER         16
+#define ACB_EEPROM_ADDRESS              0xA0
+#define ACB_EEPROM_WRITETIME            5
 #else
 #error Unsupported ACB_EEPROM_TYPE type
 #endif
