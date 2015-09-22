@@ -144,3 +144,10 @@
 OB_USER_BOOT_SEL =  (1<<23)                                         @ BOOT_SEL bit in the user option byte
 PENDING          =  2                                               @ Pending status, returned from async calls
 
+/*
+ * Default the number of alarm slots, if the application has specified any other value
+ */
+
+#if !defined(ACB_ALARM_SLOTS)
+#define ACB_ALARM_SLOTS 8
+#endif
