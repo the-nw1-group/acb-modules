@@ -8,7 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/eeprom.inc"
 #include "acb/common.inc"
 
 @ public EEPROM routines, for reading and writing bytes and blocks of bytes
@@ -22,6 +21,8 @@
     .extern         EepromDrv_writeBlock                            @ Write a block of bytes from the EEPROM
     .extern         EepromDrv_asyncInProgress                       @ Is async call in progress
     .extern         EepromDrv_getLastAsyncStatus                    @ Get status of last async call
+    .extern         EepromDrv_setHint                               @ Set a EEPROM system hint
+    .extern         EepromDrv_getHint                               @ Get a EEPROM system hint
     .extern         _ram_lastLocation                               @ last RAM location origin + length
 
 @ General note: All reading and writing functions will fail if the address is out of range for the amount of memory
@@ -109,15 +110,8 @@ EepromImpl_readBlock:
 @   read from the buffer. The function returns SUCCESS if the data is read, ERROR on error, or PENDING if the
 @   call to read the data is made asynchronously. If an asynchronous call is in progress this call will block until
 @   that call is complete.
-@
-@   This function will error if the address or address+length is out of range of amount of memory of the EEPROM device,
-@   also the last location of the buffer must have at least EEPROM page size number bytes before the end of RAM, where
-@   the buffer size is not a multiple of the page size. The buffer must also be word aligned.
 
 EepromImpl_writeBlock:
-                    movs            r3, #0x03                       @ is buffer word aligned?
-                    tst             r2, r3
-                    bne             0f
                     ldr             r3, = #ACB_EEPROM_SIZE          @ check if the write is out of range
                     cmp             r0, r3
                     bhi             0f
@@ -127,17 +121,6 @@ EepromImpl_writeBlock:
                     bhi             0f
                     cmp             r1, #0                          @ write zero, or less bytes? just return OK
                     ble             1f
-                    mov             r2, r12
-                    movs            r3, #(ACB_EEPROM_WRITE_BUFFER-1) @ check we have enough room off the end of the buffer
-                    tst             r1, r3                          @ buffer already a multiple of the page size, so
-                    beq             1f                              @ skip this test
-                    ands            r3, r3, r1                      @ to read a whole page of data, even though it's not used
-                    adds            r3, r3, #ACB_EEPROM_WRITE_BUFFER
-                    adds            r2, r2, r3
-                    ldr             r3, = #(_ram_lastLocation)
-                    cmp             r3, r2
-                    blt             0f
-1:
                     mov             r2, r12
                     b               EepromDrv_writeBlock
 0:
@@ -191,7 +174,7 @@ EepromImpl_readBlockEx:
 @   write a number of bytes to the EEPROM, starting at the supplied address, writing length bytes, and the bytes are
 @   read from the buffer. The function returns SUCCESS if the data is read or ERROR on error.  This call will
 @   block until the block has been read, or an ERROR occurs.  If an asynchronous call is in progress this call will
-@   block until that call is complete. See requirements for buffer in the Eeprom_writeBlock description.
+@   block until that call is complete.
 
 EepromImpl_writeBlockEx:
                     push            {r7, lr}
@@ -208,11 +191,19 @@ EepromImpl_writeBlockEx:
 
     public_function(EepromImpl_setHint)
 
-@ void EepromImpl_setHint(int hint)
+@ void EepromImpl_setHint(int hint, int arg0, int arg1)
 @   set a hint - which may or may not be ignored by the EEPROM system or the underlying driver.
 
 EepromImpl_setHint:
-                    bx              lr
+                    b               EepromDrv_setHint
+
+    public_function(EepromImpl_getHint)
+
+@ int EepromImpl_getHint(int hint)
+@   get a hint - which may or may not be ignored by the EEPROM system or the underlying driver.
+
+EepromImpl_getHint:
+                    b               EepromDrv_getHint
 
     .end
 

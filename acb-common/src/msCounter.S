@@ -140,4 +140,30 @@ MsCounter_clearAlarm:
                     movs            r2, #0
                     b               MsCounter_alarmAt
 
+    public_function(MsCounter_waitFor)
+
+@ void MsCounter_waitFor (int numberOfMs)
+@   Wait for the supplied number of milliseconds
+
+MsCounter_waitFor:
+                    ldr             r1, = #MsCounter_milliseconds
+                    ldr             r1, [r1]
+                    adds            r0, r0, r1
+                    b               MsCounter_waitUntil
+
+    public_function(MsCounter_waitUntil)
+
+@ void MsCounter_waitUntil (int time)
+@   Wait until the supplied time or after the supplied time as passed
+
+MsCounter_waitUntil:
+                    ldr             r1, = #MsCounter_milliseconds
+0:
+                    ldr             r2, [r1]
+                    cmp             r0, r2
+                    bge             1f
+                    b               0b
+1:
+                    bx              lr
+
     .end

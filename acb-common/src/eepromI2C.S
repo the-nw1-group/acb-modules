@@ -8,8 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/eepromI2C.inc"
-#include "acb/eeprom.inc"
 #include "acb/common.inc"
 
 @ EEPROM "driver" routines for I2C implementation
@@ -37,6 +35,9 @@ EepromI2C_writeBufferAddress:
                     .byte           0                               @ address of write
 EepromI2C_writeBufferData:
                     .space          ACB_EEPROM_WRITE_BUFFER         @ temp write buffer
+
+tmp:
+                    .int            0
 
 EI2C_asyncAddressOffset = EepromI2C_asyncAddress - EepromI2C_asyncAddress
 EI2C_asyncBufferOffset  = EEpromI2C_asyncBuffer - EepromI2C_asyncAddress
@@ -390,7 +391,7 @@ EepromI2C_asyncInProgress:
 
     public_function(EepromI2C_getLastAsyncStatus)
 
-@ bool Eeprom_getLastAsyncStatus()
+@ bool EepromI2C_getLastAsyncStatus()
 @   returns SUCCESS if the last asynchronous call completed successfully, otherwise error.
 
 EepromI2C_getLastAsyncStatus:
@@ -399,6 +400,22 @@ EepromI2C_getLastAsyncStatus:
                     lsrs            r0, r0, #LAST_ASYNC_STATUS
                     movs            r1, #1
                     ands            r0, r0, r1
+                    bx              lr
+
+    public_function(EepromI2C_setHint)
+
+@ void EepromI2C_setHint(int hint, int arg0, int arg1)
+@   set a hint - which may or may not be ignored by the EEPROM system or the underlying driver.
+
+EepromI2C_setHint:
+                    bx              lr
+
+    public_function(EepromI2C_getHint)
+
+@ int EepromI2C_setHint(int hint)
+@   get a hint - which may or may not be ignored by the EEPROM system or the underlying driver.
+
+EepromI2C_getHint:
                     bx              lr
 
     public_function(__dma1Channel23IRQHandler)
@@ -545,7 +562,7 @@ EepromI2C_doReadBlock:
                     ldr             r2, [r7, #EI2C_asyncBufferOffset] @ as well as the ptr to the buffer
                     adds            r3, r2, r1
                     str             r3, [r7, #EI2C_asyncBufferOffset]
-
+0:
                     ldr             r7, = #DMA1_Channel3            @ set up the DMA channel with number of bytes to read
                     movs            r0, #DMA_ISR_GIF2               @ clear any DMA interrupts
                     str             r0, [r7, #DMA_IFCR_OFFSET]
@@ -583,8 +600,8 @@ EepromI2C_doWritePage:
 
                     push            {r3-r7, lr}
                     ldr             r2, [r1]                        @ get the next address to write, ensuring that
-                    movs            r4, r2
-                    movs            r3, #(ACB_EEPROM_WRITE_BUFFER-1) @ we only write to one page
+                    movs            r4, r2                          @ we only write to one page
+                    movs            r3, #(ACB_EEPROM_WRITE_BUFFER-1)
                     bics            r2, r2, r3
                     adds            r2, r2, #ACB_EEPROM_WRITE_BUFFER
                     subs            r3, r2, r4                      @ write up to ACB_EEPROM_WRITE_BUFFER bytes at a
@@ -596,21 +613,21 @@ EepromI2C_doWritePage:
                     strh            r0, [r1, #EI2C_asyncLengthOffset]
                     adds            r0, r4, r3                      @ inc. the address for the next write
                     str             r0, [r1]
-                    ldr             r0, [r1, #EI2C_asyncBufferOffset] @ inc. the buffer point for the next write
+                    ldr             r0, [r1, #EI2C_asyncBufferOffset] @ inc. the buffer pointer for the next write
                     adds            r7, r0, r3
                     str             r7, [r1, #EI2C_asyncBufferOffset]
                     movs            r2, r4
 
-#if ((EepromI2C_writeBufferData) & 0x03) != 0
-#error EepromI2C_writeBufferData must be word aligned
-#endif
                     ldr             r7, = #EepromI2C_writeBuffer    @ copy the address and data into one buffer
                     strb            r2, [r7]                        @ store the address
                     adds            r7, r7, #1
-                    ldm             r0!, {r1, r4-r6}                @ copy the data from the asyncBuffer to the temp
-                    stm             r7!, {r1, r4-r6}                @ buffer
-                    subs            r7, r7, #17
-                    movs            r0, r7                          @ this all ASSUMES there is always a whole page of
+                    mov             r4, r3
+0:
+                    ldrb            r1, [r0, r4]                    @ can't use a word aligned copy here, as this fails
+                    strb            r1, [r7, r4]                    @ if the initial address isn't word aligned
+                    subs            r4, r4, #1
+                    bcs             0b
+                    subs            r0, r7, #1
 
                     ldr             r7, = #DMA1_Channel2            @ set up the DMA channel with number of bytes to write
                     ldr             r1, [r7, #DMA_Channel_CCR_OFFSET] @ disable DMA channel, as we can't write to CMAR
@@ -650,7 +667,7 @@ EepromI2C_writePageSent:
                     ldr             r1, =#EepromI2C_writeComplete
                     str             r0, [r1]
                     movs            r0, #ASYNC_WRITE_ALARM_SLOT     @ set an alarm in ACB_EEPROM_WRITETIME time
-                    movs            r1, #ACB_EEPROM_WRITETIME
+                    movs            r1, #(ACB_EEPROM_WRITETIME/2)+1
                     ldr             r2, = #(EepromI2C_doWritePage+1)
                     bl              MsCounter_alarmIn
                     pop             {r7, pc}

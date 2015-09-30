@@ -32,17 +32,5 @@
 #define Eeprom_readBlockEx          EepromImpl_readBlockEx
 #define Eeprom_writeBlockEx         EepromImpl_writeBlockEx
 #define Eeprom_setHint              EepromImpl_setHint
+#define Eeprom_getHint              EepromImpl_getHint
 
-/*
- * A set of hints that can be supplied to the EEPROM system via the Eeprom_setHint call. These may or may not be ignored
- * by the EEPROM system or the underlying driver.
- *
- *  ACB_EEPROM_BEGIN_MULTI_WRITE_HINT               hint that the application is going to make multiple writes and it
- *                                                  might be faster for the EEPROM system not to update the physical
- *                                                  device until the corresponding end hint is set.
- *  ACB_EEPROM_END_MULTI_WRITE_HINT                 hint that the application has finished a set of updates that can
- *                                                  now be committed to the underlying device.
- */
-
-#define ACB_EEPROM_BEGIN_MULTI_WRITE_HINT   0x01
-#define ACB_EEPROM_END_MULTI_WRITE_HINT     0x02

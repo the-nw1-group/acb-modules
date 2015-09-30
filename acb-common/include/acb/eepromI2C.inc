@@ -50,6 +50,7 @@
 #define ACB_EEPROM_I2C_AFR_SDA_OFFSET   (GPIO_AFR_OFFSET)
 #endif
 
+#if !defined(EepromDrv_init)
 #define EepromDrv_init               EepromI2C_init
 #define EepromDrv_readByte           EepromI2C_readByte
 #define EepromDrv_writeByte          EepromI2C_writeByte
@@ -57,3 +58,6 @@
 #define EepromDrv_writeBlock         EepromI2C_writeBlock
 #define EepromDrv_asyncInProgress    EepromI2C_asyncInProgress
 #define EepromDrv_getLastAsyncStatus EepromI2C_getLastAsyncStatus
+#define EepromDrv_setHint            EepromI2C_setHint
+#define EepromDrv_getHint            EepromI2C_getHint
+#endif
