@@ -193,7 +193,7 @@ __vectorMapEnd:
     .weak           __usbIRQHandler
     .thumb_set      __usbIRQHandler, __defaultHandler
 
-    private_function(__defaultHandler)
+    public_override(__defaultHandler)
 
 @ default handler
 

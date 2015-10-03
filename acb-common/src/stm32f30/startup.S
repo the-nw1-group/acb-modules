@@ -284,7 +284,7 @@ __vectorMapEnd:
     .weak           __fpuIRQHandler
     .thumb_set      __fpuIRQHandler, __defaultHandler
 
-    private_function(__defaultHandler)
+    public_override(__defaultHandler)
 
 @ default handler
 

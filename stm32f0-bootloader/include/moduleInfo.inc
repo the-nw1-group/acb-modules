@@ -72,3 +72,10 @@
 #define DEVICE_ID_STM32F05x 0x440
 #define DEVICE_ID_STM32F07x 0x448
 #define DEVICE_ID_STM32F09x 0x442
+
+/*
+ * Configure error handler to capture default handler, and all faults
+ */
+
+#define ACB_ERRORHANDLER_DEFAULTHANDLER
+#define ACB_ERRORHANDLER_HANDLEFAULTS

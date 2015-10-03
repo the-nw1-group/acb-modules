@@ -64,3 +64,9 @@
 #define DES_SIZE            (DES_SIZE_BASE)
 #define _DES_SIZE           (DES_SIZE + DES_SIZE_OFFSET)
 
+/*
+ * Configure error handler to capture default handler, and all faults
+ */
+
+#define ACB_ERRORHANDLER_DEFAULTHANDLER
+#define ACB_ERRORHANDLER_HANDLEFAULTS
