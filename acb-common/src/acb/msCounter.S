@@ -8,7 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "cmsis/core_cm0.inc"
 #include "acb/common.inc"
 
     .extern         Math_divu1000                                   @ unsigned integer divide by 1000
@@ -44,7 +43,12 @@ MsCounter_alarms:
 
 MsCounter_init:
                     push            {r7, lr}
+#if __CORTEX_M == 0
                     bl              Math_divu1000                   @ divide clock frequency by 1000
+#else
+                    ldr             r1, = #1000
+                    udiv            r0, r0, r1
+#endif
                     bl              SysTick_config
                     pop             {r7, pc}
 

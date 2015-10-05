@@ -30,25 +30,23 @@
 
 #if !defined(ACB_LED_CUSTOM)
 #define ACB_LED_USE         !DEBUG
-#define ACB_LED_AHBENR      RCC_AHBENR_GPIOAEN
 #define ACB_LED_PORT        GPIOA_BASE
 #define ACB_LED_GREEN_BIT   13
 #define ACB_LED_YELLOW_BIT  14
 #elif !defined(ACB_LED_USE)
 #error You must manually define ACB_LED_USE when ACB_LED_CUSTOM is defined
-#elif (ACB_LED_USE==1) && (!defined(ACB_LED_AHBENR) || !defined(ACB_LED_PORT) || !defined(ACB_LED_GREEN_BIT) || !defined(ACB_LED_YELLOW_BIT))
-#error You must manually define all of: ACB_LED_AHBENR; ACB_LED_PORT; ACB_LED_GREEN_BIT; ACB_LED_YELLOW_BIT, when ACB_LED_CUSTOM is defined and ACB_LED_USE = 1
+#elif (ACB_LED_USE==1) && (!defined(ACB_LED_PORT) || !defined(ACB_LED_GREEN_BIT) || !defined(ACB_LED_YELLOW_BIT))
+#error You must manually define all of: ACB_LED_PORT; ACB_LED_GREEN_BIT; ACB_LED_YELLOW_BIT, when ACB_LED_CUSTOM is defined and ACB_LED_USE = 1
 #endif
 
 #if !defined(ACB_FLIMSW_CUSTOM)
 #define ACB_FLIMSW_USE      1
-#define ACB_FLIMSW_AHBENR   RCC_AHBENR_GPIOBEN
 #define ACB_FLIMSW_PORT     GPIOB_BASE
 #define ACB_FLIMSW_BIT      8
 #elif !defined(ACB_FLIMSW_USE)
 #error You must manually define ACB_FLIMSW_USE when ACB_FLIMSW_CUSTOM is defined
-#elif (ACB_FLIMSW_USE==1) && (!defined(ACB_FLIMSW_AHBENR) || !defined(ACB_FLIMSW_PORT) || !defined(ACB_FLIMSW_BIT))
-#error You must manually define all of: ACB_FLIMSW_AHBENR; ACB_FLIMSW_PORT; ACB_FLIMSW_BIT; when ACB_FLIMSW_CUSTOM is defined and ACB_FLIMSW_USE = 1
+#elif (ACB_FLIMSW_USE==1) && (!defined(ACB_FLIMSW_PORT) || !defined(ACB_FLIMSW_BIT))
+#error You must manually define all of: ACB_FLIMSW_PORT; ACB_FLIMSW_BIT; when ACB_FLIMSW_CUSTOM is defined and ACB_FLIMSW_USE = 1
 #endif
 
 /*

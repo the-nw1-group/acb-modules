@@ -7,41 +7,45 @@
  *
  */
 
-
 #include "moduleInfo.inc"
 #include "acb/common.inc"
 
-
 @ public ACB common routines
 
-    module(AcbCommon)
+    module(Acb)
 
     public_function(Acb_init)
 
 @ void Acb_init()
 @   init the ACB common library, including:
-@       setting the LED (green and yellow) as outputs, if ACB_LED_USE is set
+@       setting the LED (green and yellow) as outputs, if ACB_LED_USE is set. Initialises the input for the FLiM Button.
+@       Requires the ACB_LED_PORT and ACB_FLIMSW_PORT clocks to be enabled before this is called
 
 Acb_init:
-                    push             {r7, lr}
 #if ACB_LED_USE
-                    ldr             r0, = #ACB_LED_AHBENR           @ enable LED port
-                    orrs            r0, r0, r1
-                    str             r0, [r2]
-                    ldr             r6, = #ACB_LED_PORT             @ enable bits for green and yellow to be
+                    ldr             r2, = #ACB_LED_PORT             @ enable bits for green and yellow to be
                     ldr             r1, [r2, #GPIO_MODER_OFFSET]    @ outputs - not in debug mode, otherwise
-                    ldr             r0, = #(3<<(ACB_LED_GREEN_BIT<<1))|(3<<(ACB_LED_YELLOW_BIT<<1))
-                    bics            r1, r1, r0                      @ we loose access to debug and programming
-                    ldr             r0, = #(1<<(ACB_LED_GREEN_BIT<<1))|(1<<(ACB_LED_YELLOW_BIT<<1))
-                    orrs            r0, r0, r1
-                    str             r0, [r2, #GPIO_MODER_OFFSET]
+                    ldr             r3, = #(3<<(ACB_LED_GREEN_BIT<<1))|(3<<(ACB_LED_YELLOW_BIT<<1))
+                    bics            r1, r1, r3                      @ we loose access to debug and programming
+                    ldr             r3, = #(1<<(ACB_LED_GREEN_BIT<<1))|(1<<(ACB_LED_YELLOW_BIT<<1))
+                    orrs            r3, r3, r1
+                    str             r3, [r2, #GPIO_MODER_OFFSET]
                     ldr             r1, [r2, #GPIO_OSPEEDR_OFFSET]  @ set low speed for green/yellow
-                    ldr             r0, = #(3<<(ACB_LED_GREEN_BIT<<1))|(3<<(ACB_LED_YELLOW_BIT<<1))
-                    bics            r0, r0, r1
-                    str             r0, [r2, #GPIO_OSPEEDR_OFFSET]
+                    ldr             r3, = #(3<<(ACB_LED_GREEN_BIT<<1))|(3<<(ACB_LED_YELLOW_BIT<<1))
+                    bics            r1, r1, r3
+                    str             r1, [r2, #GPIO_OSPEEDR_OFFSET]
 #endif
 
-                    pop             {r7, pc}
+#if ACB_FLIMSW_USE
+                    ldr             r2, = #ACB_FLIMSW_PORT          @ FLiM Switch as an input with a pull up
+                    ldr             r1, [r2, #GPIO_PUPDR_OFFSET]    @ Input mode is default, so just enable pullup
+                    ldr             r3, = #3<<(ACB_FLIMSW_BIT<<1)
+                    bics            r1, r1, r3
+                    ldr             r3, = #1<<(ACB_FLIMSW_BIT<<1)
+                    orrs            r1, r1, r3
+                    str             r1, [r2, #GPIO_PUPDR_OFFSET]
+#endif
+                    bx              lr
 
     public_function(Acb_showLeds)
 
