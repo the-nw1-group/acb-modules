@@ -8,6 +8,7 @@
  */
 
 #include "moduleInfo.inc"
+#include "acb/common.inc"
 #include "acb/errorHandler.inc"
 
 @ public error handler routine
@@ -112,44 +113,10 @@ __usageFaultHandler:
 
 ErrorHandler_handle:
                     cpsid           i                               @ disable all configurable interrupts
-/*
 #if defined(DEBUG)
                     nop                                             @ in debug we don't have access to GREEN and YELLOW
                     nop                                             @ so just hang
                     b               .
-#else
-
-#endif
-*/
-
-@ temp demo board settings
-#if defined(DEBUG)
-#undef ACB_LED_PORT
-#undef ACB_LED_GREEN_BIT
-#undef ACB_LED_YELLOW_BIT
-
-#define ACB_LED_AHBENR      RCC_AHBENR_GPIOAEN
-#define ACB_LED_PORT        GPIOA_BASE
-#define ACB_LED_GREEN_BIT   3
-#define ACB_LED_YELLOW_BIT  2
-
-                    ldr             r2, = #RCC_BASE
-                    ldr             r1, [r2, #RCC_AHBENR_OFFSET]
-                    ldr             r3, = #ACB_LED_AHBENR           @ enable LED port clock
-                    orrs            r3, r3, r1
-                    str             r3, [r2, #RCC_AHBENR_OFFSET]
-
-                    ldr             r2, = #ACB_LED_PORT             @ enable bits for green and yellow to be
-                    ldr             r1, [r2, #GPIO_MODER_OFFSET]    @ outputs - not in debug mode, otherwise
-                    ldr             r3, = #(3<<(ACB_LED_GREEN_BIT<<1))|(3<<(ACB_LED_YELLOW_BIT<<1))
-                    bics            r1, r1, r3                      @ we loose access to debug and programming
-                    ldr             r3, = #(1<<(ACB_LED_GREEN_BIT<<1))|(1<<(ACB_LED_YELLOW_BIT<<1))
-                    orrs            r3, r3, r1
-                    str             r3, [r2, #GPIO_MODER_OFFSET]
-                    ldr             r1, [r2, #GPIO_OSPEEDR_OFFSET]  @ set low speed for green/yellow
-                    ldr             r3, = #(3<<(ACB_LED_GREEN_BIT<<1))|(3<<(ACB_LED_YELLOW_BIT<<1))
-                    bics            r1, r1, r3
-                    str             r1, [r2, #GPIO_OSPEEDR_OFFSET]
 #endif
                     mov             r4, r0
                     ldr             r7, = #ACB_LED_PORT
