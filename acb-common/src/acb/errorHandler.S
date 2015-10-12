@@ -116,6 +116,7 @@ ErrorHandler_handle:
 #if defined(DEBUG)
                     nop                                             @ in debug we don't have access to GREEN and YELLOW
                     nop                                             @ so just hang
+                    bkpt            #0                              @ or try to breakpoint any debugger
                     b               .
 #endif
                     mov             r4, r0
