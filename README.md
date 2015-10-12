@@ -32,7 +32,7 @@ Building and Debugging
 ----------------------
 
 You'll need the following tools to build the source code:
-* Eclipse CDT - I'm using Eclipse Mars Release (4.5.0) Build id: 20150621-1200
+* Eclipse CDT - I'm using Eclipse Mars Release (4.5.0) Build id: 20150924-1200
 * GNU ARM Eclipse plug-in - I'm using version 2.9.3-201508190739 
 * Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - I'm using version 4.9-2015-q2-update
 * OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team
@@ -52,7 +52,7 @@ Note: On Windows systems, in saxon_xslt_path use forward slashes rather than bac
 For debugging and for burning the boot loader, you need:
 * ST-LINK/V2  in-circuit debugger/programmer for STM8 and STM32 - either a stand-alone version, 
 or from a ST-Discovery board
-* STM-32 ST-LINK Utility - I'm using version v3.6.0
+* STM-32 ST-LINK Utility - I'm using version v3.7.0
 
 For programming via the bootloader, you need:
 * A CAN to Serial, or CAN to USB convertor, such as MERG's CAN-USB2, 3 or 4. I'm using CAN-USB2. Details can be found
