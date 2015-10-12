@@ -17,6 +17,8 @@
     .extern         MsCounter_milliseconds                          @ ms counter
     .extern         NVIC_enableIRQ                                  @ enable interrupt
     .extern         NVIC_disableIRQ                                 @ disable interrupt
+    .extern         MsCounter_clearAlarm                            @ clear the alarm
+    .extern         MsCounter_alarmIn                               @ set an alarm in x milliseconds
 
     private_data(EepromI2C_data)
 
