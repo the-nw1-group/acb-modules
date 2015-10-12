@@ -10,9 +10,47 @@
 #include "moduleInfo.inc"
 #include "acb/common.inc"
 
+    .extern         NVIC_enableIRQ                                  @ enabled IRQ
+    .extern         MsCounter_clearAlarm                            @ clear the alarm
+    .extern         MsCounter_alarmIn                               @ set an alarm in x milliseconds
+
 @ public ACB common routines
 
     module(Acb)
+
+@ ACB private data
+
+    private_data(Acb_private)
+
+acbStatus:          .int            ACB_STATUS_FLIMSW_RELEASED      @ various status flags for ACB common code
+
+ACB_STATUS_FLIM_STATE_OFFSET = 0
+ACB_STATUS_MODULE_STATUS = 2
+
+@ ACB FLiM switch state machine (in lowest byte of acbStatus)
+
+@ User must hold down the FLiM Switch for 8s or more, then release for at least 0.5s which then signals to the module
+@ to enter FLiM mode. The state machine uses external interrupts to mointor for the button press, skip over any debounce
+@ and after the timeout monitor for the release. This then signals that the user wishes to enter (or leave) FLiM mode.
+@ ACB units can't not leave FLiM mode, but they can use this mechanism to require a node number.
+
+@ Note status are a single bit shifted either to the left or to the right
+
+ACB_STATUS_FLIMSW_RELEASED = 1                                      @ default state, no button pressed
+ACB_STATUS_FLIMSW_PRESSED = 2                                       @ user is pressing button, and the module is waiting 8s
+ACB_STATUS_FLIMSW_WAITINGRELEASE = 4                                @ waiting for the user to release the button
+ACB_STATUS_FLIMSW_RELEASETIMEOUT = 8
+
+ACB_STATUS_FLIMSW_READYFORFLIM = 1                                  @ flag to indicate the user is ready to enter FLiM
+                                                                    @ mode, state machine is back to 0 at this point.
+                                                                    @ This flag is cleared on reading.
+
+FLIM_SWITCH_PRESS_TIMEOUT = 8000
+FLIM_SWITCH_RELEASE_TIMEOUT = 500
+FLIM_SWITCH_ALARM_SLOT  = 1
+#if FLIM_SWITCH_ALARM_SLOT > ACB_ALARM_SLOTS
+#error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
+#endif
 
     public_function(Acb_init)
 
@@ -22,6 +60,7 @@
 @       Requires the ACB_LED_PORT and ACB_FLIMSW_PORT clocks to be enabled before this is called
 
 Acb_init:
+                    push            {r7, lr}
 #if ACB_LED_USE
                     ldr             r2, = #ACB_LED_PORT             @ enable bits for green and yellow to be
                     ldr             r1, [r2, #GPIO_MODER_OFFSET]    @ outputs - not in debug mode, otherwise
@@ -44,8 +83,27 @@ Acb_init:
                     ldr             r3, = #1<<(ACB_FLIMSW_BIT<<1)
                     orrs            r1, r1, r3
                     str             r1, [r2, #GPIO_PUPDR_OFFSET]
+                                                                    @ setup the external interrupt configuration
+                    ldr             r2, = #ACB_FLIMSW_SYSCFG_EXTI_REG
+                    ldr             r1, [r2]
+                    ldr             r0, = #0xF<<ACB_FLIMSW_SYSCFG_EXTI_START_BIT
+                    bics            r1, r1, r0
+                    ldr             r0, = #ACB_FLIMSW_SYSCFG_EXTI_VALUE<<ACB_FLIMSW_SYSCFG_EXTI_START_BIT
+                    orrs            r1, r1, r0
+                    str             r1, [r2]
+                                                                    @ setup EXTI registers
+                    ldr             r2, = #EXTI_BASE
+                    ldr             r1, [r2, #EXTI_IMR_OFFSET]      @ enable interrupt for FLIMSW_BIT
+                    ldr             r0, = #1<<ACB_FLIMSW_BIT
+                    orrs            r1, r1, r0
+                    str             r1, [r2, #EXTI_IMR_OFFSET]
+                    ldr             r1, [r2, #EXTI_FTSR_OFFSET]     @ set falling edge interrupt
+                    orrs            r1, r1, r0
+                    str             r1, [r2, #EXTI_FTSR_OFFSET]
+                    ldr             r0, = #ACB_FLIMSW_SYSCFG_EXTI_IRQ
+                    bl              NVIC_enableIRQ
 #endif
-                    bx              lr
+                    pop             {r7, pc}
 
     public_function(Acb_showLeds)
 
@@ -91,5 +149,125 @@ __acbShowLedsYellow:
 #endif
 0:
                     pop             {r7, pc}
+
+    public_function(Acb_readyForFLiM)
+
+@ bool Acb_readyForFLiM(void)
+@   returns TRUE is user has pressed the FLiM switch for 8s and then released the switch, otherwise returns FALSE.
+@   clears the flag (if set), on reading.
+
+Acb_readyForFLiM:
+#if ACB_FLIMSW_USE
+                    ldr             r3, = #acbStatus
+                    ldrh            r2, [r3, #ACB_STATUS_MODULE_STATUS]
+                    movs            r1, #ACB_STATUS_FLIMSW_READYFORFLIM
+                    movs            r0, r2
+                    ands            r0, r0, r1
+                    beq             1f
+                    bics            r2, r2, r1
+                    strh            r2, [r3, #ACB_STATUS_MODULE_STATUS]
+                    movs            r0, #TRUE
+#else
+                    movs            r0, #FALSE                      @ No FLiM, just return false
+#endif
+1:
+                    bx              lr
+
+#if ACB_FLIMSW_USE == 1
+    public_function(ACB_FLIMSW_SYSCFG_EXTI_ISR)
+
+@ void ACB_FLIMSW_SYSCFG_EXTI_ISR(void)
+@   Handle the EXTI interrupt for the FLiM switch - assumes this is the only event on this ISR. If something more
+@   complex is required, the an upstream splitter is required.
+
+ACB_FLIMSW_SYSCFG_EXTI_ISR:
+                    push            {r7, lr}
+                    ldr             r3, = #EXTI_BASE                @ clear interrupt
+                    ldr             r2, = #1<<ACB_FLIMSW_BIT
+                    str             r2, [r3, #EXTI_PR_OFFSET]
+                    ldr             r1, = #acbStatus                @ get FLiM switch state machine status
+                    ldrb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
+                    cmp             r0, #ACB_STATUS_FLIMSW_RELEASED
+                    beq             0f
+                    cmp             r0, #ACB_STATUS_FLIMSW_PRESSED
+                    beq             1f
+                    cmp             r0, #ACB_STATUS_FLIMSW_WAITINGRELEASE
+                    beq             2f
+                    cmp             r0, #ACB_STATUS_FLIMSW_RELEASETIMEOUT
+                    beq             3f
+                    b               9f
+0:
+                    lsls            r0, r0, #1                      @ move to pressed status
+                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
+                    ldr             r1, [r3, #EXTI_FTSR_OFFSET]     @ look for rising edge rather than falling edge
+                    bics            r1, r1, r2                      @ now, for either debounce, or the user changed
+                    str             r1, [r3, #EXTI_FTSR_OFFSET]     @ their mind
+                    ldr             r1, [r3, #EXTI_RTSR_OFFSET]
+                    orrs            r1, r1, r2
+                    str             r1, [r3, #EXTI_RTSR_OFFSET]
+
+                    movs            r0, #FLIM_SWITCH_ALARM_SLOT     @ set an alarm in 8s time
+                    ldr             r1, = #FLIM_SWITCH_PRESS_TIMEOUT
+                    ldr             r2, = #(Acb_flimSwitchAlarmPress+1)
+                    bl              MsCounter_alarmIn
+                    b               9f
+1:
+                    lsrs            r0, r0, #1                      @ move to release status, user has released the
+                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET] @ button, or switch debounce. Either way reset to
+                    ldr             r1, [r3, #EXTI_RTSR_OFFSET]     @ looking for a failing edge
+                    bics            r1, r1, r2
+                    str             r1, [r3, #EXTI_RTSR_OFFSET]
+                    ldr             r1, [r3, #EXTI_FTSR_OFFSET]
+                    orrs            r1, r1, r2
+                    str             r1, [r3, #EXTI_FTSR_OFFSET]
+                    movs            r0, #FLIM_SWITCH_ALARM_SLOT     @ and clear the alarm
+                    bl              MsCounter_clearAlarm
+                    b               9f
+2:
+                    lsls            r0, r0, #1                      @ move to release timeout, simple bit of debouncing
+                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
+3:
+                    movs            r0, #FLIM_SWITCH_ALARM_SLOT     @ set an alarm in 0.5s time
+                    ldr             r1, = #FLIM_SWITCH_RELEASE_TIMEOUT
+                    ldr             r2, = #(Acb_flimSwitchAlarmRelease+1)
+                    bl              MsCounter_alarmIn
+9:
+                    pop             {r7, pc}
+
+    private_function(Acb_flimSwitchAlarmPress)
+
+@ void Acb_flimSwitchAlarmPress(void)
+@   the alarm handler, when this times out, then the user has pressed the button 8s
+
+Acb_flimSwitchAlarmPress:
+                    ldr             r1, = #acbStatus                @ get FLiM switch state machine status
+                    ldrb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
+                    lsls            r0, r0, #1                      @ we've had the button pressed for the timout, so
+                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET] @ update the state machine
+                    bx              lr
+
+    private_function(Acb_flimSwitchAlarmRelease)
+
+@ void Acb_flimSwitchAlarmRelease(void)
+@   the alarm handler, when this times out, then the user has pressed the button 8s and then released for 0.5s
+
+Acb_flimSwitchAlarmRelease:
+                    ldr             r1, = #acbStatus                @ get FLiM switch state machine status
+                    movs            r0, #ACB_STATUS_FLIMSW_RELEASED @ reset state machine
+                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
+                    movs            r0, #ACB_STATUS_FLIMSW_READYFORFLIM   @ set FLiM Switch "pressed" flag
+                    ldrh            r2, [r1, #ACB_STATUS_MODULE_STATUS]
+                    orrs            r2, r2, r0
+                    strh            r2, [r1, #ACB_STATUS_MODULE_STATUS]
+                    ldr             r2, = #1<<ACB_FLIMSW_BIT        @ wait for a falling edge again...
+                    ldr             r3, = #EXTI_BASE
+                    ldr             r0, [r3, #EXTI_RTSR_OFFSET]
+                    bics            r0, r0, r2
+                    str             r0, [r3, #EXTI_RTSR_OFFSET]
+                    ldr             r0, [r3, #EXTI_FTSR_OFFSET]
+                    orrs            r0, r0, r2
+                    str             r0, [r3, #EXTI_FTSR_OFFSET]
+                    bx              lr
+#endif
 
     .end
