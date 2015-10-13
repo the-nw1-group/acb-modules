@@ -42,7 +42,7 @@
 
     module(core_cm0)
 
-    public_function(NVIC_systemReset)
+    av_public_function(NVIC_systemReset)
 
 @ void NVIC_systemReset(void)
 @   this function initiates a system reset request to reset the MCU.
@@ -57,7 +57,7 @@ NVIC_systemReset:
                     dsb                                             @ Ensure completion of memory access
                     b               .                               @ wait until reset
 
-    public_function(NVIC_enableIRQ)
+    av_public_function(NVIC_enableIRQ)
 
 @ void NVIC_enableIRQ(int irq)
 @   enable the interrupt for the supplied irq
@@ -71,7 +71,7 @@ NVIC_enableIRQ:
                     str             r1, [r0]
                     bx              lr
 
-    public_function(NVIC_disableIRQ)
+    av_public_function(NVIC_disableIRQ)
 
 @ void NVIC_disableIRQ(int irq)
 @   enable the interrupt for the supplied irq
@@ -85,7 +85,7 @@ NVIC_disableIRQ:
                     str             r1, [r0]
                     bx              lr
 
-    public_function(NVIC_setPriority)
+    av_public_function(NVIC_setPriority)
 
 @ void NVIC_setPriority(int irq, uint priority)
 @   this function sets the priority of an interrupt. The priority cannot be set for every core interrupt.
@@ -128,7 +128,7 @@ NVIC_setPriority:
                     str             r2, [r7]
                     pop             {r7, pc}
 
-    public_function(SysTick_config)
+    av_public_function(SysTick_config)
 
 @ bool SysTick_config(uint ticks)
 @   the function initializes the System Timer and its interrupt, and starts the System Tick Timer.

@@ -7,6 +7,7 @@
  *
  */
 
+#include "cmsis/core_cm0.inc"
 #include "acb/functionHeaders.inc"
 
 @ startup file for the stm32f04xx series of microcontrollers
@@ -193,14 +194,14 @@ __vectorMapEnd:
     .weak           __usbIRQHandler
     .thumb_set      __usbIRQHandler, __defaultHandler
 
-    public_override(__defaultHandler)
+    av_public_override(__defaultHandler)
 
 @ default handler
 
 __defaultHandler:                                                   @ drop into an infinite loop
                     b               .
 
-    private_function(__resetHandler)
+    av_private_function(__resetHandler)
 
 @ reset handler
 

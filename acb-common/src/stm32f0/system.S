@@ -75,7 +75,7 @@ System_coreClock:   .word           48000000
 
 System_ahbPrescale: .byte           0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 6, 7, 8, 9
 
-    public_function(System_init)
+    av_public_function(System_init)
 
 @ void System_init(void)
 @   Initialize the Embedded Flash Interface, the PLL and update the SystemCoreClock variable.
@@ -129,7 +129,7 @@ __init_callFailHandler:                                             @ use to thi
                     b               .                               @ address all 4M, although we don't expect to
                                                                     @ return (otherwise we have a -/+ 2K limit)
 
-    public_override(System_init)
+    av_public_override(System_onClockFail)
 
 @ void System_onClockFail(void)
 @   Called when unable to set system clock
@@ -137,7 +137,7 @@ __init_callFailHandler:                                             @ use to thi
 System_onClockFail:
                     b               .
 
-    public_function(System_coreClockUpdate)
+    av_public_function(System_coreClockUpdate)
 
 @ void System_coreClockUpdate(void)
 @   Update SystemCoreClock according to Clock Register Values
@@ -211,7 +211,7 @@ _ccu_calcHCLK:                                                      @ calc HCLK,
 
                     pop             {r5-r7, pc}
 
-    private_function(_setSysClock)
+    av_private_function(_setSysClock)
 
 @ bool _setSysClock(void)
 @   Configures the System clock frequency, AHB/APBx prescalers and Flash settings.
