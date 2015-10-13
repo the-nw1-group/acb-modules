@@ -178,7 +178,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="**/m0|**/stm32f0|**/eeprom*|**/startup*|**/configurationManager.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
+						<entry excluding="**/m0|**/stm32f0|**/eeprom*|**/startup*|**/configurationManager.S|cbus/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
@@ -362,7 +362,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="**/m0|**/stm32f0|**/eeprom*|**/startup*|**/configurationManager.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
+						<entry excluding="**/m0|**/stm32f0|**/eeprom*|**/startup*|**/configurationManager.S|cbus/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
