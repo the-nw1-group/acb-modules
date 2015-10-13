@@ -40,6 +40,15 @@ __svcHandler:
                     beq             ErrorHandler_handle
                     bx              lr                              @ if not ACB_FATAL_ERROR return
 
+    public_function(System_onClockFail)
+
+@ void System_onClockFail(void)
+@   Called when unable to set system clock
+
+System_onClockFail:
+                    movs            r0, #ACB_ERROR_CLOCKFAIL
+                    b               ErrorHandler_handle
+
 #if defined(ACB_ERRORHANDLER_DEFAULTHANDLER)
 
     public_function(__defaultHandler)

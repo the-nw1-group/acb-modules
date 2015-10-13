@@ -45,6 +45,7 @@ ACB_ERROR_HARD_FAULT            = 0x14
 ACB_ERROR_MEM_MANAGE            = 0x15
 ACB_ERROR_BUS_FAULT             = 0x16
 ACB_ERROR_USAGE_FAULT           = 0x17
+ACB_ERROR_CLOCKFAIL             = 0x18
 
 ACB_CONFIG_LOAD_FAIL            = 0x21
 
