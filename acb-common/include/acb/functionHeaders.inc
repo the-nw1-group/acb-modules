@@ -59,8 +59,8 @@ TRUE  = 1
  * macro to define a function
  */
 
-#define _function(secname,fnname)\
-    .section        .text.#secname, "ax", %progbits;\
+#define __function(secname,fnname)\
+    .section        #secname, "ax", %progbits;\
     .type           fnname, %function;\
     .size           fnname, .-fnname;\
     .balign         2;\
@@ -68,7 +68,17 @@ TRUE  = 1
     .code           16;\
     .thumb_func;
 
-/*   */
+/*
+ * macro to define a function
+ */
+
+#define _function(secname,fnname) __function(.text.#secname, fnname)
+
+/*
+ * macro to define a function that goes into the after_vectors section
+ */
+
+#define _av_function(secname,fnname) __function(.after_vectors.#secname, fnname)
 
 /*
  * macro to define a private function
@@ -91,6 +101,31 @@ TRUE  = 1
 
 #define public_override(name)\
     public_function(name)\
+    .weak           name;
+
+/*
+ * macro to define a functions (into after_vectors section)
+ * for only the cortex m0 variants
+ */
+
+#if (__CORTEX_M == 0x00) && defined(ACB_APPLICATION)
+#define av_private_function(name)\
+    _av_function(name,name)
+
+#define av_public_function(name)\
+    _av_function(.public.##name,name)\
+    .global         name;
+#else
+#define av_private_function(name)\
+    _function(name,name)
+
+#define av_public_function(name)\
+    _function(.public.##name,name)\
+    .global         name;
+#endif
+
+#define av_public_override(name)\
+    av_public_function(name)\
     .weak           name;
 
 /*
