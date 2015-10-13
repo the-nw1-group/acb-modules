@@ -269,6 +269,7 @@ P32MX775F512        = 37
 P32MX795F512        = 38
 
 STM32F042xF6        = 0x80
+STM32F042xK6        = 0x81
 
 /*
  * Processor manufacturer codes
