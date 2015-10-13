@@ -25,7 +25,7 @@
 acbStatus:          .int            ACB_STATUS_FLIMSW_RELEASED      @ various status flags for ACB common code
 
 ACB_STATUS_FLIM_STATE_OFFSET = 0
-ACB_STATUS_MODULE_STATUS = 2
+ACB_STATUS_FLIM_SWITCH_STATUS = 1
 
 @ ACB FLiM switch state machine (in lowest byte of acbStatus)
 
@@ -159,13 +159,13 @@ __acbShowLedsYellow:
 Acb_readyForFLiM:
 #if ACB_FLIMSW_USE
                     ldr             r3, = #acbStatus
-                    ldrh            r2, [r3, #ACB_STATUS_MODULE_STATUS]
+                    ldrb            r2, [r3, #ACB_STATUS_FLIM_SWITCH_STATUS]
                     movs            r1, #ACB_STATUS_FLIMSW_READYFORFLIM
                     movs            r0, r2
                     ands            r0, r0, r1
                     beq             1f
                     bics            r2, r2, r1
-                    strh            r2, [r3, #ACB_STATUS_MODULE_STATUS]
+                    strb            r2, [r3, #ACB_STATUS_FLIM_SWITCH_STATUS]
                     movs            r0, #TRUE
 #else
                     movs            r0, #FALSE                      @ No FLiM, just return false
@@ -256,9 +256,9 @@ Acb_flimSwitchAlarmRelease:
                     movs            r0, #ACB_STATUS_FLIMSW_RELEASED @ reset state machine
                     strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
                     movs            r0, #ACB_STATUS_FLIMSW_READYFORFLIM   @ set FLiM Switch "pressed" flag
-                    ldrh            r2, [r1, #ACB_STATUS_MODULE_STATUS]
+                    ldrb            r2, [r1, #ACB_STATUS_FLIM_SWITCH_STATUS]
                     orrs            r2, r2, r0
-                    strh            r2, [r1, #ACB_STATUS_MODULE_STATUS]
+                    strb            r2, [r1, #ACB_STATUS_FLIM_SWITCH_STATUS]
                     ldr             r2, = #1<<ACB_FLIMSW_BIT        @ wait for a falling edge again...
                     ldr             r3, = #EXTI_BASE
                     ldr             r0, [r3, #EXTI_RTSR_OFFSET]
