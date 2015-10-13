@@ -61,7 +61,13 @@ SECTIONS
         *(.after_vectors .after_vectors.*)  /* Startup code and ISR */
 
         . = ALIGN(4);
-    } >FLASH
+    } >FLASH_VTOR
+
+    .cbus_moduleParams :
+    {
+        . = ALIGN(4);
+        KEEP(*(.cbus_moduleParams))   /* CBUS module parameter table */
+    } >CBUS_MOD_VARS
 
     .inits :
     {

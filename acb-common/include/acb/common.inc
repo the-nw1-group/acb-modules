@@ -155,6 +155,11 @@
 OB_USER_BOOT_SEL =  (1<<23)                                         @ BOOT_SEL bit in the user option byte
 PENDING          =  2                                               @ Pending status, returned from async calls
 
+#define LOBYTE(b)       ((b)&0xFF)
+#define HIBYTE(b)       (((b)>>8)&0xFF)
+#define TOPBYTE(b)      (((b)>>16)&0xFF)
+#define TOPMOSTBYTE(b)  (((b)>>24)&0xFF)
+
 /*
  * Default the number of alarm slots, if the application has specified any other value
  */
