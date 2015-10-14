@@ -29,23 +29,26 @@ cbus_moduleParameters:
                     .byte           CBUS_EVENT_VARS_PER_EVENT, CBUS_MAX_NODE_VARIABLES, CBUS_MAJOR_VERSION, CBUS_BASE_FLAGS
                     .byte           CBUS_CPU_TYPE, CBUS_BUS_TYPE
                     .int            CBUS_LOAD_ADDRESS
-__endOfParameters:
-                    .space          10, 0
+__endOfParameters:                                                  @ zero fill between this block, and the parameter
+                    .space          PAR_COUNT-(__endOfParameters-cbus_moduleParameters), 0  @ count location
 
 @ The assembler can only do + and - on non-absolute values, but it see's both __moduleName and CBUS_LOAD_ADDRESS
 @ as non-absolute (both resolved at link time), so this massive hack, ensures that the checksum is correct, but
 @ relies on __moduleName and CBUS_LOAD_ADDRESS *not* changing...
 
 LOAD_ADDRESS = 0x08000C00
-MODULE_NAME  = (0x08001188+32)
+MODULE_NAME  = (0x08001188+(__moduleName-cbus_moduleParameters))
+
+baseParameterCount =  __endOfParameters - cbus_moduleParameters
 
 checksum = CBUS_MANUFACTURER + CBUS_MINOR_VERSION + CBUS_MODULE_ID + CBUS_MAX_EVENTS +\
            CBUS_EVENT_VARS_PER_EVENT + CBUS_MAX_NODE_VARIABLES + CBUS_MAJOR_VERSION + CBUS_BASE_FLAGS +\
-           LOBYTE(LOAD_ADDRESS) + HIBYTE(LOAD_ADDRESS) + TOPBYTE(LOAD_ADDRESS) + TOPMOSTBYTE(LOAD_ADDRESS) +\
-           LOBYTE(MODULE_NAME) + HIBYTE(MODULE_NAME) + TOPBYTE(MODULE_NAME) + TOPMOSTBYTE(MODULE_NAME) +\
-           (cbus_moduleParameters - __endOfParameters)
+           CBUS_CPU_TYPE + CBUS_BUS_TYPE +\
+           TOPMOSTBYTE(MODULE_NAME) + TOPBYTE(MODULE_NAME) + HIBYTE(MODULE_NAME) + LOBYTE(MODULE_NAME) +\
+           TOPMOSTBYTE(LOAD_ADDRESS) + TOPBYTE(LOAD_ADDRESS) + HIBYTE(LOAD_ADDRESS) + LOBYTE(LOAD_ADDRESS) +\
+           baseParameterCount
 
-                    .short          cbus_moduleParameters - __endOfParameters
+                    .short          baseParameterCount
                     .int            __moduleName
                     .short          checksum
 
