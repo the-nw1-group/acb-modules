@@ -41,5 +41,5 @@ _ram_origin   = ORIGIN(RAM);
 _ram_length   = LENGTH(RAM);
 _ram_lastLocation = _ram_origin + _ram_length;
 
-_flash_origin = ORIGIN(FLASH);
-_flash_length = LENGTH(FLASH);
+_flash_origin = ORIGIN(FLASH_VTOR);
+_flash_length = LENGTH(FLASH) + LENGTH(CBUS_MOD_VARS) + LENGTH(FLASH);
