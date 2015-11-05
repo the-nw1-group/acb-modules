@@ -24,15 +24,21 @@
 
 acbStatus:          .int            ACB_STATUS_FLIMSW_RELEASED      @ various status flags for ACB common code
 
-ACB_STATUS_FLIM_STATE_OFFSET = 0
-ACB_STATUS_FLIM_SWITCH_STATUS = 1
+ACB_STATUS_FLIM_STATE_OFFSET  = 0
+ACB_STATUS_FLIM_COUNT_OFFSET  = 1
+ACB_STATUS_FLIM_SWITCH_STATUS = 2
 
 @ ACB FLiM switch state machine (in lowest byte of acbStatus)
 
 @ User must hold down the FLiM Switch for 8s or more, then release for at least 0.5s which then signals to the module
 @ to enter FLiM mode. The state machine uses external interrupts to mointor for the button press, skip over any debounce
 @ and after the timeout monitor for the release. This then signals that the user wishes to enter (or leave) FLiM mode.
-@ ACB units can't not leave FLiM mode, but they can use this mechanism to require a node number.
+@ ACB units can not leave FLiM mode, but for compatibility with existing MERG modules are supplied in a pseudo SLiM
+@ mode, and must be put into FLiM mode, by holding down the button.
+
+@ Once the ACB module is in FLiM mode a brief press and release on the switch (over 500ms, but less than 8s), will
+@ re-enter setup mode, as above. A brief press again will leave setup mode with the orginal parameters (node number,
+@ etc, intact)
 
 @ Note status are a single bit shifted either to the left or to the right
 
@@ -41,12 +47,23 @@ ACB_STATUS_FLIMSW_PRESSED = 2                                       @ user is pr
 ACB_STATUS_FLIMSW_WAITINGRELEASE = 4                                @ waiting for the user to release the button
 ACB_STATUS_FLIMSW_RELEASETIMEOUT = 8
 
+@ ACB FLiM count, the 2nd byte of the acbStatus word is the number of 500mS passed since the switch was pressed, up to
+@ 8s. After that we don't care as that's seen as a long press.
+
+@ ACB FLiM Switch status in the 3rd byte of the acbStatus word
+
 ACB_STATUS_FLIMSW_READYFORFLIM = 1                                  @ flag to indicate the user is ready to enter FLiM
                                                                     @ mode, state machine is back to 0 at this point.
                                                                     @ This flag is cleared on reading.
+ACB_STATUS_FLIMSW_SHORTPRESS = 2                                    @ flag to indicate the user has pressed the FLiM
+                                                                    @ for more than 500ms, but less that 8s. This flag
+                                                                    @ is cleared on reading
 
-FLIM_SWITCH_PRESS_TIMEOUT = 8000
-FLIM_SWITCH_RELEASE_TIMEOUT = 500
+ACB_STATUS_SWITCH_STATUS_MASK = 3
+
+FLIM_SWITCH_PRESS_TIMEOUT_COUNTS = 16                               @ Number of FLIM_SWITCH_SHORT_PRESS_TIMEOUT
+FLIM_SWITCH_SHORT_PRESS_TIMEOUT  = 500
+FLIM_SWITCH_RELEASE_TIMEOUT      = 500
 FLIM_SWITCH_ALARM_SLOT  = 1
 #if FLIM_SWITCH_ALARM_SLOT > ACB_ALARM_SLOTS
 #error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
@@ -154,31 +171,52 @@ __acbShowLedsYellow:
 
 @ bool Acb_readyForFLiM(void)
 @   returns TRUE is user has pressed the FLiM switch for 8s and then released the switch, otherwise returns FALSE.
-@   clears the flag (if set), on reading.
+@   Clears the flag (if set), on reading.
 
 Acb_readyForFLiM:
+                    movs            r0, #ACB_STATUS_FLIMSW_READYFORFLIM
+                    b               Acb_readResetFLiMButtonStatus
+
+    public_function(Acb_shortFLiMPress)
+
+@ bool Acb_shortFLiMPress(void)
+@   returns TRUE is user has pressed the FLiM switch for more 500ms and less than 8s and then released the switch,
+@   otherwise returns FALSE. Clears the flag (if set), on reading.
+Acb_shortFLiMPress:
+                    movs            r0, #ACB_STATUS_FLIMSW_SHORTPRESS
+                    b               Acb_readResetFLiMButtonStatus
+
+    private_function(Acb_readResetFLiMButtonStatus)
+
+@ bool Acb_readResetFLiMButtonStatus(int status)
+@   returns TRUE if the status bit is set in ACB_STATUS_FLIM_SWITCH_STATUS, otherwise false. Clears the flag (if set),
+@   on reading.
+
+Acb_readResetFLiMButtonStatus:
 #if ACB_FLIMSW_USE
                     ldr             r3, = #acbStatus
                     ldrb            r2, [r3, #ACB_STATUS_FLIM_SWITCH_STATUS]
-                    movs            r1, #ACB_STATUS_FLIMSW_READYFORFLIM
-                    movs            r0, r2
-                    ands            r0, r0, r1
+                    movs            r1, r2
+                    ands            r1, r1, r0
                     beq             1f
-                    bics            r2, r2, r1
+                    bics            r2, r2, r0
                     strb            r2, [r3, #ACB_STATUS_FLIM_SWITCH_STATUS]
                     movs            r0, #TRUE
 #else
                     movs            r0, #FALSE                      @ No FLiM, just return false
 #endif
-1:
                     bx              lr
+1:
+                    movs            r0, #FALSE
+                    bx              lr
+
 
 #if ACB_FLIMSW_USE == 1
     public_function(ACB_FLIMSW_SYSCFG_EXTI_ISR)
 
 @ void ACB_FLIMSW_SYSCFG_EXTI_ISR(void)
 @   Handle the EXTI interrupt for the FLiM switch - assumes this is the only event on this ISR. If something more
-@   complex is required, the an upstream splitter is required.
+@   complex is required, then an upstream splitter is required.
 
 ACB_FLIMSW_SYSCFG_EXTI_ISR:
                     push            {r7, lr}
@@ -197,8 +235,8 @@ ACB_FLIMSW_SYSCFG_EXTI_ISR:
                     beq             3f
                     b               9f
 0:
-                    lsls            r0, r0, #1                      @ move to pressed status
-                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
+                    lsls            r0, r0, #1                      @ move to pressed status, and clear the counter
+                    strh            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
                     ldr             r1, [r3, #EXTI_FTSR_OFFSET]     @ look for rising edge rather than falling edge
                     bics            r1, r1, r2                      @ now, for either debounce, or the user changed
                     str             r1, [r3, #EXTI_FTSR_OFFSET]     @ their mind
@@ -206,12 +244,16 @@ ACB_FLIMSW_SYSCFG_EXTI_ISR:
                     orrs            r1, r1, r2
                     str             r1, [r3, #EXTI_RTSR_OFFSET]
 
-                    movs            r0, #FLIM_SWITCH_ALARM_SLOT     @ set an alarm in 8s time
-                    ldr             r1, = #FLIM_SWITCH_PRESS_TIMEOUT
+                    movs            r0, #FLIM_SWITCH_ALARM_SLOT     @ set an alarm for the short press timeout, and start
+                    ldr             r1, = #FLIM_SWITCH_SHORT_PRESS_TIMEOUT @ counting up
                     ldr             r2, = #(Acb_flimSwitchAlarmPress+1)
                     bl              MsCounter_alarmIn
                     b               9f
 1:
+                    ldrb            r7, [r1, #ACB_STATUS_FLIM_COUNT_OFFSET] @ if count is greater than 0 then wait
+                    cmp             r7, #0                          @ for a release, as we have at least a short press
+                    bgt             2f
+
                     lsrs            r0, r0, #1                      @ move to release status, user has released the
                     strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET] @ button, or switch debounce. Either way reset to
                     ldr             r1, [r3, #EXTI_RTSR_OFFSET]     @ looking for a failing edge
@@ -237,14 +279,27 @@ ACB_FLIMSW_SYSCFG_EXTI_ISR:
     private_function(Acb_flimSwitchAlarmPress)
 
 @ void Acb_flimSwitchAlarmPress(void)
-@   the alarm handler, when this times out, then the user has pressed the button 8s
+@   the alarm handler, when this times out, then the user has pressed the button for at least 500ms
 
 Acb_flimSwitchAlarmPress:
-                    ldr             r1, = #acbStatus                @ get FLiM switch state machine status
+                    ldr             r1, = #acbStatus                @ inc and check the count
+                    ldrb            r0, [r1, #ACB_STATUS_FLIM_COUNT_OFFSET]
+                    adds            r0, r0, #1
+                    strb            r0, [r1, #ACB_STATUS_FLIM_COUNT_OFFSET]
+                    cmp             r0, #FLIM_SWITCH_PRESS_TIMEOUT_COUNTS
+                    ble             1f
                     ldrb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
-                    lsls            r0, r0, #1                      @ we've had the button pressed for the timout, so
-                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET] @ update the state machine
+                    lsls            r0, r0, #1                      @ we've had the button pressed for the FLiM ready
+                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET] @ timeout, so update the state machine
+0:
                     bx              lr
+1:
+                    mov             r12, lr
+                    movs            r0, #FLIM_SWITCH_ALARM_SLOT     @ set an alarm for the short press timeout
+                    ldr             r1, = #FLIM_SWITCH_SHORT_PRESS_TIMEOUT
+                    ldr             r2, = #(Acb_flimSwitchAlarmPress+1)
+                    bl              MsCounter_alarmIn
+                    bx              r12
 
     private_function(Acb_flimSwitchAlarmRelease)
 
@@ -252,11 +307,26 @@ Acb_flimSwitchAlarmPress:
 @   the alarm handler, when this times out, then the user has pressed the button 8s and then released for 0.5s
 
 Acb_flimSwitchAlarmRelease:
+
                     ldr             r1, = #acbStatus                @ get FLiM switch state machine status
-                    movs            r0, #ACB_STATUS_FLIMSW_RELEASED @ reset state machine
-                    strb            r0, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
-                    movs            r0, #ACB_STATUS_FLIMSW_READYFORFLIM   @ set FLiM Switch "pressed" flag
+                    ldrb            r3, [r1, #ACB_STATUS_FLIM_COUNT_OFFSET] @ if count is less than FLIM_SWITCH_PRESS_TIMEOUT_COUNTS
+                    cmp             r3, #FLIM_SWITCH_PRESS_TIMEOUT_COUNTS   @ then set the ACB_STATUS_FLIMSW_SHORTPRESS status
+                    blt             0f                              @ otherwise set the ACB_STATUS_FLIMSW_READYFORFLIM status
+                    movs            r0, #ACB_STATUS_FLIMSW_READYFORFLIM
+                    b               1f
+0:
+
+    nop
+    nop
+    nop
+
+                    movs            r0, #ACB_STATUS_FLIMSW_SHORTPRESS
+1:
+                    movs            r2, #ACB_STATUS_FLIMSW_RELEASED @ reset state machine, and clear the count
+                    strh            r2, [r1, #ACB_STATUS_FLIM_STATE_OFFSET]
                     ldrb            r2, [r1, #ACB_STATUS_FLIM_SWITCH_STATUS]
+                    movs            r3, #ACB_STATUS_SWITCH_STATUS_MASK
+                    bics            r2, r2, r3                      @ clear the status
                     orrs            r2, r2, r0
                     strb            r2, [r1, #ACB_STATUS_FLIM_SWITCH_STATUS]
                     ldr             r2, = #1<<ACB_FLIMSW_BIT        @ wait for a falling edge again...
