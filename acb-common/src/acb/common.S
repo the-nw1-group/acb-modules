@@ -9,6 +9,7 @@
 
 #include "moduleInfo.inc"
 #include "acb/common.inc"
+#include "acb/configurationManager.inc"
 
     .extern         NVIC_enableIRQ                                  @ enabled IRQ
     .extern         MsCounter_clearAlarm                            @ clear the alarm
@@ -27,6 +28,7 @@ acbStatus:          .int            ACB_STATUS_FLIMSW_RELEASED      @ various st
 ACB_STATUS_FLIM_STATE_OFFSET  = 0
 ACB_STATUS_FLIM_COUNT_OFFSET  = 1
 ACB_STATUS_FLIM_SWITCH_STATUS = 2
+ACB_STATUS                    = 3
 
 @ ACB FLiM switch state machine (in lowest byte of acbStatus)
 
@@ -185,6 +187,16 @@ Acb_readyForFLiM:
 Acb_shortFLiMPress:
                     movs            r0, #ACB_STATUS_FLIMSW_SHORTPRESS
                     b               Acb_readResetFLiMButtonStatus
+
+    public_function(Acb_initConfiguration)
+
+@ void Acb_initConfiguration(int cacheBaseAddress)
+@   initialises the configuration space with default values
+
+Acb_initConfiguration:
+                    movs            r1, #0                          @ default to non-FLiM state (not quite SLiM...)
+                    str             r1, [r0, #ConfigurationManager_acbOffset] @ and default the node number to be 0
+                    bx              lr
 
     private_function(Acb_readResetFLiMButtonStatus)
 
