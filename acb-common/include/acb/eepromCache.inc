@@ -86,7 +86,7 @@ EepromCache_StatusCacheError  = 1
  */
 
 EepromCache_getBaseAddressHint      = 0
-EepromCache_getStatus               = 1
+EepromCache_getStatusHint           = 1
 
 /*
  * Supported set hints

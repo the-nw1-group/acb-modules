@@ -214,7 +214,7 @@ EepromCache_getHint:
                     ldr             r0, = #EepromCache              @ return the base address of our cache
                     bx              lr
 1:
-                    cmp             r0, #EepromCache_getStatus
+                    cmp             r0, #EepromCache_getStatusHint
                     bne             2f
                     ldr             r0, = #EepromCacheStatus
                     ldr             r0, [r0]
