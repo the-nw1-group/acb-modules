@@ -87,3 +87,14 @@
 #define ACB_MSGEX_RTR_OFFSET            ACB_MSG_RESERVED_OFFSET
 #define ACB_MSGEX_RTR_SIZE              ACB_MSG_RESERVED_SIZE
 #define ACB_MSGEX_RTR_MASK              ACB_MSG_RESERVED_MASK
+
+/*
+ * Define the AcbTransport interface
+ */
+#define AcbTransport_init                   Can_initForStandardFrames
+#define AcbTransport_initConfiguration      Can_initConfiguration
+#define AcbTransport_upgradeConfiguration   Can_upgradeConfiguration
+#define AcbTransport_sendMessage            Can_sendMessage
+#define AcbTransport_postMessage            Can_postMessage
+#define AcbTransport_peakMessage            Can_getMsg
+
