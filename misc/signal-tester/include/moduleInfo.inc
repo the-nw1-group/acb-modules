@@ -21,6 +21,7 @@
 
 #include "display/ssd1306.inc"
 #include "display/displayDriverI2C.inc"
+#include "display/display.inc"
 
 #include "errorCodes.inc"
 

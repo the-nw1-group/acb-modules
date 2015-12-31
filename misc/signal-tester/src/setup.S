@@ -52,12 +52,19 @@ __setupCounter:
 
        @            bl              Eeprom_init
                     bl              Display_init
+                    cmp             r0, #ERROR
+                    beq             __setupDisplayFail
+
 #if !defined(DEBUG)
                     movs            r0, #4                          @ only enable the watchdog on non-debug builds
                     movs            r1, = #625                      @ prescaler=64, count down of 625 is a timeout
                     bl              IWDG_setup                      @ of 1 second
 #endif
                     pop             {r7, pc}
+
+__setupDisplayFail:
+                    movs            r0, #SIGTEST_DISPLAY_INIT_FAIL
+                    svc             ACB_FATAL_ERROR
 
     private_function(Setup_setupGPIO)
 
