@@ -8,6 +8,7 @@
  */
 
 #include "moduleInfo.inc"
+#include "display/font.inc"
 
 @ Display routines
 
@@ -36,15 +37,21 @@ Display_init:
                     beq             9f
                     bl              DisplayType_showDisplay
 
-    sub     sp, sp, #12
-    movs    r7, #5
-    str     r7, [sp]
-    movs    r0, #20
-    movs    r1, #3
+    movs    r0, #10
+    movs    r1, #10
     movs    r2, #1
-    movs    r3, #40
-    bl      Display_drawFilledRectangle
-    add     sp, sp, #12
+    movs    r3, #127
+    bl      Display_drawChar
+    movs    r0, #17
+    movs    r1, #10
+    movs    r2, #1
+    movs    r3, #128
+    bl      Display_drawChar
+    movs    r0, #24
+    movs    r1, #10
+    movs    r2, #1
+    movs    r3, #129
+    bl      Display_drawChar
     bl      DisplayType_blitBuffer
     b       .
 
@@ -338,6 +345,25 @@ Display_drawFilledRectangle:
 9:
                     pop             {r3-r7, pc}
 
+    public_function(Display_drawChar)
+
+@ int Display_drawChar(int x, int yOrRow, byte colour, char c)
+@   draw a single ASCII character
+@   Returns a display status
+
+Display_drawChar:
+                    push            {r5-r7, lr}
+                    bl              Display_getPixelY               @ convert Y to pixel, if it's a row value
+                    movs            r5, r0                          @ save x
+                    bl              Display_checkPixelRange
+                    cmp             r0, #DISPLAY_OK
+                    bne             9f
+                    movs            r0, r5                          @ restore x
+                    bl              Display_drawFontGlyph
+                    uxth            r0, r0                          @ clear width, from status
+9:
+                    pop             {r5-r7, pc}
+
     private_function(Display_checkPixelRange)
 
 @ int Display_checkPixelRange(int x, int y)
@@ -374,6 +400,7 @@ Display_checkPixelRange:
 @ void Display_getPixelY(int x, int* yOrRow)
 @   converts a vertical row/pixel value to a pixel value, x not used...
 @   Implementation note: preserves all registers other than r1, status and link return (lr)
+@   can't be called via C/C++
 
 Display_getPixelY:
 noRows = (DISPLAY_HEIGHT / 16)
@@ -388,5 +415,85 @@ noRows = (DISPLAY_HEIGHT / 16)
                     lsls            r1, r1, #4
 9:
                     pop             {r7, pc}
+
+    private_function(Display_drawFontGlyph)
+
+@ int Display_drawFontGlyph(int x, int y, byte colour, char c)
+@   draw a single ASCII character; increments x by the width of the character
+@   Returns a display status in lo word, and width of character in high word
+@   Implementation note: preserves all registers other than r0, status and link return (lr)
+
+Display_drawFontGlyph:
+
+minChar         = FontHeader_MinCharOffset
+maxChar         = FontHeader_MaxCharOffset
+charHeight      = FontHeader_CharHeightOffset
+
+widthOffset     = FontGlyphEntry_CharWidthOffset
+charDataOffset  = FontGlyphEntry_CharDataOffset                     @ blank top byte to get offset to character data
+
+@   r0 =
+@   r1 =
+@   r2 =
+@   r3 =
+@   r4 = charHeight
+@   r5 = charWidth
+@   r6 = status
+@   r7 = ptrToCharData
+@   r8 = x
+@   r9 = y
+@  r10 = colour
+
+
+                    push            {r4-r7, lr}
+                    mov             r4, r8                          @ save r8-r10
+                    mov             r5, r9
+                    mov             r6, r10
+                    push            {r4-r6}
+
+                    uxtb            r3, r3                          @ zero extend character
+                    ldr             r7, = #__font_data
+                    ldrh            r6, [r7, #minChar]              @ check if character is out of range...
+                    cmp             r3, r6
+                    blt             8f
+                    ldrh            r4, [r7, #maxChar]
+                    cmp             r3, r4
+                    bgt             8f
+
+                    mov             r8, r0                          @ save parameters...
+                    mov             r9, r1
+                    mov             r10, r2
+                    ldrh            r4, [r7, #charHeight]           @ get character height of font
+                    subs            r4, r4, #1
+                    subs            r3, r3, r6                      @ get pointer to character data
+                    lsls            r3, r3, #2
+                    adds            r3, r3, #FontHeader_Size
+                    ldr             r6, [r7, r3]                    @ get width of character and offset to data
+                    lsrs            r5, r6, #24                     @ get character width
+                    ldr             r3, =#0xFFF                     @ mask out width
+                    ands            r6, r6, r3
+                    adds            r7, r7, r6
+                    movs            r6, #0                          @ clear out status
+0:
+                    mov             r0, r8                          @ draw a row of character data
+                    mov             r1, r9
+                    adds            r1, r1, r4
+                    mov             r2, r10
+                    ldrb            r3, [r7, r4]
+                    bl              DisplayType_drawHorizontalByte
+                    orrs            r6, r6, r0
+                    subs            r4, r4, #1
+                    bcs             0b
+                    lsls            r0, r5, #16                     @ shift width to top half word
+                    orrs            r0, r0, r6                      @ and combine with status
+9:
+                    pop             {r4-r6}                         @ restore r8-r10
+                    mov             r8, r4
+                    mov             r9, r5
+                    mov             r10, r6
+                    pop             {r4-r7, pc}
+8:
+                    movs            r0, #DISPLAY_OK                 @ char out of range, nothing drawn, and character
+                    b               9b                              @ width is zero
 
     .end
