@@ -40,9 +40,9 @@
  * | 3   | PF1      | I/O  | I2C SCL                   |
  * | 4   | NRST     | RST  | SWD - RST                 |
  * | 5   | VDDA     | S    | 3.3v power supply         |
- * | 6   | PA0      | I/O  | (Analog) Red Input        |
+ * | 6   | PA0      | I/O  | (Analog) Blue Input       |
  * | 7   | PA1      | I/O  | (Analog) Green Input      |
- * | 8   | PA2      | I/O  | (Analog) Blue Input       |
+ * | 8   | PA2      | I/O  | (Analog) Red Input        |
  * | 9   | PA3      | I/O  | Not Used                  |
  * | 10  | PA4      | I/O  | (OUT) Display #RESET      |
  * | 11  | PA5      | I/O  | Not Used                  |
