@@ -129,6 +129,17 @@ TRUE  = 1
     .weak           name;
 
 /*
+ * macro to define static data (that's stored in flash)
+ */
+
+#define static_data(secname)\
+    .section        .rodata.##secname, "a", %progbits;\
+    .type           .rodata.##secname, %function;\
+    .size           secname, .-secname;\
+    .balign         2;\
+    .align          2;
+
+/*
  * macro to define a private data
  */
 
