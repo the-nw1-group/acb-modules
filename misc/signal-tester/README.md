@@ -22,7 +22,7 @@ Pin functions are
 | 11  | PA5      | I/O  | Not Used                  |
 | 12  | PA6      | I/O  | Not Used                  |
 | 13  | PA7      | I/O  | (IN) Button Back          |
-| 14  | PB1      | I/O  | (OUT) Signa/Servo Output  |
+| 14  | PB1      | I/O  | (OUT) Signal/Servo Output |
 | 15  | VSS      | S    | Ground                    |
 | 16  | VDD      | S    | 3.3v power supply         |
 | 17  | PA9      | I/O  | (IN) Button Action        |
