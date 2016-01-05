@@ -36,26 +36,6 @@ Display_init:
                     cmp             r0, #ERROR
                     beq             9f
                     bl              DisplayType_showDisplay
-
-    movs    r0, #10
-    movs    r1, #10
-    movs    r2, #1
-    movs    r3, #127
-    bl      Display_drawChar
-    movs    r0, #17
-    movs    r1, #10
-    movs    r2, #1
-    movs    r3, #128
-    bl      Display_drawChar
-    movs    r0, #24
-    movs    r1, #10
-    movs    r2, #1
-    movs    r3, #129
-    bl      Display_drawChar
-    bl      DisplayType_blitBuffer
-    b       .
-
-
 9:
                     pop             {r7, pc}
 
@@ -364,6 +344,74 @@ Display_drawChar:
 9:
                     pop             {r5-r7, pc}
 
+    public_function(Display_drawString)
+
+@ int Display_drawData(int x, int yOrRow, byte colour, char* str)
+@   draw a single line of null terminated characters
+@   Returns a display status
+
+Display_drawString:
+                    push            {r5-r7, lr}
+                    cmp             r3, #0                          @ null string
+                    beq             8f                              @ then just return
+                    bl              Display_getPixelY               @ convert Y to pixel, if it's a row value
+                    movs            r5, r0                          @ save x
+                    bl              Display_checkPixelRange
+                    cmp             r0, #DISPLAY_OK
+                    bne             9f
+                    movs            r0, r5                          @ restore x
+                    bl              Display_drawStringData
+9:
+                    pop             {r5-r7, pc}
+8:
+                    movs            r0, #DISPLAY_OK
+                    b               9b
+
+    public_function(Display_drawAlignedString)
+
+@ int Display_drawData(int alignment, int yOrRow, byte colour, char* str)
+@   draw a single line of null terminated characters - alignment can be a combination of:
+@       DISPLAY_CENTER_ALIGN_BIT, DISPLAY_RIGHT_ALIGN_BIT
+@   if neither DISPLAY_CENTER_ALIGN_BIT or DISPLAY_RIGHT_ALIGN_BIT is set the text will be left aligned. If both
+@   are set then the text will be center aligned. No string is shown in the string would clip horizontally in center or
+@   right align mode.
+@   Returns a display status
+
+Display_drawAlignedString:
+                    push            {r5-r7, lr}
+                    bl              Display_getPixelY               @ convert Y to pixel, if it's a row value
+                    movs            r5, r0                          @ save x
+                    movs            r0, r3
+                    bl              Display_getStringWidth
+                    cmp             r0, #0                          @ nothing to draw
+                    beq             8f                              @ then just return
+
+                    movs            r6, #DISPLAY_ALIGN_MASK         @ check which alignment was required
+                    ands            r5, r5, r6
+                    cmp             r5, #0                          @ left align?
+                    bne             0f
+                    movs            r0, #0                          @ yes, just draw the string
+                    bl              Display_drawStringData
+                    b               9f
+0:
+                    cmp             r5, #DISPLAY_CENTER_ALIGN       @ center align?
+                    bne             1f
+                    movs            r5, #DISPLAY_WIDTH
+                    subs            r5, r5, r0
+                    lsls            r0, r1, #1
+                    bl              Display_drawStringData
+                    b               9f
+1:
+                    movs            r5, #DISPLAY_WIDTH              @ right align
+                    subs            r5, r5, r0
+                    movs            r0, r5
+                    bl              Display_drawStringData
+9:
+                    pop             {r5-r7, pc}
+8:
+                    movs            r0, #DISPLAY_OK
+                    b               9b
+
     private_function(Display_checkPixelRange)
 
 @ int Display_checkPixelRange(int x, int y)
@@ -397,9 +445,9 @@ Display_checkPixelRange:
 
     private_function(Display_getPixelY)
 
-@ void Display_getPixelY(int x, int* yOrRow)
+@ void Display_getPixelY(int x, int& yOrRow)
 @   converts a vertical row/pixel value to a pixel value, x not used...
-@   Implementation note: preserves all registers other than r1, status and link return (lr)
+@   Implementation note: preserves all registers other than r1, status and link return (lr); result is placed back in r1
 @   can't be called via C/C++
 
 Display_getPixelY:
@@ -421,7 +469,6 @@ noRows = (DISPLAY_HEIGHT / 16)
 @ int Display_drawFontGlyph(int x, int y, byte colour, char c)
 @   draw a single ASCII character; increments x by the width of the character
 @   Returns a display status in lo word, and width of character in high word
-@   Implementation note: preserves all registers other than r0, status and link return (lr)
 
 Display_drawFontGlyph:
 
@@ -431,19 +478,6 @@ charHeight      = FontHeader_CharHeightOffset
 
 widthOffset     = FontGlyphEntry_CharWidthOffset
 charDataOffset  = FontGlyphEntry_CharDataOffset                     @ blank top byte to get offset to character data
-
-@   r0 =
-@   r1 =
-@   r2 =
-@   r3 =
-@   r4 = charHeight
-@   r5 = charWidth
-@   r6 = status
-@   r7 = ptrToCharData
-@   r8 = x
-@   r9 = y
-@  r10 = colour
-
 
                     push            {r4-r7, lr}
                     mov             r4, r8                          @ save r8-r10
@@ -495,5 +529,80 @@ charDataOffset  = FontGlyphEntry_CharDataOffset                     @ blank top 
 8:
                     movs            r0, #DISPLAY_OK                 @ char out of range, nothing drawn, and character
                     b               9b                              @ width is zero
+
+    private_function(Display_drawStringData)
+
+@ int Display_drawStringData(int x, int y, byte colour, char* str)
+@   draw a single line of null terminated characters
+@   Returns a display status
+
+Display_drawStringData:
+                    push            {r3-r7, lr}
+                    mov             r4, r8                          @ save off r8-r9
+                    mov             r5, r9
+                    push            {r4-r5}
+
+                    movs            r4, r0
+                    mov             r8, r1
+                    mov             r9, r2
+                    movs            r5, r3
+                    movs            r6, #0                          @ clear status
+0:
+                    ldrb            r3, [r5]
+                    cmp             r3, #0                          @ end of string? return
+                    beq             9f
+                    movs            r0, r4
+                    mov             r1, r8
+                    mov             r2, r9
+                    bl              Display_drawFontGlyph
+                    uxth            r1, r0                          @ get status
+                    orrs            r6, r6, r1
+                    movs            r1, #DISPLAY_CLIPPED_HORZ       @ if horzontally clipped, no point printing the
+                    tst             r6, r1                          @ rest of ths string
+                    bne             9f
+                    lsrs            r0, r0, #16                     @ get the character width from the status result
+                    adds            r4, r4, r0                      @ inc x by the width
+                    adds            r5, r5, #1                      @ move onto the next character
+                    b               0b
+9:
+                    movs            r0, r6                          @ copy over display status
+                    pop             {r4-r5}                         @ restore r8-r9
+                    mov             r8, r4
+                    mov             r9, r5
+                    pop             {r3-r7, pc}
+
+    private_function(Display_getStringWidth)
+
+@ int Display_getStringWidth(char* str)
+@   get the width of the supplied string in pixels
+@   Returns the width of the string in pixels
+@   Implementation note: preserves all registers other than r0, status and link return (lr)
+
+Display_getStringWidth:
+                    push            {r3-r7, lr}
+                    ldr             r7, = #__font_data
+                    ldrh            r6, [r7, #minChar]
+                    ldrh            r5, [r7, #maxChar]
+                    movs            r4, #0
+0:
+                    ldrb            r3, [r0]                        @ get the next byte
+                    cmp             r3, #0                          @ is it the null terminator?
+                    beq             9f
+                    cmp             r3, r5
+                    bgt             1f                              @ character out of range (too high)
+                    subs            r3, r3, r6
+                    blt             1f                              @ character out of range (too low)
+
+                    lsls            r3, r3, #2
+                    adds            r3, r3, #FontHeader_Size
+                    ldr             r3, [r7, r3]                    @ get width of character and offset to data
+                    lsrs            r3, #24                         @ just get the width
+                    adds            r4, r4, r3
+1:
+                    adds            r0, r0, #1                      @ move to the next character
+                    b               0b
+9:
+                    movs            r0, r4                          @ return the width
+                    pop             {r3-r7, pc}
 
     .end
