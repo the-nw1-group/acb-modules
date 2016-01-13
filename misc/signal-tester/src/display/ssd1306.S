@@ -175,7 +175,7 @@ Ssd1306_clearBuffer:
                     ldr             r1, = #(__displayBufferSize)
                     movs            r2, #0
 0:
-                    strh            r2, [r0, r1]
+                    str             r2, [r0, r1]
                     subs            r1, r1, #4
                     bne             0b
                     bx              lr
