@@ -96,7 +96,7 @@ Setup_setupGPIO:
 
                     ldr             r2, = #SIGTEST_OUTPUT_GPIOBASE  @ set output as AF, fast output, with pulldowns
                     ldr             r0, [r2, #GPIO_MODER_OFFSET]
-                    ldr             r1, = #2<<(SIGTEST_OUTPUT<<1)
+                    ldr             r1, = #1<<(SIGTEST_OUTPUT<<1)   @TODO: Set to 2 for AF
                     orrs            r0, r0, r1
                     str             r0, [r2, #GPIO_MODER_OFFSET]
                     ldr             r0, [r2, #GPIO_OSPEEDR_OFFSET]
@@ -138,17 +138,6 @@ Setup_setupTimers:
                     str             r0, [r2, #TIM_CCMR2_OFFSET]
                     ldr             r0, = #(TIM_CCER_CC4E)
                     str             r0, [r2, #TIM_CCER_OFFSET]
-
-@ The following is TEMP...
-        ldr             r0, = #47999                    @ 1 ms timer... 0 prescaler, 47999 auto-reload
-        str             r0, [r2, #TIM_ARR_OFFSET]
-        ldr             r0, = #(47999/2)                @ PWM roughly 50%
-        str             r0, [r2, #TIM_CCR4_OFFSET]
-
-        movs            r0, #TIM_CR1_CEN                @ enable the timer...
-        str             r0, [r2, #TIM_CR1_OFFSET]
-@ End of temp
-
                     bx              lr
 
     .end

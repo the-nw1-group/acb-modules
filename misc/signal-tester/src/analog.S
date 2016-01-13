@@ -17,13 +17,18 @@
 noSamples = 128                                                     @ number of samples in the averaging buffer
 avgDivider = 7                                                      @ log2(noSamples)
 
-    private_data(Main_private)
+    private_data(Analog_private)
 
 Analog_sampleBuffer:
                     .space          3 * 2 * noSamples, 0            @ average buffer, each sample is 2 bytes
+
+    public_data(Analog_public)
+
 Analog_redValue:    .short          0                               @ calculated red value
 Analog_greenValue:  .short          0                               @ calculated green value
 Analog_blueValue:   .short          0                               @ calculated blue value
+
+                    .global         Analog_redValue, Analog_greenValue, Analog_blueValue
 
     public_function(Analog_init)
 
