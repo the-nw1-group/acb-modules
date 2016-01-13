@@ -398,7 +398,7 @@ Display_drawAlignedString:
                     bne             1f
                     movs            r5, #DISPLAY_WIDTH
                     subs            r5, r5, r0
-                    lsls            r0, r1, #1
+                    lsrs            r0, r5, #1
                     bl              Display_drawStringData
                     b               9f
 1:
