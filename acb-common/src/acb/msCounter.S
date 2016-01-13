@@ -164,7 +164,7 @@ MsCounter_waitUntil:
                     ldr             r1, = #MsCounter_milliseconds
 0:
                     ldr             r2, [r1]
-                    cmp             r0, r2
+                    cmp             r2, r0
                     bge             1f
                     b               0b
 1:
