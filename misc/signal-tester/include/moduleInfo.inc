@@ -48,7 +48,7 @@
  * | 11  | PA5      | I/O  | Not Used                  |
  * | 12  | PA6      | I/O  | Not Used                  |
  * | 13  | PA7      | I/O  | (IN) Button Back          |
- * | 14  | PB1      | I/O  | (OUT) Signa/Servo Output  |
+ * | 14  | PB1      | I/O  | (OUT) Signal/Servo Output |
  * | 15  | VSS      | S    | Ground                    |
  * | 16  | VDD      | S    | 3.3v power supply         |
  * | 17  | PA9      | I/O  | (IN) Button Action        |
@@ -127,15 +127,15 @@
  */
 
 #define MAINLOOP_DELAY                  5
-#define FSM_STATE_ANALOG_CHANGED_BIT    16
-#define FSM_STATE_BUTTONS_CHANGED_BIT   17
+#define FSM_STATE_ANALOG_CHANGED_BIT    0
+#define FSM_STATE_BUTTONS_CHANGED_BIT   1
 
-#define FSM_STATE_RED_CHANGED_BIT       18
-#define FSM_STATE_GREEN_CHANGED_BIT     19
-#define FSM_STATE_BLUE_CHANGED_BIT      20
-#define FSM_STATE_LEFT_CHANGED_BIT      21
-#define FSM_STATE_ACTION_CHANGED_BIT    22
-#define FSM_STATE_RIGHT_CHANGED_BIT     23
+#define FSM_STATE_RED_CHANGED_BIT       2
+#define FSM_STATE_GREEN_CHANGED_BIT     3
+#define FSM_STATE_BLUE_CHANGED_BIT      4
+#define FSM_STATE_LEFT_CHANGED_BIT      5
+#define FSM_STATE_ACTION_CHANGED_BIT    6
+#define FSM_STATE_RIGHT_CHANGED_BIT     7
 
 #define FSM_STATE_ANALOG_CHANGED        (1<<FSM_STATE_ANALOG_CHANGED_BIT)
 #define FSM_STATE_BUTTONS_CHANGED       (1<<FSM_STATE_BUTTONS_CHANGED_BIT)
@@ -146,3 +146,11 @@
 #define FSM_STATE_LEFT_CHANGED          (1<<FSM_STATE_LEFT_CHANGED_BIT)
 #define FSM_STATE_ACTION_CHANGED        (1<<FSM_STATE_ACTION_CHANGED_BIT)
 #define FSM_STATE_RIGHT_CHANGED         (1<<FSM_STATE_RIGHT_CHANGED_BIT)
+
+#define FSM_BUTTON_LEFT_BIT             0
+#define FSM_BUTTON_ACTION_BIT           1
+#define FSM_BUTTON_RIGHT_BIT            2
+
+#define FSM_BUTTON_LEFT                 (1<<FSM_BUTTON_LEFT_BIT)
+#define FSM_BUTTON_ACTION               (1<<FSM_BUTTON_ACTION_BIT)
+#define FSM_BUTTON_RIGHT                (1<<FSM_BUTTON_RIGHT_BIT)
