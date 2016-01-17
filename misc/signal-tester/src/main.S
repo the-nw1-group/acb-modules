@@ -11,6 +11,8 @@
 
     .extern         Setup_setup                                     @ setup hardware and peripherals
     .extern         MsCounter_waitFor                               @ wait for a number of milliseconds
+    .extern         FsmCommon_dispatch                              @ call into the FSM
+    .extern         SimpleInputDebounce_getState                    @ get debounced inputs
 
 @ main code for Signal/Servo Tester
 
@@ -27,7 +29,8 @@ Main_thisStatus:    .byte           0
 Main_lastRed:       .short          0
 Main_lastGreen:     .short          0
 Main_lastBlue:      .short          0
-Main_lastButtons:   .short          0
+Main_lastButtons:   .byte           0
+Main_lastStatus:    .byte           0
 
     public_function(main)
 
@@ -59,7 +62,7 @@ __mainLoop:
 @   button and state information. Followed by the same but used for the previous values. Making a total of 8 shorts
 
 Main_getInputState:
-                    push            {r7, lr}
+                    push            {r5-r7, lr}
                     ldr             r1, [r0]                        @ copy over current values to last values
                     str             r1, [r0, #8]
                     ldr             r1, [r0, #4]
@@ -86,44 +89,39 @@ Main_getInputState:
                     ldr             r7, =#(FSM_STATE_ANALOG_CHANGED | FSM_STATE_GREEN_CHANGED)
                     orrs            r3, r3, r7
 1:
-                    ldrh            r1, [r0, #2]                    @ compare B with old B
-                    ldrh            r2, [r0, #10]
+                    ldrh            r1, [r0, #4]                    @ compare B with old B
+                    ldrh            r2, [r0, #12]
                     cmp             r1, r2
                     beq             2f
                     ldr             r7, =#(FSM_STATE_ANALOG_CHANGED | FSM_STATE_BLUE_CHANGED)
                     orrs            r3, r3, r7
-                    strb            r3, [r0, #7]
 2:
-    @TODO: Still need some software debouncing here...
-
-                    ldr             r3, = #SIGTEST_BUTTON_GPIOBASE  @ get button values
-                    ldr             r2, [r3, #GPIO_IDR_OFFSET]
-                    mvns            r2, r2                          @ invert, as the buttons have pullups
-                    ldr             r7, = #(1<<SIGTEST_BUTTON_LEFT)|(1<<SIGTEST_BUTTON_ACTION)|(1<<SIGTEST_BUTTON_RIGHT)
-                    ands            r2, r2, r7
-                    movs            r7, #1
-                    lsrs            r3, r2, #(SIGTEST_BUTTON_LEFT)  @ shift button states into their various places
+                    strb            r3, [r0, #7]                    @ store analog state
+                    movs            r5, r0                          @ save off r0
+                    bl              SimpleInputDebounce_getState    @ get button values
+                    movs            r7, #1                          @ shift button states into their various places
+                    lsrs            r3, r0, #(SIGTEST_BUTTON_LEFT)
                     ands            r3, r3, r7
                     movs            r7, #3
-                    lsrs            r1, r2, #(SIGTEST_BUTTON_ACTION-1)
+                    lsrs            r1, r0, #(SIGTEST_BUTTON_ACTION - 1)
                     ands            r1, r1, r7
                     orrs            r3, r3, r1
                     movs            r7, #7
-                    lsrs            r1, r2, #(SIGTEST_BUTTON_RIGHT-2)
+                    lsrs            r1, r0, #(SIGTEST_BUTTON_RIGHT - 2)
                     ands            r1, r1, r7
                     orrs            r3, r3, r1
-                    strb            r3, [r0, #6]                    @ store current button state
-                    ldrb            r2, [r0, #16]                   @ get last button state, and compare
-                    movs            r3, #0
-                    eors            r1, r1, r2
+                    strb            r3, [r5, #6]                    @ store current button state
+                    ldrb            r2, [r5, #14]                   @ get last button state, and compare
+                    movs            r1, #0
+                    eors            r3, r3, r2
                     beq             3f
-                    ldr             r3, = #1<<FSM_STATE_BUTTONS_CHANGED_BIT
-                    lsls            r1, r1, #FSM_STATE_LEFT_CHANGED_BIT
+                    ldr             r1, = #1<<FSM_STATE_BUTTONS_CHANGED_BIT
+                    lsls            r3, r3, #FSM_STATE_LEFT_CHANGED_BIT
                     orrs            r3, r3, r1                      @ store which buttons changed
-3:
-                    ldrb            r2, [r0, #7]                    @ get analog state, and merge
+                    ldrb            r2, [r5, #7]                    @ get analog state, and merge
                     orrs            r3, r3, r2
-                    strb            r3, [r0, #7]
-                    pop             {r7, pc}
+                    strb            r3, [r5, #7]
+3:
+                    pop             {r5-r7, pc}
 
     .end

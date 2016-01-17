@@ -103,7 +103,7 @@ FsmMenus_handleMenu:
                     push            {r5-r7, lr}
                     ldr             r7, = #FsmMenus_currentMenu
                     lsrs            r6, r3, #8                      @ if non buttons have been pressed, then nothing
-                    movs            r0, #FSM_STATE_BUTTONS_CHANGED_BIT
+                    movs            r0, #FSM_STATE_BUTTONS_CHANGED
                     tst             r0, r6
                     beq             9f
                     movs            r0, #FSM_BUTTON_LEFT            @ was the left button pressed?

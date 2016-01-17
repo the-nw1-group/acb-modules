@@ -72,13 +72,6 @@
 #define ACB_EEPROM_I2C_SCL              1
 #define ACB_EEPROM_I2C_TIMING           0x00901850                   /* See STSW-STM32126 for details */
 
-/*
- * 0x00901850 - 400kHz 100/10
- * 0x00B2C8FF - ??
- *
- */
-
-
 #include "acb/eepromI2C.inc"
 #include "acb/eeprom.inc"
 
@@ -111,6 +104,16 @@
 #define SIGTEST_OUTPUT                  1
 #define SIGTEST_AF_OFFSET               GPIO_AFR_OFFSET
 #define SIGTEST_AF                      1
+
+/*
+ * Simple input debounce Constants
+ *
+ */
+
+#define ACB_SIB_GPIOBASE        SIGTEST_BUTTON_GPIOBASE
+#define ACB_SIB_MASK            ((1<<SIGTEST_BUTTON_LEFT)|(1<<SIGTEST_BUTTON_ACTION)|(1<<SIGTEST_BUTTON_RIGHT))
+#define ACB_SIB_STATE_DEPTH     8
+#define ACB_SIB_INVERT          1
 
 /*
  * Display Constants
@@ -146,6 +149,9 @@
 #define FSM_STATE_LEFT_CHANGED          (1<<FSM_STATE_LEFT_CHANGED_BIT)
 #define FSM_STATE_ACTION_CHANGED        (1<<FSM_STATE_ACTION_CHANGED_BIT)
 #define FSM_STATE_RIGHT_CHANGED         (1<<FSM_STATE_RIGHT_CHANGED_BIT)
+
+#define FSM_ANALOG_STATE_MASK           (FSM_STATE_RED_CHANGED | FSM_STATE_GREEN_CHANGED | FSM_STATE_BLUE_CHANGED)
+#define FSM_BUTTON_STATE_MASK           (FSM_STATE_LEFT_CHANGED|FSM_STATE_ACTION_CHANGED|FSM_STATE_RIGHT_CHANGED)
 
 #define FSM_BUTTON_LEFT_BIT             0
 #define FSM_BUTTON_ACTION_BIT           1

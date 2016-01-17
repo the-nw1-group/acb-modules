@@ -21,6 +21,7 @@
     .extern         IWDG_setup                                      @ Setup the watchdog timer
     .extern         Analog_init                                     @ Setup the ADCs
     .extern         Display_init                                    @ Setup the Display
+    .extern         SimpleInputDebounce_setup                       @ Setup the input debouncer
 
     public_function(Setup_setup)
 
@@ -60,6 +61,7 @@ __setupCounter:
                     movs            r1, = #625                      @ prescaler=64, count down of 625 is a timeout
                     bl              IWDG_setup                      @ of 1 second
 #endif
+                    bl              SimpleInputDebounce_setup       @ setup debounce
                     pop             {r7, pc}
 
 __setupDisplayFail:
