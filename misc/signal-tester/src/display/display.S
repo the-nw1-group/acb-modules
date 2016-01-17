@@ -134,7 +134,7 @@ Display_clearPixel:
 
     public_function(Display_drawHorizontalLine)
 
-@ int Display_drawHorizontalLine(int x, int yOrRowm, byte colour, int length)
+@ int Display_drawHorizontalLine(int x, int yOrRow, byte colour, int length)
 @   draw horiztonal line in the selected colour
 @   Returns a display status
 
@@ -170,7 +170,7 @@ Display_drawHorizontalLine:
 
     public_function(Display_drawVerticalLine)
 
-@ int Display_drawVerticalLine(int x, int yOrRowm, byte colour, int length)
+@ int Display_drawVerticalLine(int x, int yOrRow, byte colour, int length)
 @   draw vertical line in the selected colour
 @   Returns a display status
 
@@ -206,7 +206,7 @@ Display_drawVerticalLine:
 
     public_function(Display_drawRectangle)
 
-@ int Display_drawRectangle(int x, int yOrRowm, byte colour, int length, int height)
+@ int Display_drawRectangle(int x, int yOrRow, byte colour, int length, int height)
 @   draw hollow rectangle in the selected colour
 @   Returns a display status
 
@@ -270,7 +270,7 @@ Display_drawRectangle:
 
     public_function(Display_drawFilledRectangle)
 
-@ int Display_drawFilledRectangle(int x, int yOrRowm, byte colour, int length, int height)
+@ int Display_drawFilledRectangle(int x, int yOrRow, byte colour, int length, int height)
 @   draw filled rectangle in the selected colour
 @   Returns a display status
 
@@ -324,6 +324,21 @@ Display_drawFilledRectangle:
                     b               9f
 9:
                     pop             {r3-r7, pc}
+
+    public_function(Display_fillRow)
+
+@ int Display_fillRow(int x, int row, byte colour, int length, int height)
+@   draw filled rectangle in the selected colour
+@   Returns a display status
+
+Display_fillRow:
+                    push            {r7, lr}
+                    sub             sp, sp, #8
+                    movs            r7, #DISPLAY_ROW_HEIGHT
+                    str             r7, [sp]
+                    bl              Display_drawFilledRectangle     @ fill rectangle
+                    add             sp, sp, #8
+                    pop             {r7, pc}
 
     public_function(Display_drawChar)
 
