@@ -216,6 +216,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.295931349.1781550440" name="Print size" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.printsize.295931349"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createlisting.495986929.1202560079" name="Create extended listing" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.addtools.createlisting.495986929"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nobuiltin.1448640632.1782744524" name="Disable builtin (-fno-builtin)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nobuiltin.1448640632"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.118850681" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.195704899">
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.370275037" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -234,7 +235,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="**/m4|**/stm32f30|**/eeprom*|**/startup*|**/configurationManager.S|cbus/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
+						<entry excluding="**/m4|**/stm32f30|**/eeprom*|**/startup*|**/configurationManager.S|cbus/|acb/simpleInputDebounce.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
@@ -416,7 +417,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="**/m4|**/stm32f30|**/eeprom*|**/startup*|**/configurationManager.S|cbus/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
+						<entry excluding="**/m4|**/stm32f30|**/eeprom*|**/startup*|**/configurationManager.S|cbus/|acb/simpleInputDebounce.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
