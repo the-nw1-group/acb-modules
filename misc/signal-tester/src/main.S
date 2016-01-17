@@ -38,7 +38,6 @@ Main_lastStatus:    .byte           0
 @   main code for module
 
 main:
-
                     bl              Setup_setup
 
 __mainLoop:

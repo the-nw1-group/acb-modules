@@ -13,11 +13,13 @@
 
     module(FsmMenus)
 
-    .extern         Setup_setup                                     @ setup hardware and peripherals
     .extern         Display_drawAlignedString                       @ draw a aligned single line characters
     .extern         Display_blitDisplayBuffer                       @ draw the display buffer onto the display
     .extern         Display_clearDisplayBuffer                      @ clear the display buffer
     .extern         Display_drawFilledRectangle                     @ draw a filled rectangle
+    .extern         Display_fillRow                                 @ fill a row with colour
+
+    .extern         FsmPwmSetup_initPwmSetup                        @ PWM LED Setup init
 
     private_data(FsmMenus_privateData)
 
@@ -29,8 +31,8 @@ FsmMenus_noEntries:
                     .short          0                               @ number of entries in this menu
 
     static_data(FsmMenus_const)
-FsmMenus_const:                                                     @ Constant strings
 
+FsmMenus_const:                                                     @ Constant strings
 
 FsmMenus_main:                                                      @ Main Menu constants
 rgbSignalSetup:     .string         "> RGB Signal Setup"
@@ -39,16 +41,27 @@ servoSetup:         .string         "> Servo Setup"
 pwmLedSetup:        .string         "> PWM LED Setup"
 configure:          .string         "> Configure"
 
+FsmMenus_signalTest:
+stRgbTest:          .string         "> RGB Test"
+stAspectTest:       .string         "> Aspect Test"
+stBack:             .string         "> Back"
+
                     .balign         4                               @ align these data structures to 4 byte boundary
                     .align          4
 
 FsmMenus_mainMenuConf:                                              @ Main menu configuration
                     .int            rgbSignalSetup, 0
-                    .int            rgbSignalTest, 0
+                    .int            rgbSignalTest, FsmMenus_initSignalTestMenu
                     .int            servoSetup, 0
-                    .int            pwmLedSetup, 0
+                    .int            pwmLedSetup, FsmPwmSetup_initPwmSetup
                     .int            configure, 0
 FsmMenus_mainMenuConfEnd:
+
+FsmMenus_stMenuConf:
+                    .int            stRgbTest, 0
+                    .int            stAspectTest, 0
+                    .int            stBack, FsmMenus_initMainMenu
+FsmMenus_stMenuConfEnd:
 
     public_function(FsmMenus_initMainMenu)
 
@@ -63,6 +76,18 @@ FsmMenus_initMainMenu:
                     bl              FsmMenus_initMenu
                     pop             {r7, pc}
 
+    public_function(FsmMenus_initSignalTestMenu)
+
+@ int FsmMenus_initSignalTestMenu(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for initialising the signal test menu. Returns the next state, or 0 to remain in the same state
+
+FsmMenus_initSignalTestMenu:
+                    push            {r7, lr}
+                    ldr             r0, = #FsmMenus_stMenuConf
+                    movs            r1, (FsmMenus_stMenuConfEnd-FsmMenus_stMenuConf)/8
+                    ldr             r2, = #(rgbSignalTest + 2)
+                    bl              FsmMenus_initMenu
+                    pop             {r7, pc}
 
     private_function(FsmMenus_initMenu)
 
@@ -131,19 +156,18 @@ FsmMenus_handleMenu:
                     movs            r0, #FSM_BUTTON_ACTION          @ was the right button pressed?
                     tst             r0, r3
                     beq             9f
-
-
-                    b               9f
+                    ldrh            r0, [r7, #4]                    @ get current position
+                    lsls            r0, r0, #3
+                    adds            r0, r0, #4                      @ get action function pointer
+                    ldr             r7, [r7]
+                    ldr             r0, [r7, r0]                    @ if not implemented, returns 0, to stay on the
+                    b               actionReturn                    @ same menu
 8:
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
-                    add             sp, sp, #8
-                    movs            r3, #DISPLAY_ROW_HEIGHT
-                    str             r3, [sp]
                     movs            r3, #DISPLAY_WIDTH
-                    bl              Display_drawFilledRectangle     @ clear the menu line
-                    sub             sp, sp, #8
+                    bl              Display_fillRow
 
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
@@ -155,6 +179,7 @@ FsmMenus_handleMenu:
                     bl              Display_blitDisplayBuffer
 9:
                     movs            r0, #0
+actionReturn:
                     pop             {r5-r7, pc}
 
     .end
