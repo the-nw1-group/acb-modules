@@ -21,7 +21,7 @@
 
 Fsm_state:          .int            FsmCommon_showSplash            @ Current FSM State
 FsmCommon_splashCount:
-                    .int            (2 * 1000) / MAINLOOP_DELAY     @ show splash screen for 10s
+                    .int            (2 * 1000) / MAINLOOP_DELAY     @ show splash screen for 2s
 
     static_data(FsmCommon_const)
 
