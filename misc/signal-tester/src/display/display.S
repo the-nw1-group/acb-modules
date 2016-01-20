@@ -286,6 +286,7 @@ Display_drawFilledRectangle:
                     bl              Display_checkPixelRange
                     cmp             r0, #DISPLAY_OK
                     bne             9f
+                    movs            r0, r5                          @ restore r0
 
                     mov             r5, r8                          @ save r8-r10
                     mov             r6, r9
