@@ -17,6 +17,9 @@
     .extern         Display_blitDisplayBuffer                       @ draw the display buffer onto the display
     .extern         Display_clearDisplayBuffer                      @ clear the display buffer
     .extern         Display_drawFilledRectangle                     @ draw a filled rectangle
+    .extern         Display_fillRow                                 @ fill a row in the display buffer
+    .extern         Display_drawString                              @ draw a string into the display buffer
+    .extern         FsmMenus_initMainMenu                           @ init and show the main menu
 
     private_data(FsmPwmSetup_privateData)
 
@@ -26,6 +29,8 @@ FsmPwmSetup_displayCount:
                     .short          INST_DELAY                      @ show instructions counter
 FsmPwmSetup_currentInstruction:
                     .short          0
+FsmPwmSetup_convertBuffer:
+                    .string         "     "                         @ buffer for integer conversion
 
     static_data(FsmPwmSetup_const)
 
@@ -35,7 +40,7 @@ title:              .string         "PWM LED Setup & Test "
 instructions1:      .string         "Connect a LED and resistor"
 instructions2:      .string         "between SIG and GND, and use"
 instructions3:      .string         "RED to adjust the duty cycle"
-instructions4:      .string         "Click any button to quit"
+instructions4:      .string         "Click any button to go back"
 dutyCycle:          .string         "Duty Cycle: "
 
                     .balign         4                               @ align these data structures to 4 byte boundary
@@ -53,6 +58,9 @@ instructionTableEnd:
 
 FsmPwmSetup_initPwmSetup:
                     push            {r7, lr}
+                    movs            r0, #0
+                    ldr             r1, = #FsmPwmSetup_currentInstruction
+                    strh            r0, [r1]
                     ldr             r0, = #instructions1
                     bl              FsmPwmSetup_showInstruction
                     ldr             r0, = #FsmPwmSetup_instructionTimeout
@@ -120,6 +128,7 @@ FsmPwmSetup_instructionTimeout:
 
 FsmPwmSetup_setupPwm:
                     push            {r7, lr}
+                    movs            r7, r0                          @ save off the redValue for later
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
@@ -134,7 +143,90 @@ FsmPwmSetup_setupPwm:
 
     @ setup timer 3 for pwm
 
-                    ldr             r0, = #0
+                    movs            r0, r7
+                    bl              FsmPwmSetup_adjustPwmFromValue  @ adjust pwm value and display %-age
+                    ldr             r0, = #FsmPwmSetup_adjustPwm
+                    pop             {r7, pc}
+
+    private_function(FsmPwmSetup_adjustPwm)
+
+@ int FsmPwmSetup_adjustPwm(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine adjusting the PWM timer based on Red. Returns the next state, or 0 to remain in the same state
+
+FsmPwmSetup_adjustPwm:
+                    push            {r7, lr}
+                    movs            r1, #FSM_STATE_ANALOG_CHANGED   @ if the analog state hasn't changed, then
+                    rev16           r2, r3                          @ just check for any button press
+                    tst             r1, r2
+                    beq             0f
+                    movs            r7, r2
+                    bl              FsmPwmSetup_adjustPwmFromValue  @ adjust pwm value and display %-age
+                    movs            r2, r7
+0:
+                    movs            r1, #FSM_STATE_BUTTONS_CHANGED  @ has a button state changed?
+                    tst             r1, r2
+                    beq             8f                              @ no, just return
+                    movs            r1, #FSM_BUTTON_MASK
+                    tst             r1, r3                          @ was it a button pressed?
+                    beq             8f                              @ no, just return
+                    ldr             r0, = #FsmMenus_initMainMenu    @ otherwise return to the main menu
+
+    @ stop timer 3
+
+                    b               9f
+8:
+                    movs            r0, #0
+9:
+                    pop             {r7, pc}
+
+    private_function(FsmPwmSetup_adjustPwmFromValue)
+
+@ void FsmPwmSetup_adjustPwmFromValue(short pwmValue)
+@   display the pwm value on the display, and adjust timer 3 value to the pwmValue
+
+FsmPwmSetup_adjustPwmFromValue:
+
+drawValueOffset=50
+
+                    push            {r7, lr}
+                    movs            r7, r0                          @ save r0 for later
+                    movs            r1, #100                        @ calculate PWM as a percentage
+                    muls            r1, r1, r0
+                    lsrs            r0, r1, #12                     @ analog range is 12 bits
+                    ldr             r1, = #FsmPwmSetup_convertBuffer
+                    movs            r2, #10                         @ convert to base 10
+                    bl              itoa
+0:                                                                  @ add %<NULL> to the end of the returned string
+                    ldrb            r1, [r0]
+                    cmp             r1, #0
+                    beq             1f
+                    adds            r0, r0, #1
+                    b               0b
+1:
+                    movs            r1, #'%'
+                    strb            r1, [r0]
+                    adds            r0, r0, #1
+                    movs            r1, #0
+                    strb            r1, [r0]
+
+                    movs            r0, #drawValueOffset            @ blank previous values
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #0
+                    sub             sp, sp, #8
+                    movs            r3, #DISPLAY_HEIGHT
+                    str             r3, [sp]
+                    movs            r3, #(DISPLAY_WIDTH - drawValueOffset)
+                    bl              Display_drawFilledRectangle
+                    add             sp, sp, #8
+                    movs            r0, #drawValueOffset            @ write new percentage value on the display
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #1
+                    ldr             r3, = #FsmPwmSetup_convertBuffer
+                    bl              Display_drawString
+                    bl              Display_blitDisplayBuffer
+
+    @ set pwm value for timer 3
+
                     pop             {r7, pc}
 
     .end
