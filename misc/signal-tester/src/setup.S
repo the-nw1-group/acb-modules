@@ -98,7 +98,7 @@ Setup_setupGPIO:
 
                     ldr             r2, = #SIGTEST_OUTPUT_GPIOBASE  @ set output as AF, fast output, with pulldowns
                     ldr             r0, [r2, #GPIO_MODER_OFFSET]
-                    ldr             r1, = #1<<(SIGTEST_OUTPUT<<1)   @TODO: Set to 2 for AF
+                    ldr             r1, = #2<<(SIGTEST_OUTPUT<<1)
                     orrs            r0, r0, r1
                     str             r0, [r2, #GPIO_MODER_OFFSET]
                     ldr             r0, [r2, #GPIO_OSPEEDR_OFFSET]
@@ -129,17 +129,11 @@ Setup_setupGPIO:
 @       Another timer is used to trigger the ADCs, but this is configured with the Analog "class"
 
 Setup_setupTimers:
-                    ldr             r2, = #_RCC_APB1ENR             @ enable Timer 2 and 3 clock
+                    ldr             r2, = #_RCC_APB1ENR             @ enable Timer 3 clock
                     ldr             r1, [r2]
                     movs            r0, #RCC_APB1ENR_TIM3EN
                     orrs            r0, r0, r1
                     str             r0, [r2]
-
-                    ldr             r2, = #TIM3_BASE                @ set TIM3 as PWM output (which may be redefined later)
-                    ldr             r0, = #(TIM_CCMR2_OC4FE | TIM_CCMR2_OC4PE | TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2)
-                    str             r0, [r2, #TIM_CCMR2_OFFSET]
-                    ldr             r0, = #(TIM_CCER_CC4E)
-                    str             r0, [r2, #TIM_CCER_OFFSET]
                     bx              lr
 
     .end

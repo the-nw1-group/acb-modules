@@ -40,6 +40,7 @@ rgbSignalTest:      .string         "> RGB Signal Test"
 servoSetup:         .string         "> Servo Setup"
 pwmLedSetup:        .string         "> PWM LED Setup"
 configure:          .string         "> Configure"
+help:               .string         "> Help"
 
 FsmMenus_signalTest:
 stRgbTest:          .string         "> RGB Test"
@@ -55,6 +56,7 @@ FsmMenus_mainMenuConf:                                              @ Main menu 
                     .int            servoSetup, 0
                     .int            pwmLedSetup, FsmPwmSetup_initPwmSetup
                     .int            configure, 0
+                    .int            help, 0
 FsmMenus_mainMenuConfEnd:
 
 FsmMenus_stMenuConf:

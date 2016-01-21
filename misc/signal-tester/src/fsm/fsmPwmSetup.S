@@ -23,7 +23,8 @@
 
     private_data(FsmPwmSetup_privateData)
 
-INST_DELAY = (2 * 1000) / MAINLOOP_DELAY
+INST_DELAY  = (2 * 1000) / MAINLOOP_DELAY                           @ how long to show the instructions for
+PWM_ARR     = 23999                                                 @ ARR value for frequency of 2khz
 
 FsmPwmSetup_displayCount:
                     .short          INST_DELAY                      @ show instructions counter
@@ -141,7 +142,15 @@ FsmPwmSetup_setupPwm:
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
 
-    @ setup timer 3 for pwm
+                    ldr             r2, = #TIM3_BASE                @ setup TIMER3 to be PWM with output of OC4
+                    ldr             r0, = #(TIM_CCMR2_OC4FE | TIM_CCMR2_OC4PE | TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2)
+                    str             r0, [r2, #TIM_CCMR2_OFFSET]
+                    ldr             r0, = #(TIM_CCER_CC4E)
+                    str             r0, [r2, #TIM_CCER_OFFSET]
+                    ldr             r0, = #PWM_ARR
+                    str             r0, [r2, #TIM_ARR_OFFSET]
+                    movs            r0, #TIM_CR1_CEN                @ enable the timer...
+                    str             r0, [r2, #TIM_CR1_OFFSET]
 
                     movs            r0, r7
                     bl              FsmPwmSetup_adjustPwmFromValue  @ adjust pwm value and display %-age
@@ -171,8 +180,9 @@ FsmPwmSetup_adjustPwm:
                     beq             8f                              @ no, just return
                     ldr             r0, = #FsmMenus_initMainMenu    @ otherwise return to the main menu
 
-    @ stop timer 3
-
+                    ldr             r2, = #TIM3_BASE                @ stop TIMER3
+                    movs            r0, #0
+                    str             r0, [r2, #TIM_CR1_OFFSET]
                     b               9f
 8:
                     movs            r0, #0
@@ -225,8 +235,11 @@ drawValueOffset=50
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
 
-    @ set pwm value for timer 3
-
+                    ldr             r2, = #TIM3_BASE                @ adjust PWM value for Timer3:OC4
+                    ldr             r0, = #PWM_ARR
+                    muls            r0, r0, r7
+                    lsrs            r0, r0, #12
+                    str             r0, [r2, #TIM_CCR4_OFFSET]
                     pop             {r7, pc}
 
     .end

@@ -28,7 +28,7 @@ FsmCommon_splashCount:
 FsmCommon_const:
 FsmCommon_title:
 welcome:            .string         "Signal / Servo Tester"
-version:            .string         "Version 0.00"
+version:            .string         "Version 0.01"
 
                     .global         FsmCommon_title                 @ Application title
 
