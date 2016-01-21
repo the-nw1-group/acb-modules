@@ -20,6 +20,8 @@
     .extern         Display_fillRow                                 @ fill a row in the display buffer
     .extern         Display_drawString                              @ draw a string into the display buffer
     .extern         FsmMenus_initMainMenu                           @ init and show the main menu
+    .extern         FsmCommon_showInstructions                      @ show instructions
+    .extern         FsmCommon_anyKeyPressed                         @ check if any key pressed
 
     private_data(FsmPwmSetup_privateData)
 
@@ -37,7 +39,7 @@ FsmPwmSetup_convertBuffer:
 
 FsmPwmSetup_const:
 
-title:              .string         "PWM LED Setup & Test "
+title:              .string         "PWM LED Setup & Test"
 instructions1:      .string         "Connect a LED and resistor"
 instructions2:      .string         "between SIG and GND, and use"
 instructions3:      .string         "RED to adjust the duty cycle"
@@ -59,67 +61,17 @@ instructionTableEnd:
 
 FsmPwmSetup_initPwmSetup:
                     push            {r7, lr}
-                    movs            r0, #0
-                    ldr             r1, = #FsmPwmSetup_currentInstruction
-                    strh            r0, [r1]
-                    ldr             r0, = #instructions1
-                    bl              FsmPwmSetup_showInstruction
-                    ldr             r0, = #FsmPwmSetup_instructionTimeout
-                    pop             {r7, pc}
-
-    private_function(FsmPwmSetup_showInstruction)
-
-@ void FsmPwmSetup_showInstruction(char* text)
-@   show instruction text on the display for INST_DELAY
-
-FsmPwmSetup_showInstruction:
-                    push            {r7, lr}
-                    movs            r7, r0                          @ save off r0
-                    bl              Display_clearDisplayBuffer
+                    bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
                     ldr             r1, = #(0 | DISPLAY_ROW)
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
-                    movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #1
-                    movs            r3, r7
-                    bl              Display_drawString
-                    bl              Display_blitDisplayBuffer
-                    ldr             r0, = #FsmPwmSetup_displayCount @ reset delay
-                    ldr             r1, = #INST_DELAY
-                    strh            r1, [r0]
-                    pop             {r7, pc}
 
-    private_function(FsmPwmSetup_instructionTimeout)
-
-@ int FsmPwmSetup_instructionTimeout(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
-@   FSM Routine for showing the instructions. Returns the next state, or 0 to remain in the same state
-
-FsmPwmSetup_instructionTimeout:
-                    push            {r7, lr}
-                    ldr             r0, = #FsmPwmSetup_displayCount
-                    ldrh            r1, [r0]
-                    subs            r1, r1, #1
-                    beq             0f
-                    strh            r1, [r0]
-                    movs            r0, #0
-                    b               9f
-0:
-                    ldrh            r1, [r0, #2]
-                    adds            r1, r1, #4
-                    cmp             r1, #(instructionTableEnd-instructionTable)
-                    beq             1f
-                    strh            r1, [r0, #2]
-                    ldr             r0, = #instructionTable
-                    ldr             r0, [r0, r1]
-                    bl              FsmPwmSetup_showInstruction
-                    movs            r0, #0
-                    b               9f
-1:
-                    ldr             r0, = #FsmPwmSetup_setupPwm
-9:
+                    ldr             r0, = #instructionTable         @ show the instructions
+                    movs            r1, #(instructionTableEnd-instructionTable)
+                    ldr             r2, = #FsmPwmSetup_setupPwm
+                    bl              FsmCommon_showInstructions
                     pop             {r7, pc}
 
     private_function(FsmPwmSetup_setupPwm)
@@ -168,21 +120,17 @@ FsmPwmSetup_adjustPwm:
                     rev16           r2, r3                          @ just check for any button press
                     tst             r1, r2
                     beq             0f
-                    movs            r7, r2
+                    push            {r2, r3}
                     bl              FsmPwmSetup_adjustPwmFromValue  @ adjust pwm value and display %-age
-                    movs            r2, r7
+                    pop             {r2, r3}
 0:
-                    movs            r1, #FSM_STATE_BUTTONS_CHANGED  @ has a button state changed?
-                    tst             r1, r2
-                    beq             8f                              @ no, just return
-                    movs            r1, #FSM_BUTTON_MASK
-                    tst             r1, r3                          @ was it a button pressed?
-                    beq             8f                              @ no, just return
-                    ldr             r0, = #FsmMenus_initMainMenu    @ otherwise return to the main menu
+                    movs            r1, r3                          @ check if any button pressed
+                    ldr             r0, = #FsmMenus_initMainMenu
+                    bl              FsmCommon_anyKeyPressed
 
                     ldr             r2, = #TIM3_BASE                @ stop TIMER3
-                    movs            r0, #0
-                    str             r0, [r2, #TIM_CR1_OFFSET]
+                    movs            r1, #0
+                    str             r1, [r2, #TIM_CR1_OFFSET]
                     b               9f
 8:
                     movs            r0, #0

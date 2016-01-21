@@ -36,7 +36,7 @@ FsmMenus_const:                                                     @ Constant s
 
 FsmMenus_main:                                                      @ Main Menu constants
 rgbSignalSetup:     .string         "> RGB Signal Setup"
-rgbSignalTest:      .string         "> RGB Signal Test"
+rgbSignalTest:      .string         "> RGB Signal Test..."
 servoSetup:         .string         "> Servo Setup"
 pwmLedSetup:        .string         "> PWM LED Setup"
 configure:          .string         "> Configure"
@@ -56,7 +56,7 @@ FsmMenus_mainMenuConf:                                              @ Main menu 
                     .int            servoSetup, 0
                     .int            pwmLedSetup, FsmPwmSetup_initPwmSetup
                     .int            configure, 0
-                    .int            help, 0
+                    .int            help, FsmHelp_initHelp
 FsmMenus_mainMenuConfEnd:
 
 FsmMenus_stMenuConf:
