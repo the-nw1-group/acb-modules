@@ -25,13 +25,8 @@
 
     private_data(FsmPwmSetup_privateData)
 
-INST_DELAY  = (2 * 1000) / MAINLOOP_DELAY                           @ how long to show the instructions for
 PWM_ARR     = 23999                                                 @ ARR value for frequency of 2khz
 
-FsmPwmSetup_displayCount:
-                    .short          INST_DELAY                      @ show instructions counter
-FsmPwmSetup_currentInstruction:
-                    .short          0
 FsmPwmSetup_convertBuffer:
                     .string         "     "                         @ buffer for integer conversion
 
@@ -42,10 +37,10 @@ FsmPwmSetup_const:
 title:              .string         "PWM LED Setup & Test"
 instructions1:      .string         "Connect a LED and resistor"
 instructions2:      .string         "between SIG and GND, and use"
-instructions3:      .string         "RED to adjust the duty cycle"
+instructions3:      .string         "RED to adjust the duty cycle."
 instructions4:      .string         "The PWM frequency is fixed"
-instructions5:      .string         "at 200kHz"
-instructions6:      .string         "Click any button to go back"
+instructions5:      .string         "at 200kHz."
+instructions6:      .string         "Click any button to go back."
 dutyCycle:          .string         "Duty Cycle: "
 
                     .balign         4                               @ align these data structures to 4 byte boundary
@@ -79,7 +74,7 @@ FsmPwmSetup_initPwmSetup:
 
     private_function(FsmPwmSetup_setupPwm)
 
-@ int FsmPwmSetup_instructionTimeout(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@ int FsmPwmSetup_setupPwm(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
 @   FSM Routine setting up the PWM timer. Returns the next state, or 0 to remain in the same state
 
 FsmPwmSetup_setupPwm:
@@ -104,6 +99,8 @@ FsmPwmSetup_setupPwm:
                     str             r0, [r2, #TIM_CCER_OFFSET]
                     ldr             r0, = #PWM_ARR
                     str             r0, [r2, #TIM_ARR_OFFSET]
+                    movs            r0, #0                          @ 0 prescale
+                    str             r0, [r2, #TIM_PSC_OFFSET]
                     movs            r0, #TIM_CR1_CEN                @ enable the timer...
                     str             r0, [r2, #TIM_CR1_OFFSET]
 
