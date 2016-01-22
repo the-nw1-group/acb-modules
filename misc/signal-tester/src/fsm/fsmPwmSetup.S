@@ -43,7 +43,9 @@ title:              .string         "PWM LED Setup & Test"
 instructions1:      .string         "Connect a LED and resistor"
 instructions2:      .string         "between SIG and GND, and use"
 instructions3:      .string         "RED to adjust the duty cycle"
-instructions4:      .string         "Click any button to go back"
+instructions4:      .string         "The PWM frequency is fixed"
+instructions5:      .string         "at 200kHz"
+instructions6:      .string         "Click any button to go back"
 dutyCycle:          .string         "Duty Cycle: "
 
                     .balign         4                               @ align these data structures to 4 byte boundary
@@ -52,6 +54,7 @@ dutyCycle:          .string         "Duty Cycle: "
 instructionTable:
                     .int            instructions1, instructions2
                     .int            instructions3, instructions4
+                    .int            instructions5, instructions6
 instructionTableEnd:
 
     public_function(FsmPwmSetup_initPwmSetup)
