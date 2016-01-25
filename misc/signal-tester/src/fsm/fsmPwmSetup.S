@@ -23,6 +23,7 @@
     .extern         FsmCommon_showInstructions                      @ show instructions
     .extern         FsmCommon_anyKeyPressed                         @ check if any key pressed
     .extern         __aeabi_uidiv                                   @ unsigned integer divide
+    .extern         itoa                                            @ convert integer to string
 
     private_data(FsmPwmSetup_privateData)
 
@@ -128,13 +129,13 @@ FsmPwmSetup_adjustPwm:
                     movs            r1, r3                          @ check if any button pressed
                     ldr             r0, = #FsmMenus_initMainMenu
                     bl              FsmCommon_anyKeyPressed
+                    cmp             r0, #0
+                    beq             9f
 
                     ldr             r2, = #TIM3_BASE                @ stop TIMER3
                     movs            r1, #0
                     str             r1, [r2, #TIM_CR1_OFFSET]
                     b               9f
-8:
-                    movs            r0, #0
 9:
                     pop             {r7, pc}
 
