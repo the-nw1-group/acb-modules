@@ -163,7 +163,7 @@
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.disassemble.1772348554" name="Disassemble (--disassemble|-d)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.disassemble" value="true" valueType="boolean"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.reloc.1607618217" name="Display relocation info (--reloc|-r)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.createlisting.reloc" value="true" valueType="boolean"/>
 							</tool>
-							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.2107714101" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize">
+							<tool command="${cross_prefix}${cross_size}${cross_suffix} --radix=16 " id="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize.2107714101" name="Cross ARM GNU Print Size" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.printsize">
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format.1505806700" name="Size format" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format" value="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.format.sysv" valueType="enumerated"/>
 								<option id="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.totals.1706233524" name="Show totals" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.printsize.totals" value="true" valueType="boolean"/>
 							</tool>
