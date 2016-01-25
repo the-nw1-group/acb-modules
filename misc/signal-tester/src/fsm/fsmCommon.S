@@ -18,6 +18,8 @@
     .extern         Display_blitDisplayBuffer                       @ draw the display buffer onto the display
     .extern         Display_fillRow                                 @ fill a row in the display buffer
     .extern         Display_drawString                              @ draw a string into the display buffer
+    .extern         NVIC_disableIRQ                                 @ disable interrupt
+    .extern         NVIC_enableIRQ                                  @ enable interrupt
 
     private_data(FsmCommon_private)
 
@@ -38,6 +40,9 @@ FsmCommon_currentInstruction:
                     .byte           0
 FsmCommon_maxInstructions:
                     .byte           0
+
+FsmCommon_timer3Isr:
+                    .int            0
 
     static_data(FsmCommon_const)
 
@@ -102,6 +107,66 @@ FsmCommon_anyKeyPressed:
                     bx              lr
 8:
                     movs            r0, #0
+                    bx              lr
+
+    public_function(FsmCommon_enableTimer3Isr)
+
+@ void FsmCommon_enableTimer3Isr(short interruptEnable, fn* handler)
+@   Enable interrupts for timer 3, based on the interruptEnable parameter. When an interrupt occurs for timer 3
+@   the handler is called.
+
+FsmCommon_enableTimer3Isr:
+                    push            {r7, lr}
+                    cmp             r0, #0
+                    beq             9f
+                    cmp             r1, #0
+                    beq             9f
+                    cpsid           i                               @ disable interrupts except NMI
+                    ldr             r2,  = #FsmCommon_timer3Isr     @ set the ISR
+                    str             r1, [r2]
+                    ldr             r2, = #TIM3_BASE                @ enable event generation from timer3
+                    str             r0, [r2, #TIM_DIER_OFFSET]
+                    movs            r0, #TIM3_IRQn                  @ enable the timer 3 interrupt, via NVIC
+                    bl              NVIC_enableIRQ
+                    cpsie           i                               @ enable interrupts
+                    dsb                                             @ flush any memory writes before continuing
+9:
+                    pop             {r7, pc}
+
+    public_function(FsmCommon_disableTimer3Isr)
+
+@ void FsmCommon_disableTimer3Isr(short interruptEnable, fn* handler)
+@   Disable interrupts for timer 3.
+
+FsmCommon_disableTimer3Isr:
+                    push            {r7, lr}
+                    cpsid           i                               @ disable interrupts except NMI
+                    movs            r0, #TIM3_IRQn                  @ disable the timer 3 interrupt, via NVIC
+                    bl              NVIC_disableIRQ
+                    movs            r0, #0                          @ turn off event generation from timer 3
+                    ldr             r1, = #TIM3_BASE
+                    str             r0, [r1, #TIM_DIER_OFFSET]
+                    ldr             r1, = #FsmCommon_timer3Isr      @ clear the isr routine
+                    str             r0, [r1]
+                    cpsie           i                               @ enable interrupts
+                    dsb                                             @ flush any memory writes before continuing
+                    pop             {r7, pc}
+
+    public_function(__tim3IRQHandler)
+
+@ void __tim3IRQHandler(void)
+@   System timer 3 ISR routine
+
+__tim3IRQHandler:
+                    ldr             r1, = #TIM3_BASE                @ acknowledge the interrupt
+                    movs            r0, #0
+                    str             r0, [r1, #TIM_SR_OFFSET]
+                    ldr             r1, = #FsmCommon_timer3Isr      @ load the real ISR
+                    ldr             r1, [r1]
+                    cmp             r1, #0                          @ if zero, then just ignore it
+                    beq             9f
+                    bx              r1                              @ no need to link here, just let the real ISR
+9:                                                                  @ return straight through here
                     bx              lr
 
     private_function(FsmCommon_instructionTimeout)
