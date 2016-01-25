@@ -20,6 +20,8 @@
     .extern         Display_fillRow                                 @ fill a row with colour
 
     .extern         FsmPwmSetup_initPwmSetup                        @ PWM LED Setup init
+    .extern         FsmServoSetup_initServoSetup                    @ Server setup init
+    .extern         FsmHelp_initHelp                                @ Help init
 
     private_data(FsmMenus_privateData)
 
@@ -45,7 +47,13 @@ help:               .string         "> Help"
 FsmMenus_signalTest:
 stRgbTest:          .string         "> RGB Test"
 stAspectTest:       .string         "> Aspect Test"
-stBack:             .string         "> Back"
+stMainMenu:         .string         "> Back to main menu"
+
+FsmMenus_servoSave:
+ssTitle:            .string         "Save Servo Settings"
+ssSave:             .string         "> Save Settings to EEPROM"
+ssReturn:           .string         "> Return"
+ssMainMenu:         .string         "> Back to main menu"
 
                     .balign         4                               @ align these data structures to 4 byte boundary
                     .align          4
@@ -53,7 +61,7 @@ stBack:             .string         "> Back"
 FsmMenus_mainMenuConf:                                              @ Main menu configuration
                     .int            rgbSignalSetup, 0
                     .int            rgbSignalTest, FsmMenus_initSignalTestMenu
-                    .int            servoSetup, 0
+                    .int            servoSetup, FsmServoSetup_initServoSetup
                     .int            pwmLedSetup, FsmPwmSetup_initPwmSetup
                     .int            configure, 0
                     .int            help, FsmHelp_initHelp
@@ -62,8 +70,15 @@ FsmMenus_mainMenuConfEnd:
 FsmMenus_stMenuConf:
                     .int            stRgbTest, 0
                     .int            stAspectTest, 0
-                    .int            stBack, FsmMenus_initMainMenu
+                    .int            stMainMenu, FsmMenus_initMainMenu
 FsmMenus_stMenuConfEnd:
+
+FsmMenus_ssMenuConf:
+                    .int            ssSave, 0
+                    .int            ssReturn, FsmServoSetup_initServoSetup
+                    .int            ssMainMenu, FsmMenus_initMainMenu
+FsmMenus_ssMenuConfEnd:
+
 
     public_function(FsmMenus_initMainMenu)
 
@@ -88,6 +103,19 @@ FsmMenus_initSignalTestMenu:
                     ldr             r0, = #FsmMenus_stMenuConf
                     movs            r1, (FsmMenus_stMenuConfEnd-FsmMenus_stMenuConf)/8
                     ldr             r2, = #(rgbSignalTest + 2)
+                    bl              FsmMenus_initMenu
+                    pop             {r7, pc}
+
+    public_function(FsmMenus_initServoSaveMenu)
+
+@ int FsmMenus_initServoSaveMenu(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for initialising the signal test menu. Returns the next state, or 0 to remain in the same state
+
+FsmMenus_initServoSaveMenu:
+                    push            {r7, lr}
+                    ldr             r0, = #FsmMenus_ssMenuConf
+                    movs            r1, (FsmMenus_ssMenuConfEnd-FsmMenus_ssMenuConf)/8
+                    ldr             r2, = #(ssTitle)
                     bl              FsmMenus_initMenu
                     pop             {r7, pc}
 
