@@ -22,6 +22,7 @@
     .extern         FsmMenus_initMainMenu                           @ init and show the main menu
     .extern         FsmCommon_showInstructions                      @ show instructions
     .extern         FsmCommon_anyKeyPressed                         @ check if any key pressed
+    .extern         __aeabi_uidiv                                   @ unsigned integer divide
 
     private_data(FsmPwmSetup_privateData)
 
@@ -149,8 +150,10 @@ drawValueOffset=50
                     push            {r7, lr}
                     movs            r7, r0                          @ save r0 for later
                     movs            r1, #100                        @ calculate PWM as a percentage
-                    muls            r1, r1, r0
-                    lsrs            r0, r1, #12                     @ analog range is 12 bits
+                    lsrs            r0, r0, #3                      @ make analog range 9 bits, rather than 12
+                    muls            r0, r0, r1                      @ as the bottom 3 bits are too noisy
+                    ldr             r1, = #(1<<9)-1                 @ divide by 2^9-1 to get full range, rather than
+                    bl              __aeabi_uidiv                   @ a right shift by 9
                     ldr             r1, = #FsmPwmSetup_convertBuffer
                     movs            r2, #10                         @ convert to base 10
                     bl              itoa
