@@ -9,6 +9,10 @@
 
 #include "moduleInfo.inc"
 
+    @TODO: allow for start > end
+    @TODO: change period to 15ms
+    @TODO: when not in use set to high (eventually configurable...)
+
 @ Finite State Machine functions for servo operation
 
     module(FsmServoSetup)
@@ -23,8 +27,11 @@
     .extern         FsmMenus_initServoSaveMenu                      @ show the servo save menu
     .extern         FsmCommon_showInstructions                      @ show instructions
     .extern         FsmCommon_anyKeyPressed                         @ check if any key pressed
+    .extern         FsmCommon_enableTimer3Isr                       @ enable timer 3 interrupts
+    .extern         FsmCommon_disableTimer3Isr                      @ disable timer 3 interrupts
+    .extern         FsmCommon_setTimer3Handler                      @ set the timer 3 interrupt handler
     .extern         itoa                                            @ convert integer to string
-   .extern         __aeabi_uidiv                                   @ unsigned integer divide
+    .extern         __aeabi_uidiv                                   @ unsigned integer divide
 
     private_data(FsmServoSetup_privateData)
 
@@ -38,6 +45,10 @@ FsmServoRun_start:                                                  @ Running pa
 FsmServoRun_end:
                     .short          0
 FsmServoRun_speed:
+                    .short          0
+FsmServoRun_delayCount:                                             @ used to delay between reversing direction
+                    .short          0
+FsmServoRun_state:                                                  @ cheeky state flag
                     .short          0
 
 FsmServoSetup_convertBuffer:
@@ -203,6 +214,8 @@ FsmServoSetup_runServo:
                     lsls            r0, r0, #1
                     ldrh            r0, [r5, r0]
                     strh            r0, [r7, #4]
+                    movs            r0, #0                          @ reset state flag
+                    strh            r0, [r7, #8]
 
                     movs            r0, #0                          @ display a line to the user that we are testing
                     ldr             r1, = #(1 | DISPLAY_ROW)        @ the servo
@@ -227,8 +240,8 @@ FsmServoSetup_runServo:
                     str             r0, [r2, #TIM_CCR4_OFFSET]
                     movs            r0, #PWM_PSC
                     str             r0, [r2, #TIM_PSC_OFFSET]
-                    movs            r0, #TIM_DIER_UIE
-                    ldr             r1, = #FsmServoSetup_timer3Isr
+                    movs            r0, #TIM_DIER_CC4IE             @ Timer3 interrupt on CC4 event (hopefully more
+                    ldr             r1, = #FsmServoSetup_timer3ForwardIsr   @ gitter free than using the update event)
                     bl              FsmCommon_enableTimer3Isr
                     movs            r0, #TIM_CR1_CEN                @ enable the timer...
                     str             r0, [r2, #TIM_CR1_OFFSET]
@@ -317,48 +330,118 @@ FsmServoSetup_displayValue:
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #1
                     bl              Display_drawString
-
                     pop             {r7, pc}
 
-    private_function(FsmServoSetup_timer3Isr)
+    private_function(FsmServoSetup_timer3ForwardIsr)
 
-@ void FsmServoSetup_displayValue(void)
-@   Handles the timer 3 update interrupt
+@ void FsmServoSetup_timer3ForwardIsr(void)
+@   Handles the timer 3 update interrupt for move the servo forwards (start>end)
 
-FsmServoSetup_timer3Isr:
-                    push            {r6-r7, lr}                     @ no need to align stack, as can only be interrupted
-                                                                    @ by NMI, and we're not calling any functions
-                    ldr             r6, = #TIM3_BASE                @ current position
-                    ldr             r3, [r6, #TIM_CCR4_OFFSET]
-                    ldr             r7, = #FsmServoRun_start        @ check to see which direction the servo should
-                    ldrh            r0, [r7]                        @ be going
-                    ldrh            r1, [r7, #2]
-                    ldrh            r2, [r7, #4]
-                    cmp             r0, r1
-                    bgt             backwards
-                    beq             endTest                         @ if they are equal then end
-forwards:
-                    adds            r3, r3, r2
-                    cmp             r3, r1                          @ if the setting is past the end stop
-                    ble             set                             @ set it to the endstop
-                    movs            r3, r1
-                    strh            r1, [r7]                        @ swap the ends over
-                    strh            r0, [r7, #2]
-                    b               set
-backwards:
-                    subs            r3, r3, r2
-                    cmp             r3, r1                          @ if the setting is past the start stop
-                    bge             set                             @ set it to the endstop
-                    movs            r3, r1
-                    movs            r0, #0                          @ store zero in start and end, indicating we'll
-                    str             r0, [r7]                        @ stop next time round
-set:
-                    str             r3, [r6, #TIM_CCR4_OFFSET]
-                    pop             {r6-r7, pc}
-endTest:
-                    movs            r0, #0
-                    str             r0, [r6, #TIM_CCER_OFFSET]
-                    str             r0, [r6, #TIM_CR1_OFFSET]
-                    pop             {r6-r7, pc}
+FsmServoSetup_timer3ForwardIsr:
+                    push            {r5-r7, lr}
+                    ldr             r7, = #FsmServoRun_start        @ get increment and end stop
+                    ldrh            r0, [r7, #2]
+                    ldrh            r1, [r7, #4]
+                    ldr             r5, = #TIM3_BASE                @ current position
+                    ldr             r6, [r5, #TIM_CCR4_OFFSET]
+                    adds            r6, r6, r1
+                    cmp             r6, r0                          @ if the setting is past the end stop
+                    ble             0f                              @ set it to the endstop
+                    movs            r6, r0
+                    ldr             r1, = #(1000/6)
+                    strh            r1, [r7, #6]
+                    ldr             r0, = #FsmServoSetup_timer3DelayIsr @ setup for 0.5s delay
+                    bl              FsmCommon_setTimer3Handler
+0:
+                    str             r6, [r5, #TIM_CCR4_OFFSET]
+                    pop             {r5-r7, pc}
+
+    private_function(FsmServoSetup_timer3BackwardsIsr)
+
+@ void FsmServoSetup_timer3BackwardsIsr(void)
+@   Handles the timer 3 update interrupt for move the servo backwards (end>start)
+
+FsmServoSetup_timer3BackwardsIsr:
+                    push            {r5-r7, lr}
+                    ldr             r7, = #FsmServoRun_start        @ get increment and end stop
+                    ldrh            r0, [r7, #2]
+                    ldrh            r1, [r7, #4]
+                    ldr             r5, = #TIM3_BASE                @ current position
+                    ldr             r6, [r5, #TIM_CCR4_OFFSET]
+                    subs            r6, r6, r1
+                    cmp             r6, r0                          @ if the setting is past the end stop
+                    bge             0f                              @ set it to the endstop
+                    movs            r6, r0
+                    ldr             r1, = #(1000/6)
+                    strh            r1, [r7, #6]
+                    ldr             r0, = #FsmServoSetup_timer3DelayIsr @ setup for 0.5s delay
+                    bl              FsmCommon_setTimer3Handler
+0:
+                    str             r6, [r5, #TIM_CCR4_OFFSET]
+                    pop             {r5-r7, pc}
+
+    private_function(FsmServoSetup_timer3DelayIsr)
+
+@ void FsmServoSetup_timer3DelayIsr(void)
+@   Handles the timer 3 update interrupt for delaying for 05.s
+
+FsmServoSetup_timer3DelayIsr:
+                    push            {r7, lr}
+                    ldr             r0, =#FsmServoRun_delayCount
+                    ldrh            r1, [r0]
+                    subs            r1, r1, #1
+                    beq             0f
+                    strh            r1, [r0]
+                    b               9f
+0:
+                    ldr             r0, = #FsmServoSetup_timer3SwapEndsIsr  @ end of delay so swap the ends over
+                    bl              FsmCommon_setTimer3Handler
+9:
+                    pop             {r7, pc}
+
+    private_function(FsmServoSetup_timer3SwapEndsIsr)
+
+@ void FsmServoSetup_timer3SwapEndsIsr(void)
+@   Handles the timer 3 update interrupt for swapping ends
+
+FsmServoSetup_timer3SwapEndsIsr:
+                    push            {r7, lr}
+                    ldr             r7, = #FsmServoRun_start        @ get the two ends
+                    ldrh            r3, [r7, #8]                    @ check to see if we've already swapped ends
+                    cmp             r3, #1
+                    bne             0f
+                    ldr             r0, = #FsmServoSetup_timer3EndIsr
+                    b               2f
+0:
+                    ldrh            r1, [r7]
+                    ldrh            r2, [r7, #2]
+                    strh            r1, [r7, #2]                    @ and swap them!
+                    strh            r2, [r7]
+                    movs            r3, #1                          @ set the state flag to indicate we've done this
+                                                                    @ already... (yes wrong, but it cuts down on the
+                                                                    @ number of handlers
+                    strh            r3, [r7, #8]
+                    cmp             r1, r2                          @ is start > end now ?
+                    ble             1f                              @ then go fowards
+                    ldr             r0, = #FsmServoSetup_timer3ForwardIsr
+                    b               2f
+1:                                                                  @ otherwise backwards
+                    ldr             r0, = #FsmServoSetup_timer3BackwardsIsr @ then go fowards
+2:
+                    bl              FsmCommon_setTimer3Handler
+                    pop             {r7, pc}
+
+
+    private_function(FsmServoSetup_timer3EndIsr)
+
+@ void FsmServoSetup_timer3EndIsr(void)
+@   Handles the timer 3 update interrupt for ending the operation
+
+FsmServoSetup_timer3EndIsr:
+                    ldr             r0, = #TIM3_BASE                @ turn off the timer...
+                    movs            r1, #0                          @ the main FSM picks up on this, and then ends...
+                    str             r1, [r0, #TIM_CCER_OFFSET]
+                    str             r1, [r0, #TIM_CR1_OFFSET]
+                    bx              lr
 
     .end

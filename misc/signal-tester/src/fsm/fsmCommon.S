@@ -135,7 +135,7 @@ FsmCommon_enableTimer3Isr:
 
     public_function(FsmCommon_disableTimer3Isr)
 
-@ void FsmCommon_disableTimer3Isr(short interruptEnable, fn* handler)
+@ void FsmCommon_disableTimer3Isr(void)
 @   Disable interrupts for timer 3.
 
 FsmCommon_disableTimer3Isr:
@@ -151,6 +151,19 @@ FsmCommon_disableTimer3Isr:
                     cpsie           i                               @ enable interrupts
                     dsb                                             @ flush any memory writes before continuing
                     pop             {r7, pc}
+
+    public_function(FsmCommon_setTimer3Handler)
+
+@ void FsmCommon_setTimer3Handler(fn* handler)
+@   Set the timer 3 ISR handler
+
+FsmCommon_setTimer3Handler:
+                    cpsid           i                               @ disable interrupts except NMI
+                    ldr             r2,  = #FsmCommon_timer3Isr     @ set the ISR
+                    str             r0, [r2]
+                    cpsie           i                               @ enable interrupts
+                    dsb                                             @ flush any memory writes before continuing
+                    bx              lr
 
     public_function(__tim3IRQHandler)
 
