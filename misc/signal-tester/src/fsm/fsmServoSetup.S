@@ -9,10 +9,6 @@
 
 #include "moduleInfo.inc"
 
-    @TODO: allow for start > end
-    @TODO: change period to 15ms
-    @TODO: when not in use set to high (eventually configurable...)
-
 @ Finite State Machine functions for servo operation
 
     module(FsmServoSetup)
@@ -35,10 +31,10 @@
 
     private_data(FsmServoSetup_privateData)
 
-PWM_ARR         = 57599                                             @ ARR value for period of 6ms
-PWM_PSC         = 4                                                 @ Presclare value for period of 6ms
-PWM_CCR_LOW     = 4799                                              @ CCR value of lowest pulse for servo (0.5ms)
-PWM_CCR_HIGH    = 23999                                             @ CCR Value of highest pulse for servo (2.5ms)
+PWM_ARR         = 63999                                             @ ARR value for period of 8ms
+PWM_PSC         = 5                                                 @ Presclare value for period of 8ms
+PWM_CCR_LOW     = 3999                                              @ CCR value of lowest pulse for servo (0.5ms)
+PWM_CCR_HIGH    = 19999                                             @ CCR Value of highest pulse for servo (2.5ms)
 
 FsmServoRun_start:                                                  @ Running parameters: start, end, speed
                     .short          0
@@ -64,7 +60,7 @@ FsmServoSetup_speed:
 
 FsmServoSetup_const:
 
-speedTable:         .short          216, 108, 72, 54, 43, 36, 30, 27, 24, 31, 19, 18, 16, 15, 14, 13
+speedTable:         .short          192, 96, 64, 48, 38, 32, 27, 24, 21, 19, 17, 16, 14, 13, 12, 11
 
 title:              .string         "Servo Setup"
 instructions1:      .string         "Connect the servo to the"
@@ -172,7 +168,7 @@ FsmServoSetup_adjustServoParameters:
                     movs            r5, #FSM_BUTTON_ACTION          @ action button pressed?
                     tst             r3, r5
                     beq             2f
-                    ldr             r0, = #FsmServoSetup_runServo   @ yes, test the servo TODO:
+                    ldr             r0, = #FsmServoSetup_runServo   @ yes, test the servo
                     b               9f
 2:
                     movs            r5, #FSM_BUTTON_RIGHT           @ Next/Forward button pressed?
@@ -240,9 +236,18 @@ FsmServoSetup_runServo:
                     str             r0, [r2, #TIM_CCR4_OFFSET]
                     movs            r0, #PWM_PSC
                     str             r0, [r2, #TIM_PSC_OFFSET]
+
+                    ldrh            r0, [r7]                        @ if start < end then start fowards, otherwise
+                    ldrh            r1, [r7, #2]                    @ backwards
+                    cmp             r0, r1
+                    bge             0f
+                    ldr             r1, = #FsmServoSetup_timer3ForwardIsr
+                    b               1f
+0:
+                    ldr             r1, = #FsmServoSetup_timer3BackwardsIsr
+1:
                     movs            r0, #TIM_DIER_CC4IE             @ Timer3 interrupt on CC4 event (hopefully more
-                    ldr             r1, = #FsmServoSetup_timer3ForwardIsr   @ gitter free than using the update event)
-                    bl              FsmCommon_enableTimer3Isr
+                    bl              FsmCommon_enableTimer3Isr       @ gitter free than using the update event)
                     movs            r0, #TIM_CR1_CEN                @ enable the timer...
                     str             r0, [r2, #TIM_CR1_OFFSET]
 
@@ -261,6 +266,7 @@ FsmServoSetup_waitForServo:
                     cmp             r0, #0
                     bne             9f
                     push            {r7, lr}
+                    bne             9f
                     bl              FsmCommon_disableTimer3Isr
                     ldr             r0, = #FsmServoSetup_setupServo
                     pop             {r7, pc}
@@ -292,8 +298,6 @@ FsmServoSetup_setServoValues:
                     lsrs            r6, r6, #8                      @ and speed is 0-15 (4 bit value)
                     ldr             r7, = #FsmServoSetup_start
                     strb            r6, [r7, #2]                    @ store speed
-                    cmp             r4, r5
-                    bge             1f                              @ if start > end then ignore new values
                     strb            r4, [r7, #0]
                     strb            r5, [r7, #1]
 0:
@@ -308,10 +312,6 @@ FsmServoSetup_setServoValues:
                     bl              FsmServoSetup_displayValue
                     bl              Display_blitDisplayBuffer
                     pop             {r3-r7, pc}
-1:
-                    ldrb            r4, [r7, #0]                    @ load the old values, so the displayed values
-                    ldrb            r5, [r7, #1]                    @ are as stored
-                    b               0b
 
     private_function(FsmServoSetup_displayValue)
 
