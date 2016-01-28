@@ -146,7 +146,7 @@ FsmPwmSetup_adjustPwm:
 
 FsmPwmSetup_adjustPwmFromValue:
 
-drawValueOffset=50
+drawValueOffset=46
 
                     push            {r7, lr}
                     movs            r7, r0                          @ save r0 for later

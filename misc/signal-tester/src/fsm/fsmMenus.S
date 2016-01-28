@@ -21,6 +21,8 @@
 
     .extern         FsmPwmSetup_initPwmSetup                        @ PWM LED Setup init
     .extern         FsmServoSetup_initServoSetup                    @ Server setup init
+    .extern         FsmWhiteTest_initWhiteTest                      @ RGB LED test using white setup init
+    .extern         FsmAspectTest_initAspectTest                    @ RGB LED test using different aspects setup init
     .extern         FsmHelp_initHelp                                @ Help init
 
     private_data(FsmMenus_privateData)
@@ -45,7 +47,7 @@ configure:          .string         "> Configure"
 help:               .string         "> Help"
 
 FsmMenus_signalTest:
-stRgbTest:          .string         "> RGB Test"
+stWhiteTest:        .string         "> White Test"
 stAspectTest:       .string         "> Aspect Test"
 stMainMenu:         .string         "> Back to main menu"
 
@@ -68,8 +70,8 @@ FsmMenus_mainMenuConf:                                              @ Main menu 
 FsmMenus_mainMenuConfEnd:
 
 FsmMenus_stMenuConf:
-                    .int            stRgbTest, 0
-                    .int            stAspectTest, 0
+                    .int            stWhiteTest, FsmWhiteTest_initWhiteTest
+                    .int            stAspectTest, FsmAspectTest_initAspectTest
                     .int            stMainMenu, FsmMenus_initMainMenu
 FsmMenus_stMenuConfEnd:
 
@@ -78,7 +80,6 @@ FsmMenus_ssMenuConf:
                     .int            ssReturn, FsmServoSetup_initServoSetup
                     .int            ssMainMenu, FsmMenus_initMainMenu
 FsmMenus_ssMenuConfEnd:
-
 
     public_function(FsmMenus_initMainMenu)
 
