@@ -274,6 +274,8 @@ FsmServoSetup_waitForServo:
                     movs            r0, #0
                     bx              lr
 
+    private_function(FsmServoSetup_setServoValues)
+
 @ void FsmServoSetup_setServoValues(short redValue, short blueValue, short greenValue)
 @   Set and display the new servo values
 

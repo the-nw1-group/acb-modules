@@ -57,11 +57,18 @@ ssSave:             .string         "> Save Settings to EEPROM"
 ssReturn:           .string         "> Return"
 ssMainMenu:         .string         "> Back to main menu"
 
+FsmMenus_signalSave:
+sigTitle:           .string         "Save Signal Colour Settings"
+sigSaveRed:         .string         "> Save As Red Aspect Colour"
+sigSaveYellow:      .string         "> Save As Yellow Aspect Colour"
+sigSaveGreen:       .string         "> Save As Green Aspect Colour"
+sigSaveWhite:       .string         "> Save As White Colour"
+
                     .balign         4                               @ align these data structures to 4 byte boundary
                     .align          4
 
 FsmMenus_mainMenuConf:                                              @ Main menu configuration
-                    .int            rgbSignalSetup, 0
+                    .int            rgbSignalSetup, FsmSignalSetup_initSignalSetup
                     .int            rgbSignalTest, FsmMenus_initSignalTestMenu
                     .int            servoSetup, FsmServoSetup_initServoSetup
                     .int            pwmLedSetup, FsmPwmSetup_initPwmSetup
@@ -80,6 +87,15 @@ FsmMenus_ssMenuConf:
                     .int            ssReturn, FsmServoSetup_initServoSetup
                     .int            ssMainMenu, FsmMenus_initMainMenu
 FsmMenus_ssMenuConfEnd:
+
+FsmMenus_sigMenuConf:
+                    .int            sigSaveRed, 0
+                    .int            sigSaveYellow, 0
+                    .int            sigSaveGreen, 0
+                    .int            sigSaveWhite, 0
+                    .int            ssReturn, FsmSignalSetup_initSignalSetup
+                    .int            ssMainMenu, FsmMenus_initMainMenu
+FsmMenus_sigMenuConfEnd:
 
     public_function(FsmMenus_initMainMenu)
 
@@ -117,6 +133,19 @@ FsmMenus_initServoSaveMenu:
                     ldr             r0, = #FsmMenus_ssMenuConf
                     movs            r1, (FsmMenus_ssMenuConfEnd-FsmMenus_ssMenuConf)/8
                     ldr             r2, = #(ssTitle)
+                    bl              FsmMenus_initMenu
+                    pop             {r7, pc}
+
+    public_function(FsmMenus_initSignalSaveMenu)
+
+@ int FsmMenus_initSignalSaveMenu(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for initialising the signal test menu. Returns the next state, or 0 to remain in the same state
+
+FsmMenus_initSignalSaveMenu:
+                    push            {r7, lr}
+                    ldr             r0, = #FsmMenus_sigMenuConf
+                    movs            r1, (FsmMenus_sigMenuConfEnd-FsmMenus_sigMenuConf)/8
+                    ldr             r2, = #(sigTitle)
                     bl              FsmMenus_initMenu
                     pop             {r7, pc}
 
