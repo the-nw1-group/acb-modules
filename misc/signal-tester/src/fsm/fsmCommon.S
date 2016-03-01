@@ -51,7 +51,7 @@ FsmCommon_dma23Isr:
 FsmCommon_const:
 FsmCommon_title:
 welcome:            .string         "Signal / Servo Tester"
-version:            .string         "Version 0.02"
+version:            .string         "Version 0.03"
 
                     .global         FsmCommon_title                 @ Application title
 

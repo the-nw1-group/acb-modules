@@ -25,9 +25,13 @@
 
     private_data(FsmWhiteTest_privateData)
 
+FsmWhiteTest_white:
+                    .int            0x00FFFFFF                      @ value to use for white
 FsmWhiteTest_convertBuffer:
                     .string         "    "                          @ buffer for integer conversion
 FsmWhiteTest_noOfLeds:
+                    .byte           0
+FsmWhiteTest_currentLed:
                     .byte           0
 
     static_data(FsmWhiteTest_const)
@@ -45,6 +49,7 @@ instructions7:      .string         "the Action button to test"
 instructions8:      .string         "the LEDs. Use Back or Next"
 instructions9:      .string         "to return to the last menu."
 noLeds:             .string         "Number of LEDs: "
+waitMessage:        .string         "Testing the LEDs"
 
                     .balign         4                               @ align these data structures to 4 byte boundary
                     .align          4
@@ -70,6 +75,14 @@ FsmWhiteTest_initWhiteTest:
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
+
+                    bl              Ws2812_init                     @ set up ws2812 module here
+                    movs            r0, #0                          @ set buffer sizes
+                    movs            r1, #0
+                    movs            r2, #0
+                    movs            r3, #32
+                    bl              Ws2812_setBufferSizes
+                    bl              Ws2812_clearBuffer              @ and clear the buffer
 
                     ldr             r0, = #instructionTable         @ show the instructions
                     movs            r1, #(instructionTableEnd-instructionTable)
@@ -97,19 +110,6 @@ FsmWhiteTest_setupWhiteTest:
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
 
-/*
-                    ldr             r2, = #TIM3_BASE                @ setup TIMER3 to be PWM with output of OC4
-                    ldr             r0, = #(TIM_CCMR2_OC4FE | TIM_CCMR2_OC4PE | TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2)
-                    str             r0, [r2, #TIM_CCMR2_OFFSET]
-                    ldr             r0, = #(TIM_CCER_CC4E)
-                    str             r0, [r2, #TIM_CCER_OFFSET]
-                    ldr             r0, = #PWM_ARR
-                    str             r0, [r2, #TIM_ARR_OFFSET]
-                    movs            r0, #0                          @ 0 prescale
-                    str             r0, [r2, #TIM_PSC_OFFSET]
-                    movs            r0, #TIM_CR1_CEN                @ enable the timer...
-                    str             r0, [r2, #TIM_CR1_OFFSET]
-*/
                     movs            r0, r7
                     bl              FsmWhiteTest_displayNumber      @ adjust number of LEDs and display
                     ldr             r0, = #FsmWhiteTest_adjustNumber
@@ -118,7 +118,7 @@ FsmWhiteTest_setupWhiteTest:
     private_function(FsmWhiteTest_adjustNumber)
 
 @ int FsmWhiteTest_adjustNumber(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
-@   FSM Routine adjusting the PWM timer based on Red. Returns the next state, or 0 to remain in the same state
+@   FSM Routine adjusting the number of LEDS based on Red. Returns the next state, or 0 to remain in the same state
 
 FsmWhiteTest_adjustNumber:
                     push            {r5-r7, lr}
@@ -142,12 +142,90 @@ FsmWhiteTest_adjustNumber:
                     movs            r5, #FSM_BUTTON_ACTION          @ action button pressed?
                     tst             r3, r5
                     beq             8f
-                    ldr             r0, = #0 @ FsmServoSetup_runServo   @ yes, test the LEDs
+                    ldr             r0, = #FsmWhiteTest_runWhiteTest @ yes, test the LEDs
                     b               9f
 8:
                     movs            r0, #0
 9:
                     pop             {r5-r7, pc}
+
+    private_function(FsmWhiteTest_runWhiteTest)
+
+@ int FsmWhiteTest_runWhiteTest(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for running the white test. Returns the next state, or 0 to remain in the same state
+
+FsmWhiteTest_runWhiteTest:
+                    push            {r7, lr}
+                    movs            r0, #0                          @ display a line to the user that we are testing
+                    ldr             r1, = #(1 | DISPLAY_ROW)        @ the LEDs
+                    movs            r2, #0
+                    movs            r3, #DISPLAY_WIDTH
+                    bl              Display_fillRow
+                    movs            r0, #0                          @ draw the text
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #1
+                    ldr             r3, = #waitMessage
+                    bl              Display_drawString
+                    bl              Display_blitDisplayBuffer
+
+                    ldr             r0, = #FsmWhiteTest_currentLed  @ re-init current LED value
+                    movs            r1, #0
+                    strb            r1, [r0]
+                    bl              FsmWhiteTest_testLed            @ show the first LED
+                    ldr             r0, = #FsmWhiteTest_waitForWhiteTest
+                    pop             {r7, pc}
+
+    private_function(FsmWhiteTest_waitForWhiteTest)
+
+@ int FsmWhiteTest_waitForWhiteTest(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for waiting for the white test to finish. Returns the next state, or 0 to remain in the same state
+
+FsmWhiteTest_waitForWhiteTest:
+                    push            {r7, lr}
+
+                    movs            r0, #0
+                    ldr             r7, = #FsmWhiteTest_noOfLeds    @ check if we've finished
+                    ldrb            r2, [r7]
+                    ldrb            r1, [r7, #1]
+                    cmp             r1, r2
+                    blt             9f
+                    ldr             r0, = #FsmWhiteTest_adjustNumber
+9:
+                    pop             {r7, pc}
+
+    private_function(FsmWhiteTest_testLed)
+
+@ void FsmWhiteTest_testLed()
+@   Test an LED, and then wait to test the next one
+
+FsmWhiteTest_testLed:
+alarmSlot = 4
+
+                    push            {r5-r7, lr}
+                    bl              Ws2812_clearBuffer              @ clear the buffer and display
+                    ldr             r7, = #FsmWhiteTest_noOfLeds    @ check if we've already finished, and the main
+                    ldrb            r0, [r7]                        @ loop hasn't caught up with us
+                    ldrb            r5, [r7, #1]
+                    cmp             r5, r0
+                    bge             9f
+
+                    movs            r0, #3                          @ only uses channel 4
+                    movs            r1, r5                          @ and set the aspect
+                    ldr             r2, = #FsmWhiteTest_white
+                    ldr             r2, [r2]
+                    bl              Ws2812_setColour                @ set the colour
+                    adds            r5, r5, #1
+                    strb            r5, [r7, #1]
+
+                    movs            r0, #alarmSlot                  @ enable a timer every 500ms
+                    ldr             r1, = #500
+                    ldr             r2, = #FsmWhiteTest_testLed
+                    bl              MsCounter_alarmIn
+9:
+                    movs            r0, #3
+                    bl              Ws2812_update
+                    pop             {r5-r7, pc}
+
 
     private_function(FsmWhiteTest_adjustNumber)
 
