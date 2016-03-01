@@ -23,15 +23,17 @@
     .extern         FsmMenus_initSignalSaveMenu                     @ show the signal save menu
     .extern         FsmCommon_showInstructions                      @ show instructions
     .extern         FsmCommon_anyKeyPressed                         @ check if any key pressed
-    .extern         FsmCommon_enableTimer3Isr                       @ enable timer 3 interrupts
-    .extern         FsmCommon_disableTimer3Isr                      @ disable timer 3 interrupts
-    .extern         FsmCommon_setTimer3Handler                      @ set the timer 3 interrupt handler
+    .extern         Ws2812_init                                     @ init WS2812 driver
+    .extern         Ws2812_setBufferSizes                           @ set buffer sizes for each of the channels
+    .extern         Ws2812_clearBuffer                              @ clear the WS2812 buffer
+    .extern         Ws2812_setColour                                @ set the colour
+    .extern         Ws2812_update                                   @ display the buffer on the display
     .extern         itoa                                            @ convert integer to string
 
     private_data(FsmSignalSetup_privateData)
 
 FsmSignalSetup_aspect:
-                    .byte           2                               @ which aspect shown (displayed 1-4)
+                    .byte           0                               @ which aspect shown (displayed 1-4)
 FsmSignalSetup_convertBuffer:
                     .string         "   "                           @ buffer for integer conversion
 
@@ -86,6 +88,14 @@ FsmSignalSetup_initSignalSetup:
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
 
+                    bl              Ws2812_init                     @ set up ws2812 module here
+                    movs            r0, #0                          @ set buffer sizes
+                    movs            r1, #0
+                    movs            r2, #0
+                    movs            r3, #4
+                    bl              Ws2812_setBufferSizes
+                    bl              Ws2812_clearBuffer              @ and clear the buffer
+
                     ldr             r0, = #instructionTable         @ show the instructions
                     movs            r1, #(instructionTableEnd-instructionTable)
                     ldr             r2, = #FsmSignalSetup_setupSignal
@@ -102,9 +112,6 @@ FsmSignalSetup_setupSignal:
                     ldr             r3, = #FsmSignalSetup_aspect
                     ldrb            r3, [r3]
                     bl              FsmSignalSetup__setSignalValues @ set and display values
-
-@ Start to show the values on the chosen aspect
-
                     ldr             r0, = #FsmSignalSetup_adjustSignalParameters
                     pop             {r7, pc}
 
@@ -131,20 +138,26 @@ FsmSignalSetup_adjustSignalParameters:
                     movs            r5, #FSM_BUTTON_LEFT            @ Left/Back pressed?
                     tst             r3, r5
                     beq             1f
-                    ldr             r0, = #FsmMenus_initMainMenu    @ yes, return to the main menu
+                    ldr             r0, = #FsmSignalSetup_exitSignalSetup @ yes, then exit
                     b               9f
 1:
                     movs            r5, #FSM_BUTTON_ACTION          @ action button pressed?
                     tst             r3, r5
                     beq             2f
-                    ldr             r0, = #FsmSignalSetup_aspect    @ yes, change the apsect
-                    ldrb            r1, [r0]
-                    adds            r1, r1, #1
-                    cmp             r1, #4
+                    ldr             r5, = #FsmSignalSetup_aspect    @ yes, change the apsect
+                    ldrb            r6, [r5]
+                    movs            r0, #3                          @ clear the current displayed colour
+                    movs            r1, r6
+                    movs            r2, #0
+                    bl              Ws2812_setColour                @ set the colour
+                    movs            r0, #3
+                    bl              Ws2812_update                   @ and display it
+                    adds            r6, r6, #1
+                    cmp             r6, #4
                     bne             0f
-                    movs            r1, #0
+                    movs            r6, #0
 0:
-                    strb            r1, [r0]
+                    strb            r6, [r5]
                     b               8f
 2:
                     movs            r5, #FSM_BUTTON_RIGHT           @ Next/Forward button pressed?
@@ -157,6 +170,19 @@ FsmSignalSetup_adjustSignalParameters:
 9:
                     pop             {r5-r7, pc}
 
+    public_function(FsmSignalSetup_exitSignalSetup)
+
+@ int FsmSignalSetup_exitSignalSetup(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for exiting the signal setup. Returns the next state, or 0 to remain in the same state
+
+FsmSignalSetup_exitSignalSetup:
+                    push            {r7, lr}
+                    bl              Ws2812_clearBuffer              @ clear the buffer and display
+                    movs            r0, #3
+                    bl              Ws2812_update
+                    ldr             r0, = #FsmMenus_initMainMenu    @ return to the main menu
+                    pop             {r7, pc}
+
 
     private_function(FsmSignalSetup__setSignalValues)
 
@@ -168,7 +194,7 @@ FsmSignalSetup__setSignalValues:
                     movs            r4, r0                          @ save parameters
                     movs            r5, r1
                     movs            r6, r2
-                    push            {r3-r4}
+                    movs            r7, r3
                     movs            r0, #0                          @ clear row, and display the template
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
@@ -183,12 +209,6 @@ FsmSignalSetup__setSignalValues:
                     lsrs            r4, r4, #4                      @ shift to the right, to it's an 8 bit value
                     lsrs            r5, r5, #4
                     lsrs            r6, r6, #4
-/*
-                    ldr             r7, = #FsmServoSetup_start
-                    strb            r6, [r7, #2]                    @ store speed
-                    strb            r4, [r7, #0]
-                    strb            r5, [r7, #1]
-*/
 0:
                     movs            r0, r4                          @ display the red value
                     movs            r1, #8
@@ -199,15 +219,21 @@ FsmSignalSetup__setSignalValues:
                     movs            r0, r6                          @ display the blue value
                     movs            r1, #59
                     bl              FsmSignalSetup_displayValue
-                    pop             {r0, r1}                        @ display the aspect
-                    adds            r0, r0, #1                      @ display 1 based
+                    adds            r0, r7, #1                      @ display the aspect, which is 1 based
                     movs            r1, #85
                     bl              FsmSignalSetup_displayValue
-
-@ display aspect value
-@ update the real display
-
                     bl              Display_blitDisplayBuffer
+
+                    movs            r2, r6
+                    lsls            r0, r5, #8                      @ shift the colours, into rgb in one word
+                    orrs            r2, r2, r0
+                    lsls            r0, r4, #16
+                    orrs            r2, r2, r0
+                    movs            r0, #3                          @ only uses channel 4
+                    movs            r1, r7                          @ and set the aspect
+                    bl              Ws2812_setColour                @ set the colour
+                    movs            r0, #3
+                    bl              Ws2812_update                   @ and display it
                     pop             {r3-r7, pc}
 
     private_function(FsmSignalSetup_displayValue)
@@ -228,6 +254,5 @@ FsmSignalSetup_displayValue:
                     movs            r2, #1
                     bl              Display_drawString
                     pop             {r7, pc}
-
 
     .end

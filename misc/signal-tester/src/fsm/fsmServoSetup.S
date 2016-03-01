@@ -341,6 +341,10 @@ FsmServoSetup_displayValue:
 
 FsmServoSetup_timer3ForwardIsr:
                     push            {r5-r7, lr}
+                    ldr             r1, = #TIM3_BASE                @ acknowledge the interrupt
+                    movs            r0, #0
+                    str             r0, [r1, #TIM_SR_OFFSET]
+
                     ldr             r7, = #FsmServoRun_start        @ get increment and end stop
                     ldrh            r0, [r7, #2]
                     ldrh            r1, [r7, #4]
@@ -365,6 +369,10 @@ FsmServoSetup_timer3ForwardIsr:
 
 FsmServoSetup_timer3BackwardsIsr:
                     push            {r5-r7, lr}
+                    ldr             r1, = #TIM3_BASE                @ acknowledge the interrupt
+                    movs            r0, #0
+                    str             r0, [r1, #TIM_SR_OFFSET]
+
                     ldr             r7, = #FsmServoRun_start        @ get increment and end stop
                     ldrh            r0, [r7, #2]
                     ldrh            r1, [r7, #4]
@@ -389,6 +397,10 @@ FsmServoSetup_timer3BackwardsIsr:
 
 FsmServoSetup_timer3DelayIsr:
                     push            {r7, lr}
+                    ldr             r1, = #TIM3_BASE                @ acknowledge the interrupt
+                    movs            r0, #0
+                    str             r0, [r1, #TIM_SR_OFFSET]
+
                     ldr             r0, =#FsmServoRun_delayCount
                     ldrh            r1, [r0]
                     subs            r1, r1, #1
@@ -408,6 +420,10 @@ FsmServoSetup_timer3DelayIsr:
 
 FsmServoSetup_timer3SwapEndsIsr:
                     push            {r7, lr}
+                    ldr             r1, = #TIM3_BASE                @ acknowledge the interrupt
+                    movs            r0, #0
+                    str             r0, [r1, #TIM_SR_OFFSET]
+
                     ldr             r7, = #FsmServoRun_start        @ get the two ends
                     ldrh            r3, [r7, #8]                    @ check to see if we've already swapped ends
                     cmp             r3, #1
@@ -442,6 +458,7 @@ FsmServoSetup_timer3SwapEndsIsr:
 FsmServoSetup_timer3EndIsr:
                     ldr             r0, = #TIM3_BASE                @ turn off the timer...
                     movs            r1, #0                          @ the main FSM picks up on this, and then ends...
+                    str             r1, [r0, #TIM_SR_OFFSET]
                     str             r1, [r0, #TIM_CCER_OFFSET]
                     str             r1, [r0, #TIM_CR1_OFFSET]
                     bx              lr

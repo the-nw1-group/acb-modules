@@ -22,6 +22,8 @@
     .extern         Analog_init                                     @ Setup the ADCs
     .extern         Display_init                                    @ Setup the Display
     .extern         SimpleInputDebounce_setup                       @ Setup the input debouncer
+    .extern         Ws2812_init                                     @ Setup the WS2812 driver
+    .extern         Ws2812_setBufferSizes                           @ Set the WS2812 buffer sizes
 
     public_function(Setup_setup)
 
@@ -51,10 +53,11 @@ __setupCounter:
                     bl              Setup_setupTimers
                     bl              Analog_init
 
-       @            bl              Eeprom_init
+             @      bl              Eeprom_init
                     bl              Display_init
                     cmp             r0, #ERROR
                     beq             __setupDisplayFail
+                    bl              Ws2812_init
 
 #if !defined(DEBUG)
                     movs            r0, #4                          @ only enable the watchdog on non-debug builds

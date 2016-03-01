@@ -59,6 +59,9 @@ dmaConfig = DMA_CCR_PL_0 | DMA_CCR_MSIZE_0 | DMA_CCR_PSIZE_1 | DMA_CCR_MINC | DM
                     ldr             r0, = #dmaConfig
                     str             r0, [r2, #DMA_Channel_CCR_OFFSET]
 
+                    movs            r0, #DMA1_Channel1_IRQn         @ set DMA channel interrup to have the lowest
+                    movs            r1, #3                          @ priority
+                    bl              NVIC_setPriority
                     movs            r0, #DMA1_Channel1_IRQn         @ enable DMA channel 1 interrupt
                     bl              NVIC_enableIRQ
 

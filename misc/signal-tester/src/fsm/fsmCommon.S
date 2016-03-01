@@ -43,13 +43,15 @@ FsmCommon_maxInstructions:
 
 FsmCommon_timer3Isr:
                     .int            0
+FsmCommon_dma23Isr:
+                    .int            0
 
     static_data(FsmCommon_const)
 
 FsmCommon_const:
 FsmCommon_title:
 welcome:            .string         "Signal / Servo Tester"
-version:            .string         "Version 0.01"
+version:            .string         "Version 0.02"
 
                     .global         FsmCommon_title                 @ Application title
 
@@ -152,15 +154,51 @@ FsmCommon_disableTimer3Isr:
                     dsb                                             @ flush any memory writes before continuing
                     pop             {r7, pc}
 
+    public_function(FsmCommon_interceptIsr)
+
+@ void FsmCommon_interceptIsr(int irq, fn* handler)
+@   Intercept a ISR. The only ISR's handled by this method is TIM3_IRQn and DMA1_Channel2_3_IRQn. This doesn't enable
+@   the interrupt, so callee must still call NVIC_enableIRQ
+
+FsmCommon_interceptIsr:
+                    cmp             r0, #TIM3_IRQn
+                    beq             0f
+                    cmp             r0, #DMA1_Channel2_3_IRQn
+                    beq             1f
+                    bx              lr
+0:
+                    movs            r0, r1
+                    b               FsmCommon_setTimer3Handler      @ tail chain call to the handler below
+1:
+                    movs            r0, r1
+                    b               FsmCommon_setDma23Handler       @ tail chain call to the handler below
+
     public_function(FsmCommon_setTimer3Handler)
 
 @ void FsmCommon_setTimer3Handler(fn* handler)
 @   Set the timer 3 ISR handler
 
 FsmCommon_setTimer3Handler:
+                    ldr             r1,  = #FsmCommon_timer3Isr     @ set the ISR
+                    b               FsmCommon_setHandler            @ tail chain call to the handler below
+
+    public_function(FsmCommon_setDma23Handler)
+
+@ void FsmCommon_setDma23Handler(fn* handler)
+@   Set the timer 3 ISR handler
+
+FsmCommon_setDma23Handler:
+                    ldr             r1,  = #FsmCommon_dma23Isr      @ set the ISR
+                    b               FsmCommon_setHandler            @ tail chain call to the handler below
+
+    private_function(FsmCommon_setHandler)
+
+@ void FsmCommon_setHandler(fn* handler, int* handlerLocation)
+@   Set the handler
+
+FsmCommon_setHandler:
                     cpsid           i                               @ disable interrupts except NMI
-                    ldr             r2,  = #FsmCommon_timer3Isr     @ set the ISR
-                    str             r0, [r2]
+                    str             r0, [r1]                        @ store value
                     cpsie           i                               @ enable interrupts
                     dsb                                             @ flush any memory writes before continuing
                     bx              lr
@@ -171,10 +209,21 @@ FsmCommon_setTimer3Handler:
 @   System timer 3 ISR routine
 
 __tim3IRQHandler:
-                    ldr             r1, = #TIM3_BASE                @ acknowledge the interrupt
-                    movs            r0, #0
-                    str             r0, [r1, #TIM_SR_OFFSET]
                     ldr             r1, = #FsmCommon_timer3Isr      @ load the real ISR
+                    ldr             r1, [r1]
+                    cmp             r1, #0                          @ if zero, then just ignore it
+                    beq             9f
+                    bx              r1                              @ no need to link here, just let the real ISR
+9:                                                                  @ return straight through here
+                    bx              lr
+
+    public_function(__dma1Channel23IRQHandler)
+
+@ void __dma1Channel23IRQHandler (void)
+@   DMA interrupt service routine for channel 2, and channel 3
+
+__dma1Channel23IRQHandler:
+                    ldr             r1, = #FsmCommon_dma23Isr       @ load the real ISR
                     ldr             r1, [r1]
                     cmp             r1, #0                          @ if zero, then just ignore it
                     beq             9f

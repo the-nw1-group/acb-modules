@@ -21,8 +21,6 @@
     .extern         Display_drawString                              @ draw a string into the display buffer
     .extern         FsmMenus_initSignalTestMenu                     @ show the signal test menu
     .extern         FsmCommon_showInstructions                      @ show instructions
-    .extern         FsmCommon_enableTimer3Isr                       @ enable timer 3 interrupts
-    .extern         FsmCommon_disableTimer3Isr                      @ disable timer 3 interrupts
     .extern         itoa                                            @ convert integer to string
 
     private_data(FsmWhiteTest_privateData)

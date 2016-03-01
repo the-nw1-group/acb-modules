@@ -76,6 +76,15 @@
 #include "acb/eeprom.inc"
 
 /*
+ * Configure ws2812 driver
+ */
+
+#define ACB_USE_WS2812
+#define ACB_WS2812_DRIVER                   3
+#define ACB_WS2812_IRQ_REDIRECT_FN          FsmCommon_interceptIsr
+#include "acb/ws2812.inc"
+
+/*
  * Configure error handler to capture default handler, and all faults
  */
 

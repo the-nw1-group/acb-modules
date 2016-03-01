@@ -94,7 +94,7 @@ FsmMenus_sigMenuConf:
                     .int            sigSaveGreen, 0
                     .int            sigSaveWhite, 0
                     .int            ssReturn, FsmSignalSetup_initSignalSetup
-                    .int            ssMainMenu, FsmMenus_initMainMenu
+                    .int            ssMainMenu, FsmSignalSetup_exitSignalSetup
 FsmMenus_sigMenuConfEnd:
 
     public_function(FsmMenus_initMainMenu)
