@@ -22,11 +22,17 @@
     .extern         FsmMenus_initSignalTestMenu                     @ show the signal test menu
     .extern         FsmCommon_showInstructions                      @ show instructions
     .extern         itoa                                            @ convert integer to string
+    .extern         Ws2812_init                                     @ init WS2812 driver
+    .extern         Ws2812_setBufferSizes                           @ set buffer sizes for each of the channels
+    .extern         Ws2812_clearBuffer                              @ clear the WS2812 buffer
+    .extern         Ws2812_setColour                                @ set the colour
+    .extern         Ws2812_update                                   @ display the buffer on the display
+    .extern         MsCounter_alarmIn                               @ set an alarm in x milliseconds
 
     private_data(FsmWhiteTest_privateData)
 
-FsmWhiteTest_white:
-                    .int            0x00FFFFFF                      @ value to use for white
+FsmWhiteTest_white:                                                 @ value to use for white (in SRAM as will be
+                    .int            0x00FFFFFF                      @ configurable
 FsmWhiteTest_convertBuffer:
                     .string         "    "                          @ buffer for integer conversion
 FsmWhiteTest_noOfLeds:
@@ -184,11 +190,10 @@ FsmWhiteTest_waitForWhiteTest:
                     push            {r7, lr}
 
                     movs            r0, #0
-                    ldr             r7, = #FsmWhiteTest_noOfLeds    @ check if we've finished
+                    ldr             r7, = #FsmWhiteTest_currentLed  @ check if we've finished
                     ldrb            r2, [r7]
-                    ldrb            r1, [r7, #1]
-                    cmp             r1, r2
-                    blt             9f
+                    cmp             r2, #0xff                       @ uses 0xff as a marker that the test has finished
+                    bne             9f
                     ldr             r0, = #FsmWhiteTest_adjustNumber
 9:
                     pop             {r7, pc}
@@ -207,7 +212,7 @@ alarmSlot = 4
                     ldrb            r0, [r7]                        @ loop hasn't caught up with us
                     ldrb            r5, [r7, #1]
                     cmp             r5, r0
-                    bge             9f
+                    bge             8f
 
                     movs            r0, #3                          @ only uses channel 4
                     movs            r1, r5                          @ and set the aspect
@@ -225,7 +230,10 @@ alarmSlot = 4
                     movs            r0, #3
                     bl              Ws2812_update
                     pop             {r5-r7, pc}
-
+8:
+                    movs            r0, #0xff                       @ use 0xff as a marker to indicate we've
+                    strb            r0, [r7, #1]                    @ finished
+                    b               9b
 
     private_function(FsmWhiteTest_adjustNumber)
 

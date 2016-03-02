@@ -19,13 +19,48 @@
     .extern         Display_drawFilledRectangle                     @ draw a filled rectangle
     .extern         Display_fillRow                                 @ fill a row in the display buffer
     .extern         Display_drawString                              @ draw a string into the display buffer
+    .extern         Display_drawFilledRectangle                     @ fill a rectangle
     .extern         FsmMenus_initSignalTestMenu                     @ show the signal test menu
     .extern         FsmCommon_showInstructions                      @ show instructions
+    .extern         Ws2812_init                                     @ init WS2812 driver
+    .extern         Ws2812_setBufferSizes                           @ set buffer sizes for each of the channels
+    .extern         Ws2812_clearBuffer                              @ clear the WS2812 buffer
+    .extern         Ws2812_setColour                                @ set the colour
+    .extern         Ws2812_update                                   @ display the buffer on the display
+    .extern         MsCounter_alarmIn                               @ set an alarm in x milliseconds
 
     private_data(FsmAspectTest_privateData)
 
-FsmWhiteTest_convertBuffer:
-                    .string         "    "                          @ buffer for integer conversion
+FsmAspectTest_oneAspectR:                                           @ in SRAM as these will be configurable at some
+                    .int            0x00C00014, 0, 0, 0             @ point
+FsmAspectTest_twoAspectRG:
+                    .int            0x00C00014, 0, 0, 0
+                    .int            0, 0x0000A816, 0, 0
+FsmAspectTest_twoAspectYG:
+                    .int            0x00B88000, 0, 0, 0
+                    .int            0, 0x0000A816, 0, 0
+FsmAspectTest_threeAspectRYG:
+                    .int            0x00C00014, 0, 0, 0
+                    .int            0, 0x00B88000, 0, 0
+                    .int            0, 0, 0x0000A816, 0
+FsmAspectTest_fourAspectRYGD:
+                    .int            0x00C00014, 0, 0, 0
+                    .int            0, 0x00B88000, 0, 0
+                    .int            0, 0, 0x0000A816, 0
+                    .int            0, 0x00B88000, 0, 0x00B88000
+FsmAspectTest_oneAspectY:
+                    .int            0x00B88000, 0, 0, 0
+FsmAspectTest_oneAspectG:
+                    .int            0x0000A816, 0, 0, 0
+FsmAspectTest_oneAspectW:
+                    .int            0x00FFFFFF, 0, 0, 0
+
+FsmAspectTest_currentTestPtr:
+                    .int            0
+FsmAspectTest_currentTestLength:
+                    .byte           0
+FsmAspectTest_currentTestAspect:
+                    .byte           0
 FsmAspectTest_aspectType:
                     .byte           0
 
@@ -44,6 +79,7 @@ instructions7:      .string         "then use the Action button to"
 instructions8:      .string         "test the LEDs. Use Back or Next"
 instructions9:      .string         "to return to the last menu."
 aspects:            .string         "Aspects: "
+waitMessage:        .string         "Testing: "
 
 aspect0:            .string         "1 Aspect   [R]"                @ the aspects and types (yes they do all line
 aspect1:            .string         "2 Aspects [RG]"                @ up on the display
@@ -65,9 +101,19 @@ instructionTable:
                     .int            instructions9
 instructionTableEnd:
 
-aspectTable:
+aspectTextTable:
                     .int            aspect0, aspect1, aspect2, aspect3
                     .int            aspect4, aspect5, aspect6, aspect7
+
+aspectValueTable:
+                    .int            FsmAspectTest_oneAspectR, 1
+                    .int            FsmAspectTest_twoAspectRG, 2
+                    .int            FsmAspectTest_twoAspectYG, 2
+                    .int            FsmAspectTest_threeAspectRYG, 3
+                    .int            FsmAspectTest_fourAspectRYGD, 4
+                    .int            FsmAspectTest_oneAspectY, 1
+                    .int            FsmAspectTest_oneAspectG, 1
+                    .int            FsmAspectTest_oneAspectW, 1
 
     public_function(FsmAspectTest_initAspectTest)
 
@@ -82,6 +128,14 @@ FsmAspectTest_initAspectTest:
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
+
+                    bl              Ws2812_init                     @ set up ws2812 module here
+                    movs            r0, #0                          @ set buffer sizes
+                    movs            r1, #0
+                    movs            r2, #0
+                    movs            r3, #4
+                    bl              Ws2812_setBufferSizes
+                    bl              Ws2812_clearBuffer              @ and clear the buffer
 
                     ldr             r0, = #instructionTable         @ show the instructions
                     movs            r1, #(instructionTableEnd-instructionTable)
@@ -109,19 +163,6 @@ FsmAspectTest_setupAspectTest:
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
 
-/*
-                    ldr             r2, = #TIM3_BASE                @ setup TIMER3 to be PWM with output of OC4
-                    ldr             r0, = #(TIM_CCMR2_OC4FE | TIM_CCMR2_OC4PE | TIM_CCMR2_OC4M_1 | TIM_CCMR2_OC4M_2)
-                    str             r0, [r2, #TIM_CCMR2_OFFSET]
-                    ldr             r0, = #(TIM_CCER_CC4E)
-                    str             r0, [r2, #TIM_CCER_OFFSET]
-                    ldr             r0, = #PWM_ARR
-                    str             r0, [r2, #TIM_ARR_OFFSET]
-                    movs            r0, #0                          @ 0 prescale
-                    str             r0, [r2, #TIM_PSC_OFFSET]
-                    movs            r0, #TIM_CR1_CEN                @ enable the timer...
-                    str             r0, [r2, #TIM_CR1_OFFSET]
-*/
                     movs            r0, r7
                     bl              FsmAspectTest_displayAspects    @ adjust number of Aspects and Type
                     ldr             r0, = #FsmAspectTest_adjustAspects
@@ -154,12 +195,124 @@ FsmAspectTest_adjustAspects:
                     movs            r5, #FSM_BUTTON_ACTION          @ action button pressed?
                     tst             r3, r5
                     beq             8f
-                    ldr             r0, = #0 @ FsmServoSetup_runServo   @ yes, test the LEDs
+                    ldr             r0, = #FsmAspectTest_runAspectTest @ yes, test the "aspects"
                     b               9f
 8:
                     movs            r0, #0
 9:
                     pop             {r5-r7, pc}
+
+    private_function(FsmAspectTest_runAspectTest)
+
+@ int FsmAspectTest_runAspectTest(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for running the aspect test. Returns the next state, or 0 to remain in the same state
+
+FsmAspectTest_runAspectTest:
+                    push            {r7, lr}
+                    movs            r0, #0                          @ display a line to the user that we are testing
+                    ldr             r1, = #(1 | DISPLAY_ROW)        @ the Aspects
+                    movs            r2, #0
+                    movs            r3, #drawValueOffset-1
+                    sub             sp, sp, #8
+                    movs            r7, #DISPLAY_ROW_HEIGHT
+                    str             r7, [sp]
+                    bl              Display_drawFilledRectangle     @ fill rectangle
+                    add             sp, sp, #8
+                    movs            r0, #0                          @ draw the text
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #1
+                    ldr             r3, = #waitMessage
+                    bl              Display_drawString
+                    bl              Display_blitDisplayBuffer
+
+                    ldr             r0, = #FsmAspectTest_currentTestPtr  @ re-init current Aspects value and set up
+                    movs            r1, #0                          @ ptrs to current test
+                    strb            r1, [r0, #5]
+                    ldrb            r1, [r0, #6]
+                    ldr             r7, = #aspectValueTable
+                    lsls            r1, r1, #3
+                    ldr             r2, [r7, r1]                    @ get selected aspects and length of test
+                    str             r2, [r0]
+                    adds            r1, r1, #4
+                    ldr             r2, [r7, r1]
+                    strb            r2, [r0, #4]
+
+                    bl              FsmAspectTest_testAspect        @ show the first Aspect
+                    ldr             r0, = #FsmAspectTest_waitForAspectTest
+                    pop             {r7, pc}
+
+    private_function(FsmAspectTest_waitForAspectTest)
+
+@ int FsmAspectTest_waitForAspectTest(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for waiting for the aspect test to finish. Returns the next state, or 0 to remain in the same state
+
+FsmAspectTest_waitForAspectTest:
+                    push            {r7, lr}
+
+                    movs            r0, #0
+                    ldr             r7, = #FsmAspectTest_currentTestAspect @ check if we've finished
+                    ldrb            r2, [r7]
+                    cmp             r2, #0xff                       @ uses 0xff as a marker that the test has finished
+                    bne             9f
+
+                    movs            r0, #0                          @ reset the display
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #0
+                    movs            r3, #DISPLAY_WIDTH
+                    bl              Display_fillRow
+                    movs            r0, #0
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #1
+                    ldr             r3, = #aspects
+                    bl              Display_drawString
+                    ldr             r0, = #FsmAspectTest_adjustAspects
+9:
+                    pop             {r7, pc}
+
+    private_function(FsmAspectTest_testAspect)
+
+@ void FsmAspectTest_testAspect()
+@   Test an Aspect, and then wait to test the next one
+
+FsmAspectTest_testAspect:
+alarmSlot = 4
+
+                    push            {r3-r7, lr}
+                    bl              Ws2812_clearBuffer              @ clear the buffer and display
+                    ldr             r7, = #FsmAspectTest_currentTestPtr  @ check if we've already finished, and the main
+                    ldrb            r0, [r7, #4]                    @ loop hasn't caught up with us
+                    ldrb            r5, [r7, #5]
+                    cmp             r5, r0
+                    bge             8f
+
+                    ldr             r6, [r7]
+                    lsls            r0, r5, #4
+                    adds            r6, r6, r0
+                    movs            r4, #0
+0:
+                    movs            r0, #3                          @ only uses channel 4
+                    movs            r1, r4
+                    lsls            r3, r4, #2
+                    ldr             r2, [r6, r3]
+                    bl              Ws2812_setColour                @ set the colour
+                    adds            r4, r4, #1
+                    cmp             r4, #4                          @ only ever 4 aspects
+                    blt             0b
+
+                    adds            r5, r5, #1
+                    strb            r5, [r7, #5]
+                    movs            r0, #alarmSlot                  @ enable a timer every 500ms
+                    ldr             r1, = #500
+                    ldr             r2, = #FsmAspectTest_testAspect
+                    bl              MsCounter_alarmIn
+9:
+                    movs            r0, #3
+                    bl              Ws2812_update
+                    pop             {r3-r7, pc}
+8:
+                    movs            r0, #0xff                       @ use 0xff as a marker to indicate we've
+                    strb            r0, [r7, #5]                    @ finished
+                    b               9b
 
     private_function(FsmAspectTest_displayAspects)
 
@@ -174,7 +327,7 @@ drawValueOffset=35
                     lsrs            r0, r0, #9                      @ support 8 types of aspects
                     ldr             r1, = #FsmAspectTest_aspectType
                     strb            r0, [r1]
-                    ldr             r1, = #aspectTable
+                    ldr             r1, = #aspectTextTable
                     lsls            r0, r0, #2
                     ldr             r7, [r1, r0]
 
