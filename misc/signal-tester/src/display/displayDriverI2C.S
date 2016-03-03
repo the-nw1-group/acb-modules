@@ -180,42 +180,42 @@ _sdi2c_nextBlocks:
 @   Possibly temp function to set up the I2C interface
 
 DisplayDriverI2C_setupI2C:
-                    ldr             r3, = #ACB_EEPROM_I2C_GPIOBASE  @ setup I2C on port/pins defined in header
+                    ldr             r3, = #ACB_DISPLAY_I2C_GPIOBASE @ setup I2C on port/pins defined in header
                     ldr             r1, [r3, #GPIO_MODER_OFFSET]    @ file
-                    ldr             r0, = #(2<<(ACB_EEPROM_I2C_SDA<<1))|(2<<(ACB_EEPROM_I2C_SCL<<1))
+                    ldr             r0, = #(2<<(ACB_DISPLAY_I2C_SDA<<1))|(2<<(ACB_DISPLAY_I2C_SCL<<1))
                     orrs            r0, r0, r1
                     str             r0, [r3, #GPIO_MODER_OFFSET]
 
                     ldr             r1, [r3, #GPIO_OSPEEDR_OFFSET]  @ enable high speed for these bits
-                    ldr             r0, = #(3<<(ACB_EEPROM_I2C_SDA<<1))|(3<<(ACB_EEPROM_I2C_SCL<<1))
+                    ldr             r0, = #(3<<(ACB_DISPLAY_I2C_SDA<<1))|(3<<(ACB_DISPLAY_I2C_SCL<<1))
                     orrs            r0, r0, r1
                     str             r0, [r3, #GPIO_OSPEEDR_OFFSET]
 
                     ldr             r1, [r3, #GPIO_OTYPER_OFFSET]   @ set opendrain outputs
-                    ldr             r0, = #(1<<ACB_EEPROM_I2C_SDA)|(1<<ACB_EEPROM_I2C_SCL)
+                    ldr             r0, = #(1<<ACB_DISPLAY_I2C_SDA)|(1<<ACB_DISPLAY_I2C_SCL)
                     orrs            r0, r0, r1
                     str             r0, [r3, #GPIO_OTYPER_OFFSET]
 
                     ldr             r1, [r3, #GPIO_PUPDR_OFFSET]    @ enable pullups (not sure if required)
-                    ldr             r0, = #(1<<(ACB_EEPROM_I2C_SDA<<1))|(1<<(ACB_EEPROM_I2C_SCL<<1))
+                    ldr             r0, = #(1<<(ACB_DISPLAY_I2C_SDA<<1))|(1<<(ACB_DISPLAY_I2C_SCL<<1))
                     orrs            r0, r0, r1
                     str             r0, [r3, #GPIO_PUPDR_OFFSET]
 
-#if ACB_EEPROM_I2C_AFR_SDA_OFFSET == ACB_EEPROM_I2C_AFR_SCL_OFFSET
-                    ldr             r1, [r3, #ACB_EEPROM_I2C_AFR_SDA_OFFSET]
-                    ldr             r0, = #(1<<(ACB_EEPROM_I2C_AFR_SDA<<2))|(1<<(ACB_EEPROM_I2C_AFR_SCL<<2))
+#if ACB_DISPLAY_I2C_AFR_SDA_OFFSET == ACB_DISPLAY_I2C_AFR_SCL_OFFSET
+                    ldr             r1, [r3, #ACB_DISPLAY_I2C_AFR_SDA_OFFSET]
+                    ldr             r0, = #(1<<(ACB_DISPLAY_I2C_AFR_SDA<<2))|(1<<(ACB_DISPLAY_I2C_AFR_SCL<<2))
                     orrs            r0, r0, r1                      @ select I2C.SDA (AF1) / I2C.SCL (AF1)
-                    str             r0, [r3, #ACB_EEPROM_I2C_AFR_SDA_OFFSET]
+                    str             r0, [r3, #ACB_DISPLAY_I2C_AFR_SDA_OFFSET]
 #else
-                    ldr             r1, [r3, #ACB_EEPROM_I2C_AFR_SDA_OFFSET]
-                    ldr             r0, = #(1<<(ACB_EEPROM_I2C_AFR_SDA<<2))
+                    ldr             r1, [r3, #ACB_DISPLAY_I2C_AFR_SDA_OFFSET]
+                    ldr             r0, = #(1<<(ACB_DISPLAY_I2C_AFR_SDA<<2))
                     orrs            r0, r0, r1                      @ select I2C.SDA (AF1)
-                    str             r0, [r3, #ACB_EEPROM_I2C_AFR_SDA_OFFSET]
+                    str             r0, [r3, #ACB_DISPLAY_I2C_AFR_SDA_OFFSET]
 
-                    ldr             r1, [r3, #ACB_EEPROM_I2C_AFR_SCL_OFFSET]
-                    ldr             r0, = #(1<<(ACB_EEPROM_I2C_AFR_SCL<<2))
+                    ldr             r1, [r3, #ACB_DISPLAY_I2C_AFR_SCL_OFFSET]
+                    ldr             r0, = #(1<<(ACB_DISPLAY_I2C_AFR_SCL<<2))
                     orrs            r0, r0, r1                      @ select I2C.SCL (AF1)
-                    str             r0, [r3, #ACB_EEPROM_I2C_AFR_SCL_OFFSET]
+                    str             r0, [r3, #ACB_DISPLAY_I2C_AFR_SCL_OFFSET]
 #endif
 
 __i2cSetupClocks:
@@ -231,7 +231,7 @@ __i2cSetupClocks:
                     str             r0, [r3, #RCC_APB1ENR_OFFSET]
 __i2cSetupPeripheral:
                     ldr             r3, = #I2C1_BASE
-                    ldr             r0, = #ACB_EEPROM_I2C_TIMING    @ set I2C timing
+                    ldr             r0, = #ACB_DISPLAY_I2C_TIMING    @ set I2C timing
                     str             r0, [r3, #I2C_TIMINGR_OFFSET]
                     ldr             r1, [r3, #I2C_CR1_OFFSET]       @ enable the I2C peripheral
                     movs            r0, #I2C_CR1_PE
