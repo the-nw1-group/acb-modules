@@ -13,7 +13,7 @@
  *  define ACB_WS2812_DRIVER to the timer number used to control the devices. Timer 2 and 3 currently supported
  */
 
-#ifdef ACB_USE_WS2812
+#define ACB_USE_WS2812
 
 #if ACB_WS2812_DRIVER == 2
 
@@ -59,6 +59,4 @@
 
 #else
 #error to use the WS2812 driver you must define ACB_WS2812_DRIVER. See the include file for details
-#endif
-
 #endif
