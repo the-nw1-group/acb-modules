@@ -8,7 +8,7 @@
  */
 
 /*
- * General very commmon definitions
+ * General very common definitions
  */
 
 FALSE = 0
