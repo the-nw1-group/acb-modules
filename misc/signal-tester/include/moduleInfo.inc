@@ -19,10 +19,6 @@
 #include "acb/functionHeaders.inc"
 #include "acb/errorHandler.inc"
 
-#include "display/ssd1306.inc"
-#include "display/displayDriverI2C.inc"
-#include "display/display.inc"
-
 #include "errorCodes.inc"
 
 /*
@@ -60,6 +56,21 @@
  */
 
 /*
+ * Define Display type
+ *
+ */
+
+#define ACB_DISPLAY_I2C_AHBENR          RCC_AHBENR_GPIOFEN
+#define ACB_DISPLAY_I2C_GPIOBASE        GPIOF_BASE
+#define ACB_DISPLAY_I2C_SDA             0
+#define ACB_DISPLAY_I2C_SCL             1
+#define ACB_DISPLAY_I2C_TIMING          0x00901850                   /* See STSW-STM32126 for details */
+
+#include "display/ssd1306.inc"
+#include "display/displayDriverI2C.inc"
+#include "display/display.inc"
+
+/*
  * Define EEPROM type, driver and connection to device
  *
  */
@@ -72,14 +83,16 @@
 #define ACB_EEPROM_I2C_SCL              1
 #define ACB_EEPROM_I2C_TIMING           0x00901850                   /* See STSW-STM32126 for details */
 
+/*
 #include "acb/eepromI2C.inc"
+#include "acb/eepromCache.inc"
 #include "acb/eeprom.inc"
+*/
 
 /*
  * Configure ws2812 driver
  */
 
-#define ACB_USE_WS2812
 #define ACB_WS2812_DRIVER                   3
 #define ACB_WS2812_IRQ_REDIRECT_FN          FsmCommon_interceptIsr
 #include "acb/ws2812.inc"
