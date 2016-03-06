@@ -47,8 +47,8 @@ __setupCounter:
                     bl              MsCounter_waitFor               @ debugger (which we can't tell on an M0, so for all
                                                                     @ debug builds)
 #endif
-                    bl              Configuration_init
                     bl              Setup_setupGPIO
+                    bl              Configuration_init
                     bl              Setup_setupTimers
                     bl              Analog_init
                     bl              Display_init

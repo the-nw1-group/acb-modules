@@ -82,12 +82,12 @@
 #define ACB_EEPROM_I2C_SDA              0
 #define ACB_EEPROM_I2C_SCL              1
 #define ACB_EEPROM_I2C_TIMING           0x00901850                   /* See STSW-STM32126 for details */
+#define ACB_EEPROM_IRQ_REDIRECT_FN      FsmCommon_interceptIsr
+#define ACB_EEPROM_ALARM_SLOT           1
 
-/*
 #include "acb/eepromI2C.inc"
 #include "acb/eepromCache.inc"
 #include "acb/eeprom.inc"
-*/
 
 /*
  * Configure ws2812 driver
@@ -184,3 +184,6 @@
 #define FSM_BUTTON_RIGHT                (1<<FSM_BUTTON_RIGHT_BIT)
 
 #define FSM_BUTTON_MASK                 (FSM_BUTTON_LEFT | FSM_BUTTON_ACTION | FSM_BUTTON_RIGHT)
+
+
+#define ACB_SID_ALARM_SLOT              2

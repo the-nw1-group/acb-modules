@@ -297,6 +297,12 @@ Ws2812_update:
                     ldrb            r1, [r0]                        @ wait until completed
                     cmp             r1, #1
                     bne             0b
+
+                    movs            r0, #WS2812_TIM_ISR             @ disable the timer 3 interrupt, via NVIC
+                    bl              NVIC_disableIRQ
+                    ldrh            r0, [r7, #_cd_dma_isr]          @ disable the dma channel interrupt, via NVIC
+                    bl              NVIC_disableIRQ
+
                     movs            r0, #SUCCESS
 9:
                     pop             {r3-r7, pc}

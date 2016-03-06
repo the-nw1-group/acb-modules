@@ -28,7 +28,7 @@
     .extern         MsCounter_waitFor                               @ wait for a number of milliseconds
 
 SID_SAMPLE_TIME = 4
-SID_ALARM_SLOT  = 1
+SID_ALARM_SLOT  = ACB_SID_ALARM_SLOT
 #if SID_ALARM_SLOT > ACB_ALARM_SLOTS
 #error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
 #endif

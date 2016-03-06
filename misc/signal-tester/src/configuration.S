@@ -52,17 +52,41 @@
 
     module(Configuration)
 
+    .extern         Eeprom_init                                     @ Initialise the EEPROM sub-system
+    .extern         Eeprom_getHint                                  @ ask the EEPROM sub-system for information
+
     private_data(Configuration_private)
+
+Configuration_baseAddress:
+                    .int            0                               @ base address of EEPROM cache
+Configuration_buffer:
+                    .int            0, 0                            @ copy of the data returned
 
     public_data(Configuration_public)
 
     public_function(Configuration_init)
 
-@ void Configuration_init()
-@   Setup the Configuration Manager, Storage Engine and associated variables, etc...
+@ bool Configuration_init()
+@   Setup the Configuration Manager, Storage Engine and associated variables, etc... Returns SUCCESS if communicated
+@   with EEPROM ok, otherwise ERROR
 
 Configuration_init:
                     push            {r7, lr}
+                    bl              Eeprom_init
+                    cmp             r0, #ERROR
+                    beq             9f
+                    movs            r0, #EepromCache_getBaseAddressHint
+                    bl              Eeprom_getHint                  @ get the base address of the cache
+                    cmp             r0, #0
+                    beq             9f
+                    ldr             r1, = #Configuration_baseAddress
+                    str             r0, [r1]
+0:
+                    bl              EepromImpl_asyncInProgress      @ wait for the cache to be loaded
+                    cmp             r0, #TRUE
+                    beq             0b
+                    bl              EepromImpl_getLastAsyncStatus
+9:
                     pop             {r7, pc}
 
     public_function(Configuration_countData)
@@ -71,6 +95,8 @@ Configuration_init:
 @   Return the number of data records currently stored
 
 Configuration_countData:
+                    movs            r0, #CONFIG_REC_DATA
+                    b               Configuration_countMatching
 
     public_function(Configuration_countAll)
 
@@ -78,6 +104,8 @@ Configuration_countData:
 @   Return the number of records currently stored
 
 Configuration_countAll:
+                    movs            r0, #CONFIG_REC_DATA | CONFIG_REC_SETTINGS
+                    b               Configuration_countMatching
 
     public_function(Configuration_find)
 
@@ -140,5 +168,33 @@ Configuration_deleteAllData:
 @   Deletes all records. Returns SUCCESS if new value stored, otherwise ERROR.
 
 Configuration_deleteAll:
+
+
+    private_function(Configuration_countMatching)
+
+@ int Configuration_countMatching(int mask)
+@   Return the number of records currently stored that's record type matches the supplied mask, ignoring unused
+@   entries
+
+Configuration_countMatching:
+                    push            {r7, lr}
+                    ldr             r7, = #Configuration_baseAddress
+                    ldr             r7, [r7]
+                    movs            r1, #0                          @ count
+                    movs            r2, #1                          @ index into array (record type at position index+1)
+0:
+                    ldrb            r3, [r7, r2]
+                    cmp             r3, CONFIG_REC_UNUSED           @ unused, then skip
+                    beq             1f
+                    tst             r3, r0                          @ does it match mask?
+                    beq             1f
+                    adds            r1, r1, #1
+1:
+                    adds            r2, r2, #8
+                    ldr             r3, = #ACB_EEPROM_SIZE
+                    cmp             r2, r3
+                    blt             0b
+                    movs            r0, r1
+                    pop             {r7, pc}
 
     .end

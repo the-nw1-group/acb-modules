@@ -10,6 +10,8 @@
 #define ACB_SKIP_CACHE_REDEFINES
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_EEPROMCACHE
+
 @ EEPROM cache driver - sits between the public interface and the actual EEPROM driver
 
     module(EepromCache)
@@ -278,6 +280,8 @@ EepromCache_blockCopy:
                     movs            r1, r3
                     bl              memcpy                          @ can't tail chain, as the call is too "far" for
                     pop             {r7, pc}                        @ simple branch
+
+#endif
 
 #endif
 

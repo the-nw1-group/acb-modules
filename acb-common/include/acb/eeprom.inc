@@ -12,6 +12,8 @@
  *
  */
 
+#define ACB_USE_EEPROM
+
 #if !defined(EepromDrv_init) || !defined(EepromDrv_readByte) || !defined(EepromDrv_writeByte)\
     || !defined(EepromDrv_readBlock) || !defined(EepromDrv_writeBlock) || !defined(EepromDrv_asyncInProgress)\
     || !defined(EepromDrv_getLastAsyncStatus)

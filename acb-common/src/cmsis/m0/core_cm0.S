@@ -74,7 +74,7 @@ NVIC_enableIRQ:
     av_public_function(NVIC_disableIRQ)
 
 @ void NVIC_disableIRQ(int irq)
-@   enable the interrupt for the supplied irq
+@   disable the interrupt for the supplied irq
 
 NVIC_disableIRQ:
                     movs            r1, #0x1F                       @ mask out possible interrupt numbers

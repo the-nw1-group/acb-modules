@@ -18,6 +18,8 @@
  *
  */
 
+#define ACB_USE_EEPROMI2C
+
 #if !defined(ACB_EEPROM_TYPE)
 #error ACB_EEPROM_TYPE must be defined before including this file
 #elif ACB_EEPROM_TYPE == ACB_EEPROM_24AA16
@@ -30,8 +32,8 @@
 #endif
 
 #if !defined(ACB_EEPROM_I2C_AHBENR) || !defined(ACB_EEPROM_I2C_GPIOBASE) || !defined(ACB_EEPROM_I2C_SDA)\
-    || !defined(ACB_EEPROM_I2C_SCL) || !defined(ACB_EEPROM_I2C_TIMING)
-#error ACB_EEPROM_I2C_AHBENR, ACB_EEPROM_I2C_GPIOBASE, ACB_EEPROM_I2C_SDA, ACB_EEPROM_I2C_SCL and ACB_EEPROM_I2C_TIMING must all be defined to use this file
+    || !defined(ACB_EEPROM_I2C_SCL) || !defined(ACB_EEPROM_I2C_TIMING) || !defined(ACB_EEPROM_ALARM_SLOT)
+#error ACB_EEPROM_I2C_AHBENR, ACB_EEPROM_I2C_GPIOBASE, ACB_EEPROM_I2C_SDA, ACB_EEPROM_ALARM_SLOT, ACB_EEPROM_I2C_SCL and ACB_EEPROM_I2C_TIMING must all be defined to use this file
 #endif
 
 #if ACB_EEPROM_I2C_SCL > 7

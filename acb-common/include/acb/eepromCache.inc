@@ -23,6 +23,8 @@
  *
  */
 
+#define ACB_USE_EEPROMCACHE
+
 #define EepromDrvImpl_init               EepromDrv_init
 #define EepromDrvImpl_readByte           EepromDrv_readByte
 #define EepromDrvImpl_writeByte          EepromDrv_writeByte

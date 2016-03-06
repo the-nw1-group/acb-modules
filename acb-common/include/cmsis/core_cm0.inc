@@ -81,7 +81,7 @@ SCB_BASE =           (SCS_BASE + 0x0D00)                            @ System Con
 @ NVIC registers
 
 NVIC_ISER = NVIC_BASE                                               @ Interrupt Set Enable Register
-NVIC_ICER = NVIC_BASE + 0x008                                       @ Interrupt Clear Enable Register
+NVIC_ICER = NVIC_BASE + 0x080                                       @ Interrupt Clear Enable Register
 NVIC_ISPR = NVIC_BASE + 0x100                                       @ Interrupt Set Pending Register
 NVIC_ICPR = NVIC_BASE + 0x180                                       @ Interrupt Clear Pending Register
 NVIC_IP0 =  NVIC_BASE + 0x300                                       @ Interrupt Priority Register 0

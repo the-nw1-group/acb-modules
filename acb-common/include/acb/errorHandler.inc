@@ -48,5 +48,5 @@ ACB_ERROR_USAGE_FAULT           = 0x17
 ACB_ERROR_CLOCKFAIL             = 0x18
 
 ACB_CONFIG_LOAD_FAIL            = 0x21
-
+ACB_CONFIG_WRONG_VERSION        = 0x22
 
