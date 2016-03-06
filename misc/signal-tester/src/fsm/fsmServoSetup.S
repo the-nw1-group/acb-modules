@@ -29,6 +29,17 @@
     .extern         itoa                                            @ convert integer to string
     .extern         __aeabi_uidiv                                   @ unsigned integer divide
 
+    public_data(FsmServoSetup_publicData)
+
+FsmServoSetup_start:
+                    .byte           0                               @ start position
+FsmServoSetup_end:
+                    .byte           0                               @ end position
+FsmServoSetup_speed:
+                    .byte           0                               @ speed
+
+    .global         FsmServoSetup_start, FsmServoSetup_end, FsmServoSetup_speed
+
     private_data(FsmServoSetup_privateData)
 
 PWM_ARR         = 63999                                             @ ARR value for period of 8ms
@@ -49,12 +60,6 @@ FsmServoRun_state:                                                  @ cheeky sta
 
 FsmServoSetup_convertBuffer:
                     .string         "  "                            @ buffer for integer conversion
-FsmServoSetup_start:
-                    .byte           0                               @ start position
-FsmServoSetup_end:
-                    .byte           0                               @ end position
-FsmServoSetup_speed:
-                    .byte           0                               @ speed
 
     static_data(FsmServoSetup_const)
 

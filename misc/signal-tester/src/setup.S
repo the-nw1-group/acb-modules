@@ -9,8 +9,6 @@
 
 #include "moduleInfo.inc"
 #include "acb/common.inc"
-#include "acb/can.inc"
-#include "acb/eeprom.inc"
 
 @ setup code for Signal/Servo Tester
 
@@ -49,11 +47,10 @@ __setupCounter:
                     bl              MsCounter_waitFor               @ debugger (which we can't tell on an M0, so for all
                                                                     @ debug builds)
 #endif
+                    bl              Configuration_init
                     bl              Setup_setupGPIO
                     bl              Setup_setupTimers
                     bl              Analog_init
-
-             @      bl              Eeprom_init
                     bl              Display_init
                     cmp             r0, #ERROR
                     beq             __setupDisplayFail

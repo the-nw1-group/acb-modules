@@ -30,6 +30,13 @@
     .extern         Ws2812_update                                   @ display the buffer on the display
     .extern         itoa                                            @ convert integer to string
 
+    public_data(FsmSignalSetup_publicData)
+
+FsmSignalSetup_colour:
+                    .int            0
+
+    .global         FsmSignalSetup_colour
+
     private_data(FsmSignalSetup_privateData)
 
 FsmSignalSetup_aspect:
@@ -229,6 +236,8 @@ FsmSignalSetup__setSignalValues:
                     orrs            r2, r2, r0
                     lsls            r0, r4, #16
                     orrs            r2, r2, r0
+                    ldr             r3, = #FsmSignalSetup_colour    @ store the colour about to be displayed
+                    str             r2, [r3]
                     movs            r0, #3                          @ only uses channel 4
                     movs            r1, r7                          @ and set the aspect
                     bl              Ws2812_setColour                @ set the colour

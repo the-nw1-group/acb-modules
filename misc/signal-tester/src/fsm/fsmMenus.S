@@ -64,6 +64,13 @@ sigSaveYellow:      .string         "> Save As Yellow Aspect Colour"
 sigSaveGreen:       .string         "> Save As Green Aspect Colour"
 sigSaveWhite:       .string         "> Save As White Colour"
 
+FsmMenus_configure:
+cfgTitle:           .string         "Managed Stored Config"
+cfgReadData:        .string         "> View Saved Settings"
+cfgReadAll:         .string         "> View All Saved Data"
+cfgResetData:       .string         "> Delete Saved Settings"
+cfgResetAll:        .string         "> Delete All Saved Data"
+
                     .balign         4                               @ align these data structures to 4 byte boundary
                     .align          4
 
@@ -72,7 +79,7 @@ FsmMenus_mainMenuConf:                                              @ Main menu 
                     .int            rgbSignalTest, FsmMenus_initSignalTestMenu
                     .int            servoSetup, FsmServoSetup_initServoSetup
                     .int            pwmLedSetup, FsmPwmSetup_initPwmSetup
-                    .int            configure, 0
+                    .int            configure, FsmMenus_initConfigurationMenu
                     .int            help, FsmHelp_initHelp
 FsmMenus_mainMenuConfEnd:
 
@@ -83,19 +90,27 @@ FsmMenus_stMenuConf:
 FsmMenus_stMenuConfEnd:
 
 FsmMenus_ssMenuConf:
-                    .int            ssSave, 0
+                    .int            ssSave, FsmServoSave_initServoSave
                     .int            ssReturn, FsmServoSetup_initServoSetup
                     .int            ssMainMenu, FsmMenus_initMainMenu
 FsmMenus_ssMenuConfEnd:
 
 FsmMenus_sigMenuConf:
-                    .int            sigSaveRed, 0
-                    .int            sigSaveYellow, 0
-                    .int            sigSaveGreen, 0
-                    .int            sigSaveWhite, 0
+                    .int            sigSaveRed, FsmSignalSave_initRedSave
+                    .int            sigSaveYellow, FsmSignalSave_initYellowSave
+                    .int            sigSaveGreen, FsmSignalSave_initGreenSave
+                    .int            sigSaveWhite, FsmSignalSave_initWhiteSave
                     .int            ssReturn, FsmSignalSetup_initSignalSetup
                     .int            ssMainMenu, FsmSignalSetup_exitSignalSetup
 FsmMenus_sigMenuConfEnd:
+
+FsmMenus_cfgMenuConf:
+                    .int            cfgReadData, 0
+                    .int            cfgReadAll, 0
+                    .int            cfgResetData, 0
+                    .int            cfgResetAll, 0
+                    .int            ssMainMenu, FsmMenus_initMainMenu
+FsmMenus_cfgMenuConfEnd:
 
     public_function(FsmMenus_initMainMenu)
 
@@ -146,6 +161,19 @@ FsmMenus_initSignalSaveMenu:
                     ldr             r0, = #FsmMenus_sigMenuConf
                     movs            r1, (FsmMenus_sigMenuConfEnd-FsmMenus_sigMenuConf)/8
                     ldr             r2, = #(sigTitle)
+                    bl              FsmMenus_initMenu
+                    pop             {r7, pc}
+
+    public_function(FsmMenus_initConfigurationMenu)
+
+@ int FsmMenus_initConfigurationMenu(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for initialising the configuration menu. Returns the next state, or 0 to remain in the same state
+
+FsmMenus_initConfigurationMenu:
+                    push            {r7, lr}
+                    ldr             r0, = #FsmMenus_cfgMenuConf
+                    movs            r1, (FsmMenus_cfgMenuConfEnd-FsmMenus_cfgMenuConf)/8
+                    ldr             r2, = #(cfgTitle)
                     bl              FsmMenus_initMenu
                     pop             {r7, pc}
 
