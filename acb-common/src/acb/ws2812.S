@@ -244,6 +244,10 @@ Ws2812_update:
                     orrs            r3, r3, r2
                     str             r3, [r6, #TIM_CCER_OFFSET]
 
+                    ldr             r2, = #WS2812_DMA_BASE          @ clear any interrupts
+                    ldrh            r1, [r7, #_cd_dma_ifcr_offset]
+                    str             r1, [r2, #DMA_IFCR_OFFSET]
+
                     ldr             r5, [r7, #_cd_dma_chan_offset]  @ set peripheral and memory address for the DMA
                     ldr             r1, [r7, #_cd_ccr_addr_offset]  @ channel, set 8 bit->32 bit conversion, and
                     str             r1, [r5, #DMA_Channel_CPAR_OFFSET] @ memory inc, read from memory and write to
