@@ -8,6 +8,7 @@
  */
 
 #include "moduleInfo.inc"
+#include "configuration.inc"
 
 @ Finite State Machine functions to test a number of RGB LEDs with Aspect colours
 
@@ -43,11 +44,11 @@ FsmAspectTest_threeAspectRYG:
                     .int            0x00C00014, 0, 0, 0
                     .int            0, 0x00B88000, 0, 0
                     .int            0, 0, 0x0000A816, 0
-FsmAspectTest_fourAspectRYGD:
+FsmAspectTest_fourAspectRYDG:
                     .int            0x00C00014, 0, 0, 0
                     .int            0, 0x00B88000, 0, 0
-                    .int            0, 0, 0x0000A816, 0
                     .int            0, 0x00B88000, 0, 0x00B88000
+                    .int            0, 0, 0x0000A816, 0
 FsmAspectTest_oneAspectY:
                     .int            0x00B88000, 0, 0, 0
 FsmAspectTest_oneAspectG:
@@ -110,7 +111,7 @@ aspectValueTable:
                     .int            FsmAspectTest_twoAspectRG, 2
                     .int            FsmAspectTest_twoAspectYG, 2
                     .int            FsmAspectTest_threeAspectRYG, 3
-                    .int            FsmAspectTest_fourAspectRYGD, 4
+                    .int            FsmAspectTest_fourAspectRYDG, 4
                     .int            FsmAspectTest_oneAspectY, 1
                     .int            FsmAspectTest_oneAspectG, 1
                     .int            FsmAspectTest_oneAspectW, 1
@@ -122,6 +123,7 @@ aspectValueTable:
 
 FsmAspectTest_initAspectTest:
                     push            {r7, lr}
+                    bl              FsmAspectTest_loadConfiguration
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
                     ldr             r1, = #(0 | DISPLAY_ROW)
@@ -142,6 +144,121 @@ FsmAspectTest_initAspectTest:
                     ldr             r2, = #FsmAspectTest_setupAspectTest
                     bl              FsmCommon_showInstructions
                     pop             {r7, pc}
+
+    private_function(FsmAspectTest_loadConfiguration)
+
+@ void FsmAspectTest_loadConfiguration()
+@   load the aspect led colours from configuration if present
+
+FsmAspectTest_loadConfiguration:
+                    push            {r7, lr}
+                    bl              FsmAspectTest_loadRedConfiguration
+                    bl              FsmAspectTest_loadYellowConfiguration
+                    bl              FsmAspectTest_loadGreenConfiguration
+                    bl              FsmAspectTest_loadWhiteConfiguration
+                    pop             {r7, pc}
+
+    private_function(FsmAspectTest_loadRedConfiguration)
+
+@ void FsmAspectTest_loadRedConfiguration()
+@   load the red aspect led colours from configuration if present
+
+FsmAspectTest_loadRedConfiguration:
+                    push            {r7, lr}
+                    movs            r0, #CONFIG_DATA_RED
+                    bl              FsmAspectTest_loadAspectConfiguration
+                    adds            r1, r0, #1                      @ quick way to test if -1 was returned
+                    beq             9f
+                    ldr             r1, = #FsmAspectTest_oneAspectR
+                    str             r0, [r1]                        @ there's probably a better way of doing this...
+                    str             r0, [r1, #16]
+                    str             r0, [r1, #80]
+                    ldr             r1, = #FsmAspectTest_fourAspectRYDG
+                    str             r0, [r1]
+9:
+                    pop             {r7, pc}
+
+    private_function(FsmAspectTest_loadYellowConfiguration)
+
+@ void FsmAspectTest_loadYellowConfiguration()
+@   load the yellow aspect led colours from configuration if present
+
+FsmAspectTest_loadYellowConfiguration:
+                    push            {r7, lr}
+                    movs            r0, #CONFIG_DATA_YELLOW
+                    bl              FsmAspectTest_loadAspectConfiguration
+                    adds            r1, r0, #1                      @ quick way to test if -1 was returned
+                    beq             9f
+                    ldr             r1, = #FsmAspectTest_oneAspectY
+                    str             r0, [r1, #4]
+                    str             r0, [r1, #52]
+                    ldr             r1, = #FsmAspectTest_fourAspectRYDG
+                    str             r0, [r1, #20]
+                    str             r0, [r1, #36]
+                    str             r0, [r1, #44]
+                    str             r0, [r1, #64]
+9:
+                    pop             {r7, pc}
+
+    private_function(FsmAspectTest_loadGreenConfiguration)
+
+@ void FsmAspectTest_loadGreenConfiguration()
+@   load the green aspect led colours from configuration if present
+
+FsmAspectTest_loadGreenConfiguration:
+                    push            {r7, lr}
+                    movs            r0, #CONFIG_DATA_GREEN
+                    bl              FsmAspectTest_loadAspectConfiguration
+                    adds            r1, r0, #1                      @ quick way to test if -1 was returned
+                    beq             9f
+                    ldr             r1, = #FsmAspectTest_twoAspectRG + 16
+                    str             r0, [r1, #4]
+                    str             r0, [r1, #36]
+                    str             r0, [r1, #88]
+                    ldr             r1, = #FsmAspectTest_fourAspectRYDG
+                    str             r0, [r1, #56]
+                    str             r0, [r1, #80]
+9:
+                    pop             {r7, pc}
+
+    private_function(FsmAspectTest_loadWhiteConfiguration)
+
+@ void FsmAspectTest_loadWhiteConfiguration()
+@   load the white aspect led colours from configuration if present
+
+FsmAspectTest_loadWhiteConfiguration:
+                    push            {r7, lr}
+                    movs            r0, #CONFIG_DATA_WHITE
+                    bl              FsmAspectTest_loadAspectConfiguration
+                    adds            r1, r0, #1                      @ quick way to test if -1 was returned
+                    beq             9f
+                    ldr             r1, =#FsmAspectTest_oneAspectW
+                    str             r0, [r1]
+9:
+                    pop             {r7, pc}
+
+    private_function(FsmAspectTest_loadAspectConfiguration)
+
+@ int FsmAspectTest_loadAspectConfiguration(byte dataType)
+@   load the aspect led colour from configuration, based on the supplied dataType. Returns the colour, or -1 if no
+@   colour was loaded.
+
+FsmAspectTest_loadAspectConfiguration:
+                    push            {r7, lr}
+                    movs            r1, r0
+                    movs            r0, #CONFIG_REC_SETTINGS
+                    bl              Configuration_find
+                    cmp             r0, #0                          @ no configuration found
+                    beq             8f
+                    ldrh            r0, [r0, #CONFIG_DATA_OFFSET]   @ it's not word aligned, so load as two half words
+                    ldrh            r1, [r0, #CONFIG_DATA_OFFSET+2]
+                    lsls            r0, r0, #16
+                    orrs            r0, r0, r1
+9:
+                    pop             {r7, pc}
+8:
+                    subs            r0, r0, #1                      @ set -1 as the return value, as zero may be a
+                    b               9b                              @ valid "colour"
 
     private_function(FsmAspectTest_setupAspectTest)
 
