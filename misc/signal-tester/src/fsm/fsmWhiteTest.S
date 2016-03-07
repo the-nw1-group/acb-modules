@@ -8,6 +8,7 @@
  */
 
 #include "moduleInfo.inc"
+#include "configuration.inc"
 
 @ Finite State Machine functions to test a number of RGB LEDs using white (all dies displayed)
 
@@ -75,6 +76,7 @@ instructionTableEnd:
 
 FsmWhiteTest_initWhiteTest:
                     push            {r7, lr}
+                    bl              FsmWhiteTest_loadConfiguration
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
                     ldr             r1, = #(0 | DISPLAY_ROW)
@@ -94,6 +96,27 @@ FsmWhiteTest_initWhiteTest:
                     movs            r1, #(instructionTableEnd-instructionTable)
                     ldr             r2, = #FsmWhiteTest_setupWhiteTest
                     bl              FsmCommon_showInstructions
+                    pop             {r7, pc}
+
+    private_function(FsmWhiteTest_loadConfiguration)
+
+@ void FsmWhiteTest_loadConfiguration()
+@   load the white led "colour" from configuration if present
+
+FsmWhiteTest_loadConfiguration:
+                    push            {r7, lr}
+                    movs            r0, #CONFIG_REC_SETTINGS
+                    movs            r1, #CONFIG_DATA_WHITE
+                    bl              Configuration_find
+                    cmp             r0, #0                          @ no configuration found
+                    beq             9f
+
+                    ldr             r1, =#FsmWhiteTest_white        @ save stored value locally
+                    ldrh            r2, [r0, #CONFIG_DATA_OFFSET]   @ it's not word aligned, so load as two half words
+                    strh            r2, [r1]
+                    ldrh            r2, [r0, #(CONFIG_DATA_OFFSET+2)]
+                    strh            r2, [r1, #2]
+9:
                     pop             {r7, pc}
 
     private_function(FsmWhiteTest_setupWhiteTest)

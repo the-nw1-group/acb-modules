@@ -121,8 +121,8 @@ FsmSignalSave_doSignalSave:
                     movs            r3, #0
                     bl              Configuration_replaceOrAddNew
                     ldr             r7, = #success                  @ if OK show success message, otherwise error
-                    cmp             r0, #SUCCESS
-                    beq             0f
+                    adds            r1, r0, #1
+                    bne             0f
                     ldr             r7, = #error
 0:
                     movs            r0, #0                          @ clear row, and display the template

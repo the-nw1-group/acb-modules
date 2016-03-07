@@ -33,3 +33,13 @@
 #define CONFIG_DATA_GREEN   4
 #define CONFIG_DATA_WHITE   5
 
+/*
+ * Data offsets
+ *
+ */
+
+#define CONFIG_REC_OFFSET   0
+#define CONFIG_TYPE_OFFSET  1
+#define CONFIG_DATA_OFFSET  2
+
+

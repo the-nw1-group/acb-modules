@@ -20,17 +20,20 @@
     .extern         Display_fillRow                                 @ fill a row in the display buffer
     .extern         Configuration_addNew                            @ save a new record
     .extern         FsmServoSetup_initServoSetup
+    .extern         itoa                                            @ convert integer to string
 
     private_data(FsmSignalSave_private)
 
 FsmServoSave_delay: .short          0
+FsmServoSave_buffer:
+                    .string         "    "
 
     static_data(FsmServoSave_const)
 
 FsmServoSave_const:
 title:              .string         "Saving Servo Settings"
 pleaseWait:         .string         "Please Wait..."
-success:            .string         "Settings Saved OK"
+success:            .string         "Settings Saved at"
 error:              .string         "Error: Memory Full"
 
     public_function(FsmServoSave_initServoSave)
@@ -61,7 +64,14 @@ FsmServoSave_initServoSave:
 @   FSM Routine for the saving servo settings. Returns the next state, or 0 to remain in the same state
 
 FsmServoSave_doServoSave:
+drawValueOffset = 74
                     push            {r7, lr}
+                    movs            r0, #0                          @ clear row, and display the template
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #0
+                    movs            r3, #DISPLAY_WIDTH
+                    bl              Display_fillRow
+
                     movs            r0, #CONFIG_REC_DATA            @ save the last settings to the configuration
                     movs            r1, #CONFIG_DATA_SERVO          @ manager
                     ldr             r7, = #FsmServoSetup_start
@@ -74,17 +84,11 @@ FsmServoSave_doServoSave:
                     orrs            r2, r2, r3
                     movs            r3, #0
                     bl              Configuration_addNew
-                    ldr             r7, = #success                  @ if OK show success message, otherwise error
-                    cmp             r0, #SUCCESS
-                    beq             0f
+                    adds            r1, r0, #1
+                    bne             8f
                     ldr             r7, = #error
 0:
-                    movs            r0, #0                          @ clear row, and display the template
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
-                    bl              Display_fillRow
-                    movs            r0, #0
+                    movs            r0, #0                          @ display success or error text
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #1
                     movs            r3, r7
@@ -92,10 +96,22 @@ FsmServoSave_doServoSave:
                     bl              Display_blitDisplayBuffer
 
                     ldr             r0, = #FsmServoSave_delay
-                    ldr             r1, = #200
+                    ldr             r1, = #400
                     strh            r1, [r0]
                     ldr             r0, = #FsmServoSave_servoSaveShowMessage
                     pop             {r7, pc}
+8:                                                                  @ convert slot to ascii, so we can display it
+                    ldr             r1, = #FsmServoSave_buffer
+                    movs            r2, #10                         @ convert to base 10
+                    bl              itoa
+                    movs            r3, r0
+                    movs            r0, #drawValueOffset
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #1
+                    bl              Display_drawString
+                    ldr             r7, = #success
+                    b               0b
+
 
     public_function(FsmServoSave_servoSaveShowMessage)
 

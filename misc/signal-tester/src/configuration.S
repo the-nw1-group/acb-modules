@@ -114,7 +114,8 @@ Configuration_countAll:
 @   found, this function returns a null pointer.
 
 Configuration_find:
-
+                    movs            r0, #0
+                    bx              lr
 
     public_function(Configuration_getDataAt)
 
@@ -134,25 +135,25 @@ Configuration_getAt:
 
     public_function(Configuration_addNew)
 
-@ bool Configuration_addNew(byte recordType, byte dataType, int data1, short data2)
+@ int Configuration_addNew(byte recordType, byte dataType, int data1, short data2)
 @   Store a new record of the supplied record type and dataType. data1 and data2 are stored in the following bytes
-@   in little endian format. Returns SUCCESS if new value stored, otherwise ERROR (if out of space for example.)
+@   in little endian format. On success it returns the index of the saved record, otherwise it returns -1.
 
 Configuration_addNew:
                     push            {r7, lr}
-                    movs            r0, #SUCCESS
+                    movs            r0, #0
                     pop             {r7, pc}
 
     public_function(Configuration_replaceOrAddNew)
 
 @ bool Configuration_replaceOrAddNew(byte recordType, byte dataType, int data1, short data2)
 @   Store a new record of the supplied record type and dataType, if that combination isn't already stored, otherwise
-@   a new record is created.  data1 and data2 are stored in the following bytes in little endian format. Returns
-@   SUCCESS if new value stored, otherwise ERROR (if out of space for example.)
+@   a new record is created.  data1 and data2 are stored in the following bytes in little endian format.
+@   On success it returns the index of the saved record, otherwise it returns -1.
 
 Configuration_replaceOrAddNew:
                     push            {r7, lr}
-                    movs            r0, #SUCCESS
+                    movs            r0, #0
                     pop             {r7, pc}
 
     public_function(Configuration_deleteAllData)
