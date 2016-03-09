@@ -114,8 +114,17 @@ Configuration_countAll:
 @   found, this function returns a null pointer.
 
 Configuration_find:
-                    movs            r0, #0
-                    bx              lr
+                    push            {r7, lr}
+                    bl              Configuration_findRecord
+                    cmp             r0, #0
+                    beq             9f
+                    ldr             r2, = #Configuration_buffer     @ copy the data to be return
+                    ldr             r1, [r0]
+                    str             r1, [r2]
+                    ldr             r1, [r0, #4]
+                    str             r1, [r0, #4]
+9:
+                    pop             {r7, pc}
 
     public_function(Configuration_getDataAt)
 
@@ -140,21 +149,69 @@ Configuration_getAt:
 @   in little endian format. On success it returns the index of the saved record, otherwise it returns -1.
 
 Configuration_addNew:
-                    push            {r7, lr}
-                    movs            r0, #0
+                    push            {r0-r1, r7, lr}
+                    bl              Configuration_findFirstFree
+                    cmp             r0, #0
+                    beq             8f
+                    movs            r7, r0
+                    pop             {r0-r1}
+                    strb            r0, [r7]                        @ copy record and data type
+                    strb            r1, [r7, #1]
+                    strh            r2, [r7, #2]
+                    lsrs            r2, r2, #16
+                    strh            r2, [r7, #4]
+                    strh            r3, [r7, #6]
+
+    @ TODO: Tell Eeprom to update this area in back store (via hint)
+
+                    lsrs            r0, r7, #3
+9:
                     pop             {r7, pc}
+8:
+                    pop             {r0-r1}
+                    ldr             r0, = #-1
+                    b               9b
 
     public_function(Configuration_replaceOrAddNew)
 
-@ bool Configuration_replaceOrAddNew(byte recordType, byte dataType, int data1, short data2)
+@ int Configuration_replaceOrAddNew(byte recordType, byte dataType, int data1, short data2)
 @   Store a new record of the supplied record type and dataType, if that combination isn't already stored, otherwise
 @   a new record is created.  data1 and data2 are stored in the following bytes in little endian format.
 @   On success it returns the index of the saved record, otherwise it returns -1.
 
 Configuration_replaceOrAddNew:
-                    push            {r7, lr}
-                    movs            r0, #0
+                    push            {r0-r1, r7, lr}
+                    bl              Configuration_findRecord
+                    cmp             r0, #0
+                    beq             croan_addNew
+croan_replace:
+                    movs            r7, r0
+                    pop             {r0-r1}
+0:
+                    strh            r2, [r7, #2]                    @ overwrite existing entry. No need to store data
+                    lsrs            r2, r2, #16                     @ and record type, as they won't have changed. Need
+                    strh            r2, [r7, #4]                    @ to store data1 in two half words as it's not
+                    strh            r3, [r7, #6]                    @ word aligned
+
+    @ TODO: Tell Eeprom to update this area in back store (via hint)
+
+                    lsrs            r0, r7, #3
+                    b               9f
+croan_addNew:
+                    bl              Configuration_findFirstFree     @ need to create a new record, find first free slot
+                    cmp             r0, #0                          @ if none found, then return an error
+                    beq             8f
+                    movs            r7, r0
+                    pop             {r0-r1}
+                    strb            r0, [r7]                        @ copy record and data type
+                    strb            r1, [r7, #1]
+                    b               0b                              @ and then the rest of the data
+9:
                     pop             {r7, pc}
+8:
+                    pop             {r0-r1}
+                    ldr             r0, = #-1
+                    b               9b
 
     public_function(Configuration_deleteAllData)
 
@@ -197,5 +254,44 @@ Configuration_countMatching:
                     blt             0b
                     movs            r0, r1
                     pop             {r7, pc}
+
+    private_function(Configuration_findRecord)
+
+@ byte* Configuration_findRecord(byte recordType, byte dataType)
+@   Find an entry by it's record and data type, returning it as a pointer to the entry. If the record can't be
+@   found, this function returns a null pointer. Implementation note: r2 and r3 are preserved
+
+Configuration_findRecord:
+                    push            {r5-r7, lr}
+                    lsls            r1, r1, #8                      @ combine record and data type
+                    orrs            r0, r0, r1                      @ so we just do half word compares, rather than 2
+                    ldr             r7, = #Configuration_baseAddress @ byte compares
+                    ldr             r7, [r7]
+                    movs            r6, #0
+0:
+                    ldrh            r1, [r7, r6]                    @ test this record
+                    cmp             r1, r0
+                    beq             8f
+                    adds            r6, r6, #8                      @ move to the next record
+                    ldr             r1, = #ACB_EEPROM_SIZE
+                    cmp             r6, r1
+                    blt             0b
+                    movs            r0, #0
+9:
+                    pop             {r5-r7, pc}
+8:
+                    adds            r0, r7, r6
+                    b               9b
+
+    private_function(Configuration_findFirstFree)
+
+@ byte* Configuration_findFirstFree()
+@   find the first free slot, returning a pointer to it, otherwise returns 0. Implementation note: r2 and r3 are
+@   preserved
+
+Configuration_findFirstFree:
+                    movs            r0, #0xff
+                    movs            r1, r0
+                    b               Configuration_findRecord
 
     .end

@@ -102,7 +102,7 @@ FsmSignalSave_initCommon:
                     bl              Display_drawAlignedString
                     bl              Display_blitDisplayBuffer
                     ldr             r0, = #FsnSignalSave_dataType   @ save data type
-                    strb            r6, [r0]
+                    strb            r5, [r0]
                     ldr             r0, = #FsmSignalSave_doSignalSave
                     pop             {r5-r7, pc}
 

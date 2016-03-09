@@ -189,8 +189,8 @@ FsmAspectTest_loadYellowConfiguration:
                     bl              FsmAspectTest_loadAspectConfiguration
                     adds            r1, r0, #1                      @ quick way to test if -1 was returned
                     beq             9f
-                    ldr             r1, = #FsmAspectTest_oneAspectY
-                    str             r0, [r1, #4]
+                    ldr             r1, = #FsmAspectTest_twoAspectYG
+                    str             r0, [r1]
                     str             r0, [r1, #52]
                     ldr             r1, = #FsmAspectTest_fourAspectRYDG
                     str             r0, [r1, #20]
@@ -250,10 +250,10 @@ FsmAspectTest_loadAspectConfiguration:
                     bl              Configuration_find
                     cmp             r0, #0                          @ no configuration found
                     beq             8f
-                    ldrh            r0, [r0, #CONFIG_DATA_OFFSET]   @ it's not word aligned, so load as two half words
+                    ldrh            r2, [r0, #CONFIG_DATA_OFFSET]   @ it's not word aligned, so load as two half words
                     ldrh            r1, [r0, #CONFIG_DATA_OFFSET+2]
-                    lsls            r0, r0, #16
-                    orrs            r0, r0, r1
+                    lsls            r0, r1, #16
+                    orrs            r0, r0, r2
 9:
                     pop             {r7, pc}
 8:
