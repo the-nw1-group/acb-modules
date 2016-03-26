@@ -53,7 +53,10 @@
     module(Configuration)
 
     .extern         Eeprom_init                                     @ Initialise the EEPROM sub-system
-    .extern         Eeprom_getHint                                  @ ask the EEPROM sub-system for information
+    .extern         Eeprom_getHint                                  @ Ask the EEPROM sub-system for information
+    .extern         Eeprom_setHint                                  @ Tell the EEPROM sub-system a hint
+    .extern         Eeprom_asyncInProgress                          @ Is an async process in progress
+    .extern         Eeprom_getLastAsyncStatus                       @ Get the status of the last async process
 
     private_data(Configuration_private)
 
@@ -82,10 +85,10 @@ Configuration_init:
                     ldr             r1, = #Configuration_baseAddress
                     str             r0, [r1]
 0:
-                    bl              EepromImpl_asyncInProgress      @ wait for the cache to be loaded
+                    bl              Eeprom_asyncInProgress          @ wait for the cache to be loaded
                     cmp             r0, #TRUE
                     beq             0b
-                    bl              EepromImpl_getLastAsyncStatus
+                    bl              Eeprom_getLastAsyncStatus
 9:
                     pop             {r7, pc}
 
@@ -164,6 +167,9 @@ Configuration_addNew:
 
     @ TODO: Tell Eeprom to update this area in back store (via hint)
 
+                    ldr             r2, = #Configuration_baseAddress
+                    ldr             r2, [r2]
+                    subs            r7, r7, r2
                     lsrs            r0, r7, #3
 9:
                     pop             {r7, pc}
@@ -195,6 +201,9 @@ croan_replace:
 
     @ TODO: Tell Eeprom to update this area in back store (via hint)
 
+                    ldr             r2, = #Configuration_baseAddress
+                    ldr             r2, [r2]
+                    subs            r7, r7, r2
                     lsrs            r0, r7, #3
                     b               9f
 croan_addNew:
@@ -219,14 +228,79 @@ croan_addNew:
 @   Deletes all data records. Returns SUCCESS if new value stored, otherwise ERROR.
 
 Configuration_deleteAllData:
+                    push            {r5-r7, lr}
+                    ldr             r0, = #(ACB_EEPROM_SIZE - 8)    @ set all the data to 0xffffffff
+                    movs            r1, #0
+                    subs            r1, r1, #1
+                    ldr             r2, = #Configuration_baseAddress
+                    ldr             r2, [r2]
+                    movs            r5, #0
+                    movs            r6, #0
+0:
+                    ldrb            r3, [r2, r0]                    @ check if configuration record
+                    cmp             r3, #CONFIG_REC_DATA
+                    bne             1f                              @ no, just move to next record
+                    str             r1, [r2, r0]                    @ overwrite the data
+                    adds            r7, r0, #4
+                    str             r1, [r2, r7]
+                    movs            r5, r0                          @ store the end of this record as the lowest written
+                    cmp             r6, #0                          @ record, and check if we have a highest record yet?
+                    bne             1f
+                    adds            r6, r7, #4                      @ no, then store this as the highest record
+1:
+                    subs            r0, r0, #8
+                    bcs             0b
+                    cmp             r5, r6                          @ anything to write?
+                    beq             8f                              @ no, just return SUCCESS
+                    movs            r0, #EepromCache_setRegionDirtyHint
+                    movs            r1, r5                          @ otherwise write out to the EEPROM whats changed
+                    movs            r2, r6
+                    bl              Eeprom_setHint
+                    cmp             r0, #ERROR
+                    beq             9f
+2:
+                    bl              Eeprom_asyncInProgress          @ wait for the cache to be loaded
+                    cmp             r0, #TRUE
+                    beq             2b
+                    bl              Eeprom_getLastAsyncStatus
+9:
+                    pop             {r5-r7, pc}
+8:
+                    movs            r0, #SUCCESS
+                    b               9b
+
 
     public_function(Configuration_deleteAll)
 
 @ bool Configuration_deleteAll()
-@   Deletes all records. Returns SUCCESS if new value stored, otherwise ERROR.
+@   Deletes all records. Returns SUCCESS if new value stored, otherwise ERROR. Blocks until the data is written back
+@   to the EEPROM.
 
 Configuration_deleteAll:
+                    push            {r7, lr}
+                    ldr             r0, = #(ACB_EEPROM_SIZE - 4)    @ set all to 0xffffffff
+                    movs            r1, #0
+                    subs            r1, r1, #1
+                    ldr             r2, = #Configuration_baseAddress
+                    ldr             r2, [r2]
+0:
+                    str             r1, [r2, r0]
+                    subs            r0, r0, #4
+                    bcs             0b
 
+                    movs            r0, #EepromCache_setRegionDirtyHint
+                    movs            r1, #0
+                    ldr             r2, = #ACB_EEPROM_SIZE
+                    bl              Eeprom_setHint
+                    cmp             r0, #ERROR
+                    beq             9f
+1:
+                    bl              Eeprom_asyncInProgress          @ wait for the cache to be loaded
+                    cmp             r0, #TRUE
+                    beq             1b
+                    bl              Eeprom_getLastAsyncStatus
+9:
+                    pop             {r7, pc}
 
     private_function(Configuration_countMatching)
 

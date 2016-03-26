@@ -105,10 +105,10 @@ FsmMenus_sigMenuConf:
 FsmMenus_sigMenuConfEnd:
 
 FsmMenus_cfgMenuConf:
-                    .int            cfgReadData, 0
-                    .int            cfgReadAll, 0
-                    .int            cfgResetData, 0
-                    .int            cfgResetAll, 0
+                    .int            cfgReadData, FsmConfigView_initViewSettings
+                    .int            cfgReadAll, FsmConfigView_initViewData
+                    .int            cfgResetData, FsmConfigDelete_initDeleteSettings
+                    .int            cfgResetAll, FsmConfigDelete_initDeleteData
                     .int            ssMainMenu, FsmMenus_initMainMenu
 FsmMenus_cfgMenuConfEnd:
 
