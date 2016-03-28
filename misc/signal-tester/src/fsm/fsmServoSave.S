@@ -20,7 +20,7 @@
     .extern         Display_fillRow                                 @ fill a row in the display buffer
     .extern         Configuration_addNew                            @ save a new record
     .extern         FsmServoSetup_initServoSetup
-    .extern         FsmCommon_delayFor                              @ delay for a time
+    .extern         FsmCommon_showMessageFor                        @ show a message
     .extern         itoa                                            @ convert integer to string
 
     private_data(FsmSignalSave_private)
@@ -66,12 +66,6 @@ FsmServoSave_initServoSave:
 FsmServoSave_doServoSave:
 drawValueOffset = 74
                     push            {r7, lr}
-                    movs            r0, #0                          @ clear row, and display the template
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
-                    bl              Display_fillRow
-
                     movs            r0, #CONFIG_REC_DATA            @ save the last settings to the configuration
                     movs            r1, #CONFIG_DATA_SERVO          @ manager
                     ldr             r7, = #FsmServoSetup_start
@@ -86,20 +80,21 @@ drawValueOffset = 74
                     bl              Configuration_addNew
                     adds            r1, r0, #1
                     bne             8f
-                    ldr             r7, = #error
+                    ldr             r2, = #error
 0:
-                    movs            r0, #0                          @ display success or error text
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #1
-                    movs            r3, r7
-                    bl              Display_drawString
-                    bl              Display_blitDisplayBuffer
-
                     ldr             r0, = #400
                     ldr             r1, = #FsmServoSetup_initServoSetup
-                    bl              FsmCommon_delayFor
+                    bl              FsmCommon_showMessageFor
                     pop             {r7, pc}
 8:                                                                  @ convert slot to ascii, so we can display it
+                    movs            r7, r1
+                    movs            r0, #0                          @ clear row, and display the template
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #0
+                    movs            r3, #DISPLAY_WIDTH
+                    bl              Display_fillRow
+
+                    movs            r0, r7
                     ldr             r1, = #FsmServoSave_buffer
                     movs            r2, #10                         @ convert to base 10
                     bl              itoa
@@ -108,7 +103,15 @@ drawValueOffset = 74
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #1
                     bl              Display_drawString
-                    ldr             r7, = #success
-                    b               0b
+                    movs            r0, #0
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #1
+                    ldr             r3, = #success
+                    bl              Display_drawString
+                    bl              Display_blitDisplayBuffer
+                    ldr             r0, = #400
+                    ldr             r1, = #FsmServoSetup_initServoSetup
+                    bl              FsmCommon_delayFor
+                    pop             {r7, pc}
 
    .end

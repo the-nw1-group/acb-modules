@@ -236,6 +236,30 @@ __dma1Channel23IRQHandler:
 9:                                                                  @ return straight through here
                     bx              lr
 
+    public_function(FsmCommon_showMessageFor)
+
+@ int FsmCommon_showMessageFor(short delayFor, fn* handler, char* message)
+@   show a message on the bottom row of the display and delay for delayFor * 5ms, and then set the handler as the next
+@   state. Returns the next state, or 0 to remain in the same state
+
+FsmCommon_showMessageFor:
+                    push            {r0-r1, r7, lr}
+                    movs            r7, r2
+                    movs            r0, #0                          @ clear row
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #0
+                    movs            r3, #DISPLAY_WIDTH
+                    bl              Display_fillRow
+                    movs            r0, #0
+                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    movs            r2, #1
+                    movs            r3, r7
+                    bl              Display_drawString
+                    bl              Display_blitDisplayBuffer
+                    pop             {r0-r1}
+                    bl              FsmCommon_delayFor
+                    pop             {r7, pc}
+
     public_function(FsmCommon_delayFor)
 
 @ int FsmCommon_delayFor(short delayFor, fn* handler)

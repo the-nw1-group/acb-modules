@@ -21,7 +21,7 @@
     .extern         Configuration_replaceOrAddNew                   @ replace or save a new record
     .extern         FsmMenus_initSignalSaveMenu                     @ go to the signal save menu
     .extern         FsmSignalSetup_colour                           @ the last colour selected by the user
-    .extern         FsmCommon_delayFor                              @ delay for a time
+    .extern         FsmCommon_showMessageFor                        @ show a message
 
     private_data(FsmSignalSave_private)
 
@@ -124,21 +124,10 @@ FsmSignalSave_doSignalSave:
                     bne             0f
                     ldr             r7, = #error
 0:
-                    movs            r0, #0                          @ clear row, and display the template
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
-                    bl              Display_fillRow
-                    movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #1
-                    movs            r3, r7
-                    bl              Display_drawString
-                    bl              Display_blitDisplayBuffer
-
                     ldr             r0, = #400
                     ldr             r1, = #FsmMenus_initSignalSaveMenu
-                    bl              FsmCommon_delayFor
+                    movs            r2, r7
+                    bl              FsmCommon_showMessageFor
                     pop             {r7, pc}
 
    .end

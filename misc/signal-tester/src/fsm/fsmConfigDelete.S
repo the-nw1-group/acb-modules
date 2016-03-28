@@ -22,7 +22,7 @@
     .extern         Display_drawString                              @ draw a string into the display buffer
     .extern         Display_drawFilledRectangle                     @ fill a rectangle
     .extern         FsmCommon_showInstructions                      @ show instructions
-    .extern         FsmCommon_delayFor                              @ delay for a time
+    .extern         FsmCommon_showMessageFor                        @ show a message
     .extern         NVIC_systemReset                                @ reset the device
 
     private_data(FsmConfigDelete_privateData)
@@ -127,12 +127,6 @@ FsmConfigDelete_waitForSure2:
 
 FsmConfigDelete_doDelete:
                     push            {r7, lr}
-                    movs            r0, #0                          @ clear row
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
-                    bl              Display_fillRow
-
                     ldr             r0, = #FsmConfigDelete_deleteType
                     ldrb            r0, [r0]                        @ which kind of delete?
                     cmp             r0, #CONFIG_REC_SETTINGS
@@ -140,39 +134,24 @@ FsmConfigDelete_doDelete:
                     bl              Configuration_deleteAllData     @ just data items
                     cmp             r0, #SUCCESS
                     bne             8f
-                    movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #1
-                    ldr             r3, = #complete
-                    bl              Display_drawString
-                    bl              Display_blitDisplayBuffer
+                    ldr             r2, = #complete
                     b               7f
 1:
                     bl              Configuration_deleteAll         @ all the data
                     cmp             r0, #SUCCESS
                     bne             8f
-                    movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #1
-                    ldr             r3, = #reboot
-                    bl              Display_drawString
-                    bl              Display_blitDisplayBuffer
                     movs            r0, #200
                     ldr             r1, =#FsmConfigDelete_reboot
-                    bl              FsmCommon_delayFor
+                    ldr             r2, = #reboot
+                    bl              FsmCommon_showMessageFor
 9:
                     pop             {r7, pc}
 8:
-                    movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
-                    movs            r2, #1
-                    ldr             r3, = #failed
-                    bl              Display_drawString
-                    bl              Display_blitDisplayBuffer
+                    ldr             r2, =#failed
 7:
                     movs            r0, #200
                     ldr             r1, =#FsmMenus_initConfigurationMenu
-                    bl              FsmCommon_delayFor
+                    bl              FsmCommon_showMessageFor
                     b               9b
 
     public_function(FsmConfigDelete_reboot)
