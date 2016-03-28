@@ -20,11 +20,11 @@
     .extern         Display_fillRow                                 @ fill a row in the display buffer
     .extern         Configuration_addNew                            @ save a new record
     .extern         FsmServoSetup_initServoSetup
+    .extern         FsmCommon_delayFor                              @ delay for a time
     .extern         itoa                                            @ convert integer to string
 
     private_data(FsmSignalSave_private)
 
-FsmServoSave_delay: .short          0
 FsmServoSave_buffer:
                     .string         "    "
 
@@ -95,10 +95,9 @@ drawValueOffset = 74
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
 
-                    ldr             r0, = #FsmServoSave_delay
-                    ldr             r1, = #400
-                    strh            r1, [r0]
-                    ldr             r0, = #FsmServoSave_servoSaveShowMessage
+                    ldr             r0, = #400
+                    ldr             r1, = #FsmServoSetup_initServoSetup
+                    bl              FsmCommon_delayFor
                     pop             {r7, pc}
 8:                                                                  @ convert slot to ascii, so we can display it
                     ldr             r1, = #FsmServoSave_buffer
@@ -111,23 +110,5 @@ drawValueOffset = 74
                     bl              Display_drawString
                     ldr             r7, = #success
                     b               0b
-
-
-    public_function(FsmServoSave_servoSaveShowMessage)
-
-@ int FsmServoSave_servoSaveShowMessage(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
-@   FSM Routine for showing the result message. Returns the next state, or 0 to remain in the same state
-
-FsmServoSave_servoSaveShowMessage:
-                    ldr             r0, = #FsmServoSave_delay
-                    ldrh            r1, [r0]
-                    subs            r1, r1, #1
-                    beq             0f
-                    strh            r1, [r0]
-                    movs            r0, #0
-                    bx              lr
-0:
-                    ldr             r0, = #FsmServoSetup_initServoSetup
-                    bx              lr
 
    .end

@@ -21,11 +21,10 @@
     .extern         Configuration_replaceOrAddNew                   @ replace or save a new record
     .extern         FsmMenus_initSignalSaveMenu                     @ go to the signal save menu
     .extern         FsmSignalSetup_colour                           @ the last colour selected by the user
+    .extern         FsmCommon_delayFor                              @ delay for a time
 
     private_data(FsmSignalSave_private)
 
-FsmSignalSave_delay:
-                    .short          0
 FsnSignalSave_dataType:
                     .byte           0
 
@@ -137,27 +136,9 @@ FsmSignalSave_doSignalSave:
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
 
-                    ldr             r0, = #FsmSignalSave_delay
-                    ldr             r1, = #200
-                    strh            r1, [r0]
-                    ldr             r0, = #FsmSignalSave_signalSaveShowMessage
+                    ldr             r0, = #400
+                    ldr             r1, = #FsmMenus_initSignalSaveMenu
+                    bl              FsmCommon_delayFor
                     pop             {r7, pc}
-
-    public_function(FsmSignalSave_signalSaveShowMessage)
-
-@ int FsmSignalSave_servoSaveShowMessage(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
-@   FSM Routine for showing the result message. Returns the next state, or 0 to remain in the same state
-
-FsmSignalSave_signalSaveShowMessage:
-                    ldr             r0, = #FsmSignalSave_delay
-                    ldrh            r1, [r0]
-                    subs            r1, r1, #1
-                    beq             0f
-                    strh            r1, [r0]
-                    movs            r0, #0
-                    bx              lr
-0:
-                    ldr             r0, = #FsmMenus_initSignalSaveMenu
-                    bx              lr
 
    .end

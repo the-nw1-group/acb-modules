@@ -46,6 +46,11 @@ FsmCommon_timer3Isr:
 FsmCommon_dma23Isr:
                     .int            0
 
+FsmCommon_delayNext:
+                    .int            0
+FsmCommon_delayCount:
+                    .short          0
+
     static_data(FsmCommon_const)
 
 FsmCommon_const:
@@ -229,6 +234,36 @@ __dma1Channel23IRQHandler:
                     beq             9f
                     bx              r1                              @ no need to link here, just let the real ISR
 9:                                                                  @ return straight through here
+                    bx              lr
+
+    public_function(FsmCommon_delayFor)
+
+@ int FsmCommon_delayFor(short delayFor, fn* handler)
+@   delay for delayFor * 5ms, and then set the handler as the next state. Returns the next state, or 0 to remain in the
+@   same state
+
+FsmCommon_delayFor:
+                    ldr             r2, = #FsmCommon_delayNext
+                    str             r1, [r2]
+                    strh            r0, [r2, #4]
+                    ldr             r0, = #FsmCommon_delay
+                    bx              lr
+
+    private_function(FsmCommon_delay)
+
+@ int FsmCommon_delay(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for delaying. Returns the next state, or 0 to remain in the same state
+
+FsmCommon_delay:
+                    ldr             r2, = #FsmCommon_delayNext
+                    ldrh            r0, [r2, #4]
+                    subs            r0, r0, #1
+                    bcc             0f
+                    strh            r0, [r2, #4]
+                    movs            r0, #0
+                    bx              lr
+0:
+                    ldr             r0, [r2]
                     bx              lr
 
     private_function(FsmCommon_instructionTimeout)

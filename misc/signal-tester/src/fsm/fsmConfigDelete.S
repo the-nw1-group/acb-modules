@@ -22,12 +22,11 @@
     .extern         Display_drawString                              @ draw a string into the display buffer
     .extern         Display_drawFilledRectangle                     @ fill a rectangle
     .extern         FsmCommon_showInstructions                      @ show instructions
+    .extern         FsmCommon_delayFor                              @ delay for a time
     .extern         NVIC_systemReset                                @ reset the device
 
     private_data(FsmConfigDelete_privateData)
 
-FsmConfigDelete_delay:
-                    .short          0
 FsmConfigDelete_deleteType:
                     .byte           0
 
@@ -133,9 +132,6 @@ FsmConfigDelete_doDelete:
                     movs            r2, #0
                     movs            r3, #DISPLAY_WIDTH
                     bl              Display_fillRow
-                    ldr             r0, = #FsmConfigDelete_delay
-                    ldr             r1, = #200
-                    strh            r1, [r0]
 
                     ldr             r0, = #FsmConfigDelete_deleteType
                     ldrb            r0, [r0]                        @ which kind of delete?
@@ -150,8 +146,7 @@ FsmConfigDelete_doDelete:
                     ldr             r3, = #complete
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
-                    ldr             r0, = #FsmConfigDelete_showMessage
-                    b               9f
+                    b               7f
 1:
                     bl              Configuration_deleteAll         @ all the data
                     cmp             r0, #SUCCESS
@@ -162,7 +157,9 @@ FsmConfigDelete_doDelete:
                     ldr             r3, = #reboot
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
-                    ldr             r0, = #FsmConfigDelete_showMessageThenReboot
+                    movs            r0, #200
+                    ldr             r1, =#FsmConfigDelete_reboot
+                    bl              FsmCommon_delayFor
 9:
                     pop             {r7, pc}
 8:
@@ -172,41 +169,18 @@ FsmConfigDelete_doDelete:
                     ldr             r3, = #failed
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
-                    ldr             r0, = #FsmConfigDelete_showMessage
+7:
+                    movs            r0, #200
+                    ldr             r1, =#FsmMenus_initConfigurationMenu
+                    bl              FsmCommon_delayFor
                     b               9b
 
-    public_function(FsmConfigDelete_showMessage)
+    public_function(FsmConfigDelete_reboot)
 
-@ int FsmConfigDelete_showMessage(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
-@   FSM Routine for showing the result message. Returns the next state, or 0 to remain in the same state
+@ int FsmConfigDelete_reboot(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
+@   FSM Routine for rebooting. Doesn't return
 
-FsmConfigDelete_showMessage:
-                    ldr             r0, = #FsmConfigDelete_delay
-                    ldrh            r1, [r0]
-                    subs            r1, r1, #1
-                    beq             0f
-                    strh            r1, [r0]
-                    movs            r0, #0
-                    bx              lr
-0:
-                    ldr             r0, = #FsmMenus_initConfigurationMenu
-                    bx              lr
-
-    public_function(FsmConfigDelete_showMessageThenReboot)
-
-@ int FsmConfigDelete_showMessage(short redValue, short blueValue, short greenValue, int buttonsAndStatus)
-@   FSM Routine for showing the result message, when timed out the device is rebooted. Returns the next state,
-@   or 0 to remain in the same state
-
-FsmConfigDelete_showMessageThenReboot:
-                    ldr             r0, = #FsmConfigDelete_delay
-                    ldrh            r1, [r0]
-                    subs            r1, r1, #1
-                    beq             0f
-                    strh            r1, [r0]
-                    movs            r0, #0
-                    bx              lr
-0:
+FsmConfigDelete_reboot:
                     bl              NVIC_systemReset
 
     private_function(FsmConfigDelete_initDeleteCommon)
