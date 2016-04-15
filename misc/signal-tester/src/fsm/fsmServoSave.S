@@ -71,10 +71,10 @@ drawValueOffset = 74
                     ldr             r7, = #FsmServoSetup_start
                     ldrb            r3, [r7]
                     ldrb            r2, [r7, #1]
-                    lsls            r2, r2, #16
+                    lsls            r2, r2, #8
                     orrs            r3, r3, r2
                     ldrb            r2, [r7, #2]
-                    lsls            r2, r2, #24
+                    lsls            r2, r2, #16
                     orrs            r2, r2, r3
                     movs            r3, #0
                     bl              Configuration_addNew

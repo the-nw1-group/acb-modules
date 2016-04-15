@@ -21,12 +21,18 @@
  * Each record looks like:
  *
  *      +-------------+
- *      | Data Type   |    1    The type of data stored in this record
- *      +-------------+
  *      | Record Type |    1    The type of record
+ *      +-------------+
+ *      | Data Type   |    1    The type of data stored in this record
  *      +-------------+
  *      | Data        |    6    Data associated with this record
  *      +-------------+
+ *
+ * Record Types are:
+ *  0 or 0xff   Unpopulated
+ *  1           Settings record
+ *  2           Data record
+ *              Others Reserved
  *
  * Data Types are:
  *  0 or 0xff   Unpopulated
@@ -35,12 +41,6 @@
  *  3           Yellow Aspect Colour
  *  4           Green Aspect Colour
  *  5           White Aspect Colour
- *              Others Reserved
- *
- * Record Types are:
- *  0 or 0xff   Unpopulated
- *  1           Settings record
- *  2           Data record
  *              Others Reserved
  *
  * Data format is specific to each data type:
@@ -137,13 +137,37 @@ Configuration_find:
 
 Configuration_getDataAt:
 
+                    movs            r0, #0
+                    bx              lr
+
     public_function(Configuration_getAt)
 
-Configuration_getAt:
-
 @ byte* Configuration_getAt(int index)
-@   Reads the next record, returning it as a read-only array of bytes. If there is no next record, or another
+@   Reads the next record, returning it as a read-only array of bytes. If the index is out of range, or another
 @   error occurs, a null pointer is returned. index is a zero based index of the data.
+
+Configuration_getAt:
+                    push            {r7, lr}
+                    cmp             r0, #0                          @ check if the index is out of range
+                    blt             8f
+                    movs            r7, r0
+                    bl              Configuration_countAll
+                    cmp             r7, r0
+                    bgt             8f
+                    lsls            r1, r7, #3                      @ otherwise it's just an index into the data
+                    ldr             r7, = #Configuration_baseAddress
+                    ldr             r7, [r7]
+                    ldr             r0, = #Configuration_buffer
+                    ldr             r2, [r7, r1]
+                    str             r2, [r0]
+                    adds            r1, r1, #4
+                    ldr             r2, [r7, r1]
+                    str             r2, [r0, #4]
+                    b               9f
+8:
+                    movs            r0, #0
+9:
+                    pop             {r7, pc}
 
     public_function(Configuration_addNew)
 
@@ -313,7 +337,7 @@ Configuration_countMatching:
                     ldr             r7, = #Configuration_baseAddress
                     ldr             r7, [r7]
                     movs            r1, #0                          @ count
-                    movs            r2, #1                          @ index into array (record type at position index+1)
+                    movs            r2, #0                          @ index into array (record type at position index+1)
 0:
                     ldrb            r3, [r7, r2]
                     cmp             r3, CONFIG_REC_UNUSED           @ unused, then skip

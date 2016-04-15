@@ -135,7 +135,6 @@ FsmPwmSetup_adjustPwm:
                     ldr             r2, = #TIM3_BASE                @ stop TIMER3
                     movs            r1, #0
                     str             r1, [r2, #TIM_CR1_OFFSET]
-                    b               9f
 9:
                     pop             {r7, pc}
 

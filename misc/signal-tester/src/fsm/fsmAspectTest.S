@@ -20,7 +20,6 @@
     .extern         Display_drawFilledRectangle                     @ draw a filled rectangle
     .extern         Display_fillRow                                 @ fill a row in the display buffer
     .extern         Display_drawString                              @ draw a string into the display buffer
-    .extern         Display_drawFilledRectangle                     @ fill a rectangle
     .extern         FsmMenus_initSignalTestMenu                     @ show the signal test menu
     .extern         FsmCommon_showInstructions                      @ show instructions
     .extern         Ws2812_init                                     @ init WS2812 driver

@@ -328,7 +328,7 @@ Display_drawFilledRectangle:
 
     public_function(Display_fillRow)
 
-@ int Display_fillRow(int x, int row, byte colour, int length, int height)
+@ int Display_fillRow(int x, int row, byte colour, int length)
 @   draw filled rectangle in the selected colour
 @   Returns a display status
 

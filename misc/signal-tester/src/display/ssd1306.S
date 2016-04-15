@@ -172,12 +172,12 @@ Ssd1306_blitBuffer:
 
 Ssd1306_clearBuffer:
                     ldr             r0, = #_buffer
-                    ldr             r1, = #(__displayBufferSize)
+                    ldr             r1, = #(__displayBufferSize-4)
                     movs            r2, #0
 0:
                     str             r2, [r0, r1]
                     subs            r1, r1, #4
-                    bne             0b
+                    bcs             0b
                     bx              lr
 
     public_function(Ssd1306_drawPixel)
