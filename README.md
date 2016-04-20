@@ -33,8 +33,8 @@ Building and Debugging
 
 You'll need the following tools to build the source code:
 * Eclipse CDT - I'm using Eclipse Mars Release (4.5.1) Build id: 20150924-1200
-* GNU ARM Eclipse plug-in - I'm using version v2.11.3-201602101653 
-* Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - I'm using version 5.2-2015-q4-update
+* GNU ARM Eclipse plug-in - I'm using version v2.12.1-201604190915 
+* Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - I'm using version 5-2016-q1-update
 * OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team
 * GNU build tools (for Windows) - again, I'm using the one prebuilt by the GNU ARM Eclipse plug-in team
 * Saxon XSLT and XQuery Processor - I'm using version Saxon-HE 9-6-0-6J
