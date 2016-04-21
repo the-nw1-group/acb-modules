@@ -136,9 +136,34 @@ Configuration_find:
 @   error occurs, a null pointer is returned. index is a zero based index of the data.
 
 Configuration_getDataAt:
-
+                    cmp             r0, #0                          @ check if the index is out of range
+                    blt             8f
+                    ldr             r3, = #Configuration_baseAddress
+                    ldr             r3, [r3]
+                    ldr             r1, = #ACB_EEPROM_SIZE >> 3     @ end of buffer pointer
+                    adds            r1, r1, r3
+0:
+                    ldrb            r2, [r3, #CONFIG_REC_OFFSET]    @ check if it's a data record
+                    cmp             r2, #CONFIG_REC_DATA
+                    bne             1f
+                    cmp             r0, #0                          @ if the index is 0, then we've found the
+                    beq             cgda_found                      @ record
+                    subs            r0, r0, #1
+1:
+                    adds            r3, r3, #8                      @ move onto the next record
+                    cmp             r3, r1
+                    bne             0b
+8:
                     movs            r0, #0
+9:
                     bx              lr
+cgda_found:
+                    ldr             r0, = #Configuration_buffer
+                    ldr             r2, [r3]
+                    str             r2, [r0]
+                    ldr             r2, [r3, #4]
+                    str             r2, [r0, #4]
+                    b               9b
 
     public_function(Configuration_getAt)
 

@@ -56,7 +56,7 @@ FsmCommon_delayCount:
 FsmCommon_const:
 FsmCommon_title:
 welcome:            .string         "Signal / Servo Tester"
-version:            .string         "Version 0.04"
+version:            .string         "Version 0.05"
 
                     .global         FsmCommon_title                 @ Application title
 

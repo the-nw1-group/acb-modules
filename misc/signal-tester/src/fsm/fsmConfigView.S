@@ -304,16 +304,49 @@ FsmConfigView_recordDecodeServo:
                     movs            r0, r4
                     b               9b
 
+FsmConfigView_recordDecodeRed:
+                    ldr             r1, =#red
+                    b               FsmConfigView_recordDecodeCommon
+FsmConfigView_recordDecodeYellow:
+                    ldr             r1, =#yellow
+                    b               FsmConfigView_recordDecodeCommon
+FsmConfigView_recordDecodeGreen:
+                    ldr             r1, =#green
+                    b               FsmConfigView_recordDecodeCommon
+FsmConfigView_recordDecodeWhite:
+                    ldr             r1, =#white
+FsmConfigView_recordDecodeCommon:
+                    movs            r7, r0
+                    ldr             r0, =#FsmConfigView_convertBuffer
+                    bl              strcpy
+                    movs            r4, r0
+                    ldrb            r0, [r7, #CONFIG_DATA_OFFSET + 2] @ get R G B values, and display
+                    movs            r1, r4
+                    adds            r1, r1, #8
+                    movs            r2, #16
+                    bl              FsmConfigView_toString
+                    ldrb            r0, [r7, #CONFIG_DATA_OFFSET + 1]
+                    movs            r1, r4
+                    adds            r1, r1, #14
+                    movs            r2, #16
+                    bl              FsmConfigView_toString
+                    ldrb            r0, [r7, #CONFIG_DATA_OFFSET]
+                    movs            r1, r4
+                    adds            r1, r1, #20
+                    movs            r2, #16
+                    bl              itoa
+                    movs            r0, r4
+                    b               9b
 
     static_data(FsmConfigView_recordDecode)
 
 FsmConfigView_recordDecode:
-                    .word           FsmConfigView_recordDecodeFail + 1 @ no record type 0
-                    .word           FsmConfigView_recordDecodeServo + 1 @ servo (type=1)
-                    .word           FsmConfigView_recordDecodeFail + 1 @ red colour (type=2)
-                    .word           FsmConfigView_recordDecodeFail + 1 @ yellow colour (type=3)
-                    .word           FsmConfigView_recordDecodeFail + 1 @ green colour (type=4)
-                    .word           FsmConfigView_recordDecodeFail + 1 @ white colour (type=5)
+                    .word           FsmConfigView_recordDecodeFail + 1   @ no record type 0
+                    .word           FsmConfigView_recordDecodeServo + 1  @ servo (type=1)
+                    .word           FsmConfigView_recordDecodeRed + 1    @ red colour (type=2)
+                    .word           FsmConfigView_recordDecodeYellow + 1 @ yellow colour (type=3)
+                    .word           FsmConfigView_recordDecodeGreen + 1  @ green colour (type=4)
+                    .word           FsmConfigView_recordDecodeWhite + 1  @ white colour (type=5)
 
     private_function(FsmConfigView_calculateShift)
 

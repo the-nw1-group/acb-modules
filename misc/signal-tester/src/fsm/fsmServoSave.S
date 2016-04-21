@@ -87,15 +87,15 @@ drawValueOffset = 74
                     bl              FsmCommon_showMessageFor
                     pop             {r7, pc}
 8:                                                                  @ convert slot to ascii, so we can display it
-                    movs            r7, r1
+
                     movs            r0, #0                          @ clear row, and display the template
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
                     movs            r3, #DISPLAY_WIDTH
                     bl              Display_fillRow
 
-                    movs            r0, r7
-                    ldr             r1, = #FsmServoSave_buffer
+                    bl              Configuration_countData         @ always adds at the end, so get the count of the
+                    ldr             r1, = #FsmServoSave_buffer      @ number of records
                     movs            r2, #10                         @ convert to base 10
                     bl              itoa
                     movs            r3, r0
