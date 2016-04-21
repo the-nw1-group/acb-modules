@@ -10,6 +10,8 @@
 #include "moduleInfo.inc"
 #include "acb/common.inc"
 
+#ifdef ACB_USE_EEPROM
+
 @ public EEPROM routines, for reading and writing bytes and blocks of bytes
 
     module(Eeprom)
@@ -204,6 +206,8 @@ EepromImpl_setHint:
 
 EepromImpl_getHint:
                     b               EepromDrv_getHint
+
+#endif
 
     .end
 

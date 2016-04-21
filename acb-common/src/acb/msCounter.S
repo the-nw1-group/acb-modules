@@ -23,7 +23,7 @@ numberOfSlots = ACB_ALARM_SLOTS
     .global         MsCounter_milliseconds
 
 MsCounter_milliseconds:
-                    .word           0
+                    .int            0
 
     private_data(MsCounter_private)
 
@@ -109,7 +109,7 @@ MsCounter_alarmAt:
 
     public_function(MsCounter_alarmIn)
 
-@ bool MsCounter_alarmAt(int slot, int offsetToAlarm, int address)
+@ bool MsCounter_alarmIn(int slot, int offsetToAlarm, int address)
 @   Call the address at the current time plus the offset . Returns SUCCESS if the slot was unpdated with the time and
 @   address, otherwise ERROR is returned. Typically if the slot number is invalid.
 
@@ -164,7 +164,7 @@ MsCounter_waitUntil:
                     ldr             r1, = #MsCounter_milliseconds
 0:
                     ldr             r2, [r1]
-                    cmp             r0, r2
+                    cmp             r2, r0
                     bge             1f
                     b               0b
 1:

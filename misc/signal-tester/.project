@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>acb-4tc</name>
+	<name>signal-tester</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -25,10 +25,10 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 	</natures>
 	<linkedResources>
-        <link>
-            <name>acb-common</name>
-            <type>2</type>
-            <locationURI>WORKSPACE_LOC/acb-common/src</locationURI>
-        </link>
-    </linkedResources>
+		<link>
+			<name>acb-common</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/acb-common/src</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

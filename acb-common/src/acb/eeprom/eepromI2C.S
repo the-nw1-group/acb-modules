@@ -10,6 +10,8 @@
 #include "moduleInfo.inc"
 #include "acb/common.inc"
 
+#ifdef ACB_USE_EEPROMI2C
+
 @ EEPROM "driver" routines for I2C implementation
 
     module(EepromI2C)
@@ -23,12 +25,12 @@
     private_data(EepromI2C_data)
 
 EepromI2C_writeComplete:
-                    .word           0                               @ the time the last write should complete by
+                    .int            0                               @ the time the last write should complete by
 
 EepromI2C_asyncAddress:
-                    .word           0                               @ async EEPROM address to read/write from/to
+                    .int            0                               @ async EEPROM address to read/write from/to
 EEpromI2C_asyncBuffer:
-                    .word           0                               @ async pointer to destination buffer
+                    .int            0                               @ async pointer to destination buffer
 EepromI2C_asyncLength:
                     .short          0                               @ async number of bytes left to read/write
 EepromI2C_status:   .byte           0                               @ status
@@ -50,7 +52,7 @@ ASYNC_IN_PROGRESS       = 0                                         @ Async read
 WRITE_IN_PROGRESS       = 1
 LAST_ASYNC_STATUS       = 2
 
-ASYNC_WRITE_ALARM_SLOT  = 0
+ASYNC_WRITE_ALARM_SLOT  = ACB_EEPROM_ALARM_SLOT
 #if ASYNC_WRITE_ALARM_SLOT > ACB_ALARM_SLOTS
 #error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
 #endif
@@ -110,10 +112,10 @@ __eepromi2cSetupPort:
 
 __eepromi2cSetupClocks:
                     ldr             r3, = #RCC_BASE                 @ set I2C1 clock to system clock
-                    ldr             r1, [r3, #RCC_CFGR_OFFSET]
+                    ldr             r1, [r3, #RCC_CFGR3_OFFSET]
                     movs            r0, #RCC_CFGR3_I2C1SW
                     orrs            r0, r0, r1
-                    str             r0, [r3, #RCC_CFGR_OFFSET]
+                    str             r0, [r3, #RCC_CFGR3_OFFSET]
 
                     ldr             r1, [r3, #RCC_APB1ENR_OFFSET]   @ enable I2C1 clock
                     ldr             r0, = #RCC_APB1ENR_I2C1EN
@@ -296,6 +298,9 @@ readI2CSettings = (I2C_CR1_ERRIE | I2C_CR1_TCIE | I2C_CR1_STOPIE | I2C_CR1_NACKI
                     orrs            r2, r2, r0                      @ cause an interrupt straight away
                     str             r2, [r6, #I2C_CR1_OFFSET]
 
+                    movs            r0, #DMA1_Channel2_3_IRQn
+                    ldr             r1, =#EepromI2C_dmaHandler      @ use indirection to handle DMA IRQ
+                    bl              ACB_EEPROM_IRQ_REDIRECT_FN
                     movs            r0, #DMA1_Channel2_3_IRQn       @ enable DMA channel 2/3 interrupt
                     bl              NVIC_enableIRQ
                     movs            r0, #I2C1_IRQn                  @ enable I2C1 interrupts
@@ -367,6 +372,9 @@ writeI2CSettings = (I2C_CR1_ERRIE | I2C_CR1_TCIE | I2C_CR1_STOPIE | I2C_CR1_NACK
                     orrs            r2, r2, r0                      @ cause an interrupt straight away
                     str             r2, [r6, #I2C_CR1_OFFSET]
 
+                    movs            r0, #DMA1_Channel2_3_IRQn
+                    ldr             r1, =#EepromI2C_dmaHandler      @ use indirection to handle DMA IRQ
+                    bl              ACB_EEPROM_IRQ_REDIRECT_FN
                     movs            r0, #DMA1_Channel2_3_IRQn       @ enable DMA channel 2/3 interrupt
                     bl              NVIC_enableIRQ
                     movs            r0, #I2C1_IRQn                  @ enable I2C1 interrupts
@@ -420,12 +428,12 @@ EepromI2C_setHint:
 EepromI2C_getHint:
                     bx              lr
 
-    public_function(__dma1Channel23IRQHandler)
+    public_function(EepromI2C_dmaHandler)
 
-@ void __dma1Channel23IRQHandler (void)
+@ void EepromI2C_dmaHandler (void)
 @   DMA interrupt service routine for channel 2 (I2C transmit), and channel 3 (I2C receive)
 
-__dma1Channel23IRQHandler:
+EepromI2C_dmaHandler:
                     ldr             r3, = #_DMA1_ISR                @ check for an RX interrupt - only errors should
                     ldr             r0, [r3]                        @ occur here
                     ldr             r1, = #DMA_ISR_GIF3
@@ -517,7 +525,9 @@ EepromI2C_blockFinishedReport:
                     str             r2, [r3, #DMA_Channel_CCR_OFFSET]
                     ldr             r3, = #DMA1_Channel2            @ turn off DMA Channel 2
                     str             r2, [r3, #DMA_Channel_CCR_OFFSET]
-
+                    ldr             r0, = #DMA_IFCR_CGIF2 | DMA_IFCR_CGIF2 @ clear any pending interrupts
+                    ldr             r1, = #DMA1_BASE
+                    str             r0, [r1, #DMA_IFCR_OFFSET]
                     movs            r0, #DMA1_Channel2_3_IRQn       @ disable DMA channel 2/3 interrupt
                     bl              NVIC_disableIRQ
                     movs            r0, #I2C1_IRQn                  @ disable I2C1 interrupts
@@ -818,5 +828,7 @@ waitForStatusTimeout = 0xA00
 1:
                     movs            r0, #SUCCESS
                     bx              lr
+
+#endif
 
     .end

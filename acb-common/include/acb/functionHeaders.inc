@@ -8,7 +8,7 @@
  */
 
 /*
- * General very commmon definitions
+ * General very common definitions
  */
 
 FALSE = 0
@@ -127,6 +127,17 @@ TRUE  = 1
 #define av_public_override(name)\
     av_public_function(name)\
     .weak           name;
+
+/*
+ * macro to define static data (that's stored in flash)
+ */
+
+#define static_data(secname)\
+    .section        .rodata.##secname, "a", %progbits;\
+    .type           .rodata.##secname, %function;\
+    .size           secname, .-secname;\
+    .balign         2;\
+    .align          2;
 
 /*
  * macro to define a private data

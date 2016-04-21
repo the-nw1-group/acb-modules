@@ -37,8 +37,11 @@ __svcHandler:
                     ldrh            r2, [r2]                        @ address, so we can get the immediate value supplied
                     uxtb            r2, r2                          @ immediate in SVC stored in bottom byte
                     cmp             r2, #ACB_FATAL_ERROR            @ on SVC
-                    beq             ErrorHandler_handle
+                    beq             2f                              @ redirect, as beq jump range too short
                     bx              lr                              @ if not ACB_FATAL_ERROR return
+2:
+                    bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
+                                                                    @ expect to return here...
 
     public_function(System_onClockFail)
 
@@ -47,7 +50,8 @@ __svcHandler:
 
 System_onClockFail:
                     movs            r0, #ACB_ERROR_CLOCKFAIL
-                    b               ErrorHandler_handle
+                    bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
+                                                                    @ expect to return here...
 
 #if defined(ACB_ERRORHANDLER_DEFAULTHANDLER)
 
@@ -58,7 +62,8 @@ System_onClockFail:
 
 __defaultHandler:
                     movs            r0, #ACB_ERROR_IN_DEFAULT_HANDLER
-                    b               ErrorHandler_handle
+                    bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
+                                                                    @ expect to return here...
 
 #endif
 
@@ -71,7 +76,8 @@ __defaultHandler:
 
 __nmiHandler:
                     movs            r0, #ACB_ERROR_NMI
-                    b               ErrorHandler_handle
+                    bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
+                                                                    @ expect to return here...
 
     public_function(__hardFaultHandler)
 
@@ -80,7 +86,8 @@ __nmiHandler:
 
 __hardFaultHandler:
                     movs            r0, #ACB_ERROR_HARD_FAULT
-                    b               ErrorHandler_handle
+                    bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
+                                                                    @ expect to return here...
 
 #if (__CORTEX_M == 0x03) || (__CORTEX_M == 0x04) || (__CORTEX_M == 0x07)
 
@@ -91,7 +98,8 @@ __hardFaultHandler:
 
 __memManageHandler:
                     movs            r0, #ACB_ERROR_MEM_MANAGE
-                    b               ErrorHandler_handle
+                    bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
+                                                                    @ expect to return here...
 
     public_function(__busFaultHandler)
 
@@ -100,7 +108,8 @@ __memManageHandler:
 
 __busFaultHandler:
                     movs            r0, #ACB_ERROR_BUS_FAULT
-                    b               ErrorHandler_handle
+                    bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
+                                                                    @ expect to return here...
 
     public_function(__usageFaultHandler)
 
@@ -109,12 +118,13 @@ __busFaultHandler:
 
 __usageFaultHandler:
                     movs            r0, #ACB_ERROR_USAGE_FAULT
-                    b               ErrorHandler_handle
+                    bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
+                                                                    @ expect to return here...
 #endif
 
 #endif
 
-    private_function(ErrorHandler_handle)
+    public_override(ErrorHandler_handle)
 
 @ void ErrorHandler_handle(int errorCode)
 @   Last chance fatal error handler, in release flash GREEN and YELLOW, otherwise just hang. This assumes that at least
