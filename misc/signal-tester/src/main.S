@@ -9,6 +9,8 @@
 
 #include "moduleInfo.inc"
 
+#include "configuration.inc"
+
     .extern         Setup_setup                                     @ setup hardware and peripherals
     .extern         MsCounter_waitFor                               @ wait for a number of milliseconds
     .extern         FsmCommon_dispatch                              @ call into the FSM

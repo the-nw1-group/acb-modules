@@ -214,16 +214,30 @@ Configuration_addNew:
                     strh            r2, [r7, #4]
                     strh            r3, [r7, #6]
 
-    @ TODO: Tell Eeprom to update this area in back store (via hint)
-
-                    ldr             r2, = #Configuration_baseAddress
-                    ldr             r2, [r2]
+                    ldr             r2, = #Configuration_baseAddress    @ calculate EEPROM address from cache
+                    ldr             r2, [r2]                            @ address
                     subs            r7, r7, r2
+
+                    movs            r0, #EepromCache_setRegionDirtyHint
+                    movs            r1, r7
+                    movs            r2, #8
+                    bl              Eeprom_setHint
+                    cmp             r0, #ERROR
+                    beq             7f
+1:
+                    bl              Eeprom_asyncInProgress          @ wait for the cache to be loaded
+                    cmp             r0, #TRUE
+                    beq             1b
+                    bl              Eeprom_getLastAsyncStatus
+                    cmp             r0, #ERROR
+                    beq             7f
+
                     lsrs            r0, r7, #3
 9:
                     pop             {r7, pc}
 8:
                     pop             {r0-r1}
+7:
                     ldr             r0, = #-1
                     b               9b
 
@@ -248,11 +262,24 @@ croan_replace:
                     strh            r2, [r7, #4]                    @ to store data1 in two half words as it's not
                     strh            r3, [r7, #6]                    @ word aligned
 
-    @ TODO: Tell Eeprom to update this area in back store (via hint)
-
-                    ldr             r2, = #Configuration_baseAddress
-                    ldr             r2, [r2]
+                    ldr             r2, = #Configuration_baseAddress    @ calculate EEPROM address from cache
+                    ldr             r2, [r2]                            @ address
                     subs            r7, r7, r2
+
+                    movs            r0, #EepromCache_setRegionDirtyHint
+                    movs            r1, r7
+                    movs            r2, #8
+                    bl              Eeprom_setHint
+                    cmp             r0, #ERROR
+                    beq             7f
+1:
+                    bl              Eeprom_asyncInProgress          @ wait for the cache to be loaded
+                    cmp             r0, #TRUE
+                    beq             1b
+                    bl              Eeprom_getLastAsyncStatus
+                    cmp             r0, #ERROR
+                    beq             7f
+
                     lsrs            r0, r7, #3
                     b               9f
 croan_addNew:
@@ -268,6 +295,7 @@ croan_addNew:
                     pop             {r7, pc}
 8:
                     pop             {r0-r1}
+7:
                     ldr             r0, = #-1
                     b               9b
 
