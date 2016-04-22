@@ -1,0 +1,230 @@
+﻿<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Other Projects :: Signal Tester</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Signal Tester</h1>
+        <p>For testing serial RGB LEDs and for testing and positioning Servos</p>
+
+        <p class="view"><a href="https://github.com/the-nw1-group/acb-modules/tree/develop/misc/signal-tester">View stable on develop branch <small>the-nw1-group/acb-modules/misc/signal-tester</small></a></p>
+          <p class="view"><a href="https://github.com/the-nw1-group/acb-modules/tree/feature/theWeb/misc/signal-tester">View latest on feature branch <small>the-nw1-group/acb-modules/misc/signal-tester</small></a></p>
+
+      </header>
+      <section>
+        <h1>
+<a id="another-control-bus" class="anchor" href="#another-control-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Signal Tester</h1>
+
+<p>A side project for testing serial RGB LEDs (WS2182B ) and for testing and positioning Servos. It also has a 
+feature to try different PWM levels for a simple LED connection. It's powered from 3 AAA batteries, with a 
+simple OLED display, 3 analog inputs and 3 buttons for navigation. Settings can be saved into EEPROM, which
+can be reviewed at a later date. It uses an STM32F042F which is a TSSOP20 device and is all fitted onto a board
+5.5cm x 4.5cm.</p>
+
+<h2>
+<a id="the-modules" class="anchor" href="#pin-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pin Functions</h2>
+
+<p>The pin functions are:</p>
+
+<table>
+<thead>
+<tr>
+<th>Pin</th>
+<th>Function</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+    <tr>
+        <td>1</td>
+        <td>BOOT0</td>
+        <td>I/P</td>
+        <td>Tied to ground</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>PF0</td>
+        <td>I/O</td>
+        <td>I2C SDA</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>PF1</td>
+        <td>I/O</td>
+        <td>I2C SCL</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>NRST</td>
+        <td>RST</td>
+        <td>SWD - RST</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>VDDA</td>
+        <td>S</td>
+        <td>3.3v power supply</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>PA0</td>
+        <td>I/0</td>
+        <td>(Analog) Blue Input</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>PA1</td>
+        <td>I/0</td>
+        <td>(Analog) Green Input</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>PA2</td>
+        <td>I/0</td>
+        <td>(Analog) Red Input</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>PA3</td>
+        <td>I/0</td>
+        <td>Not Used</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>PA4</td>
+        <td>I/0</td>
+        <td>(OUT) Display #RESET</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>PA5</td>
+        <td>I/0</td>
+        <td>Not Used</td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>PA6</td>
+        <td>I/0</td>
+        <td>Not Used</td>
+    </tr>
+    <tr>
+        <td>13</td>
+        <td>PA7</td>
+        <td>I/0</td>
+        <td>(IN) Button Back</td>
+    </tr>
+    <tr>
+        <td>14</td>
+        <td>PB1</td>
+        <td>I/0</td>
+        <td>(OUT) Signal/Servo Output</td>
+    </tr>
+    <tr>
+        <td>15</td>
+        <td>VSS</td>
+        <td>S</td>
+        <td>Ground</td>
+    </tr>
+    <tr>
+        <td>16</td>
+        <td>VDD</td>
+        <td>S</td>
+        <td>3.3v power supply</td>
+    </tr>
+    <tr>
+        <td>17</td>
+        <td>PA9</td>
+        <td>I/0</td>
+        <td>(IN) Button Action</td>
+    </tr>
+
+    <tr>
+        <td>18</td>
+        <td>PA10</td>
+        <td>I/0</td>
+        <td>(IN) Button Forward</td>
+    </tr>
+    <tr>
+        <td>19</td>
+        <td>PA13</td>
+        <td>I/0</td>
+        <td>SWD - SWDIO</td>
+    </tr>
+    <tr>
+        <td>20</td>
+        <td>PA14</td>
+        <td>I/0</td>
+        <td>SWD - SWCLK</td>
+    </tr>
+    <tr>
+        <td>25</td>
+        <td>PA15</td>
+        <td>I/0</td>
+        <td>(OUT) Relay 4</td>
+    </tr>
+</tbody>
+</table>
+
+<h2>
+<a id="other-notable-ics" class="anchor" href="#notable-ics" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other notable ICs</h2>
+
+<p>Other notable IC's on the board</p>
+
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>24AA16</td>
+<td>16K I2C Serial EEPROM</td>
+</tr>
+<tr>
+<td>ER-OLED010-1</td>
+<td>OLED 1" Display</td>
+</tr>
+</tbody>
+</table>
+
+    <h2>
+        <a id="schematic" class="anchor" href="#schematic" aria-hidden="true"><span class="octicon octicon-link"></span></a>Schematic
+    </h2>
+
+    <a href="assets/misc/signal-tester/signal-tester.pdf"><img src="assets/misc/signal-tester/signal-tester-sch.png" alt="Signal Tester Schematic"/></a>
+    <p>Click on the image above for a PDF version.</p>
+
+    <h2>
+        <a id="the-modules" class="anchor" href="#board-layout" aria-hidden="true"><span class="octicon octicon-link"></span></a>Board Layout
+    </h2>
+
+    <img src="assets/misc/signal-tester/signal-tester-pcb-top.png" alt="Signal Tester top layout" />
+    <p>The top of the board.</p>
+
+    <img src="assets/misc/signal-tester/signal-tester-pcb-bottom.png" alt="Signal Tester bottom layout" />
+    <p>The bottom of the board.</p>
+
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/the-nw1-group">the-nw1-group</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
