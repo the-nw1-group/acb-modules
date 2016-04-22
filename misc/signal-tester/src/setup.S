@@ -58,7 +58,7 @@ __setupCounter:
 
 #if !defined(DEBUG)
                     movs            r0, #4                          @ only enable the watchdog on non-debug builds
-                    movs            r1, = #625                      @ prescaler=64, count down of 625 is a timeout
+                    ldr             r1, = #625                      @ prescaler=64, count down of 625 is a timeout
                     bl              IWDG_setup                      @ of 1 second
 #endif
                     bl              SimpleInputDebounce_setup       @ setup debounce

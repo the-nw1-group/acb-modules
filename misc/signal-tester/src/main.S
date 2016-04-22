@@ -54,6 +54,7 @@ __mainLoop:
                     ldrh            r2, [r4, #4]
                     ldrh            r3, [r4, #6]
                     bl              FsmCommon_dispatch              @ then dispatch to the next FSM state
+                    bl              IWDG_reset                      @ reset the watchdog
                     b               __mainLoop
 
     private_function(Main_getInputState)
