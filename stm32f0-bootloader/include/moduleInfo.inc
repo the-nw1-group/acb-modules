@@ -7,6 +7,10 @@
  *
  */
 
+#include "cmsis/core_cm0.inc"
+#include "stm32f0xx.inc"
+#include "acb/functionHeaders.inc"
+
 /*
  * Private bootloader include file
  *
@@ -32,7 +36,8 @@
 #define ACB_CAN_USEPORTB 1
 #define ACB_CAN_USEOTHER 2
 
-#define ACB_CANPORT ACB_CAN_USEPORTA
+#define ACB_CANPORT                     ACB_CAN_USEPORTA
+#define ACB_CAN_REQUIRES_SYSCONFIG      1
 
 /*
  * The bootloader doesn't use the FLiM switch, so turn it off here
@@ -67,3 +72,10 @@
 #define DEVICE_ID_STM32F05x 0x440
 #define DEVICE_ID_STM32F07x 0x448
 #define DEVICE_ID_STM32F09x 0x442
+
+/*
+ * Configure error handler to capture default handler, and all faults
+ */
+
+#define ACB_ERRORHANDLER_DEFAULTHANDLER
+#define ACB_ERRORHANDLER_HANDLEFAULTS

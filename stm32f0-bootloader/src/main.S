@@ -7,11 +7,9 @@
  *
  */
 
-#include "core_cm0.inc"
-#include "stm32f0xx.inc"
 #include "moduleInfo.inc"
-#include "acb_functionHeaders.inc"
-#include "acb_can.inc"
+#include "acb/common.inc"
+#include "acb/can.inc"
 
 @ main code for the CAN based bootloader
 @ this is based on Microchip's AN247 (since withdrawn) - modified by MERG for their CBUS modules
@@ -25,8 +23,15 @@
     .extern         Acb_init                                        @ init the ACB library
     .extern         Acb_showLeds                                    @ show Leds
 
-@ private variables - NOTE the bootloader doesn't have code to automatically initialise any RAM based
-@ values
+@ public variables
+
+    public_data(main_vars)
+
+applicationBaseAddress:
+                    .int        _application_orgin                  @ Base address of application
+                    .global     applicationBaseAddress
+
+@ private variables
 
     private_data(main_vars)
 
@@ -35,16 +40,20 @@ msgBuffer:          .space      ACB_MSGEX_SIZE
 
 @ bootloader response (MSGEX structure)
 bootLoaderResponse: .int        0x00080004                          @ msgex.info.exid - matches value from CBUS modules
-                    .byte       (1<<ACB_MSG_DLC_OFFSET)|(1<<ACB_MSG_IDE_OFFSET) @ msgex.info.dlc_status IDE=1, DLC=1
+                    .byte       (1<<ACB_MSG_LEN_OFFSET)|(1<<ACB_MSG_IDE_OFFSET) @ msgex.info.dlc_status IDE=1, DLC=1
                     .space      3, 0                                @ msgex.info.reserved
 txMessageData:      .space      8, 0                                @ msgex.data
 
-    public_function(main)
+    public_function(Main_calcApplicationBaseAddress)
 
-@ void main() - doesn't return
-@   main code for bootloader. Setup ports/CAN, and waits for messages and then dispatches them
+@ int main_calcApplicationBaseAddress()
+@   adjust for 072/091 devices that have 2K page boundaries; stores result in applicationBaseAddress
+@   returns pageSize significant bits (10 for 1K page boundaries, and 11 for 2K)
 
-main:
+Main_calcApplicationBaseAddress:
+                    ldr             r0, = #applicationBaseAddress   @ set the default as the data may not have been
+                    ldr             r1, = #_application_orgin       @ copied over from flash ram at this point
+                    str             r1, [r0]
 __mainCalcMaxFlash:
                     ldr             r0, = #_DES_SIZE
                     ldrh            r0, [r0]
@@ -63,10 +72,30 @@ __mainCalcPageSize:                                                 @ page size 
                     ldr             r1, = #DEVICE_ID_STM32F09x
                     cmp             r1, r2
                     beq             __main2kPageSize
-                    ldr             r1, = #10                       @ value is number of bits to shift right to get
-                    b               __initBootloader                @ page, 10 bits = 1K
+                    ldr             r0, = #10                       @ value is number of bits to shift right to get
+                    b               __mainReturn                    @ page, 10 bits = 1K
 __main2kPageSize:
-                    ldr             r1, = #11                       @ 11 bits = 2K
+                    ldr             r0, = #11                       @ 11 bits = 2K
+                    ldr             r1, = #applicationBaseAddress   @ for devices with 2K sized pages, the application
+                    ldr             r3, [r1]                        @ origin must start at a 2K page boundary
+                    ldr             r2, = #(1<<11)-1
+                    tst             r3, r2
+                    beq             __mainReturn                    @ if it's already 2K page-aligned then nothing to do
+                    adds            r2, r2, #1                      @ otherwise, round up page to the next 2K boundary
+                    adds            r3, r3, r2
+                    ldr             r2, =#0xFFFFFFFF << 11
+                    ands            r3, r3, r2
+                    str             r3, [r1]
+__mainReturn:
+                    bx              lr
+
+    public_function(main)
+
+@ void main() - doesn't return
+@   main code for bootloader. Setup ports/CAN, and waits for messages and then dispatches them
+
+main:
+                    bl              Main_calcApplicationBaseAddress
 __initBootloader:
                     bl              Bootloader_init                 @ initialise the boot loader "class"
 __mainSetupGPIOA:

@@ -11,11 +11,7 @@
 @ only defines cortex m0 interrupt handlers, the rest aren't used during the
 @ bootloading process.
 
-#include "core_cm0.inc"
-#include "stm32f0xx.inc"
 #include "moduleInfo.inc"
-#include "acb_functionHeaders.inc"
-#include "acb_common.inc"
 
     module(Startup)
 
@@ -118,6 +114,7 @@ __checkForBootloaderMode:
                     ldr             r1, = #(1<<(16+BOOTLOAD_OPTION_BIT))    @ boot mode
                     tst             r0, r1
                     beq             __bootloaderBoot
+                    bl              Main_calcApplicationBaseAddress @ get application base address
                     bl              AppRun_boot                     @ normal boot
 
 __bootloaderBoot:

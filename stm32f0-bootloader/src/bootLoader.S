@@ -10,17 +10,15 @@
 @ bootloader message handling code for the CAN based bootloader
 @ this is based on Microchip's AN247 (since withdrawn) - modified by MERG for their CBUS modules
 
-#include "core_cm0.inc"
-#include "stm32f0xx.inc"
 #include "moduleInfo.inc"
-#include "acb_functionHeaders.inc"
-#include "acb_can.inc"
+#include "acb/common.inc"
+#include "acb/can.inc"
 
     module(Bootloader)
 
     .extern         Can_sendMessageEx                               @ transmits an extended frame CAN message - blocking
     .extern         OptionByte_write                                @ write a value to the option bytes
-    .extern         NVIC_SystemReset                                @ initiates a system reset request to reset the MCU
+    .extern         NVIC_systemReset                                @ initiates a system reset request to reset the MCU
     .extern         Flash_unlockWrite                               @ unlock writing to the flash area
     .extern         Flash_lockWrite                                 @ lock writing to the flash area
     .extern         Flash_erase                                     @ erase an area of flash memory
@@ -28,7 +26,7 @@
     .extern         Flash_disableFlashProgramming                   @ disable programming to the flash
     .extern         Flash_waitForOperation                          @ wait for a flash operation to finish
 
-    .extern         _application_orgin                              @ where the application starts
+    .extern         applicationBaseAddress                          @ where the application starts
 
 /*
  *
@@ -153,8 +151,8 @@ Bootloader_init:                                                    @ init varia
 Bootloader_dispatchMsg:
                     push            {r7, lr}
 __blCheckMsgSize:                                                   @ make sure the message has at least 1 byte
-                    ldrb            r3, [r0, #ACB_MSGEX_INFO_DLC_OFFSET]
-                    movs            r1, #ACB_MSG_DLC_MASK
+                    ldrb            r3, [r0, #ACB_MSGEX_INFO_LEN_OFFSET]
+                    movs            r1, #ACB_MSG_LEN_MASK
                     ands            r1, r1, r3
                     beq             __blReturn
 __blCheckMsgType:
@@ -222,7 +220,7 @@ __hcDoCommand:
                     movs            r1, #1<<BOOTLOAD_OPTION_BIT
                     movs            r2, r1
                     bl              OptionByte_write                @ doesn't return if the option byte is changed
-                    bl              NVIC_SystemReset                @ otherwise reset anyhow
+                    bl              NVIC_systemReset                @ otherwise reset anyhow
 2:
                     cmp             r0, #BL_CMD_RST_CHKSM           @ reset checksum command
                     bne             3f
@@ -303,8 +301,9 @@ __hdUpdateChecksum:                                                 @ add the da
                     subs            r0, r0, #1
                     bge             0b
                     strh            r2, [r1]
-__hdCheckAddressRange:                                              @ check address range, if less then _application_orgin
-                    ldr             r0, = #_application_orgin       @ or greater than memoryMaxAddress then just return
+__hdCheckAddressRange:                                              @ check address range, if less then applicationBaseAddress
+                    ldr             r0, = #applicationBaseAddress   @ or greater than memoryMaxAddress then just return
+                    ldr             r0, [r0]
                     cmp             r7, r0
                     bmi             __hdReturn
                     ldr             r0, = #memoryMaxAddress

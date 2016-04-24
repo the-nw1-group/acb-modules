@@ -6,6 +6,8 @@ signals and the like. More details on CBUS can be found on the <http://www.merg.
 These modules should be compatible with CBUS as described in the Developers Guide version 6a to CBUS 4.0 Specification 
 Revision 8c. The modules only support FLiM (The Full Layout implementation Model)
 
+Further documentation can be found <http://the-nw1-group.github.io/acb-modules>.
+
 The Modules
 -----------
 
@@ -19,7 +21,7 @@ All of the boards have been designed, with only the ACB-16IO requiring the Gerbe
 | ACB-8IO    | STM32F042F6     | 8 configurable open drain inputs or outputs, 5V tolerant                              |
 | ACB-16IO   | STM32F042F6     | 16 configurable open drain inputs or outputs, 5V tolerant                             |
 | ACB-16LED  | STM32F042F6     | 16 constant current LED outputs                                                       |
-| ACB-MATRIX | STM32F042C6     | 10x7 LED matrix driver                                                                |
+| ACB-90LED  | STM32F303CB     | 90 LED driver using Charlie Plexing to drive LEDs                                     |
 | ACB-RF     | STM32F042F6     | Wireless link                                                                         |
 | ACB-ETH100 | PIC24HJ128GP504 | CAN to Ethernet bridge                                                                |
 | ACB-BRIDGE | PIC24EP512GP806 | CAN to CAN bridge                                                                     |
@@ -30,9 +32,9 @@ Building and Debugging
 ----------------------
 
 You'll need the following tools to build the source code:
-* Eclipse CDT - I'm using Eclipse Mars Release (4.5.0) Build id: 20150621-1200
-* GNU ARM Eclipse plug-in - I'm using version 2.9.1.201508011813 
-* Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - I'm using version 4.9-2015-q2-update
+* Eclipse CDT - I'm using Eclipse Mars Release (4.5.1) Build id: 20150924-1200
+* GNU ARM Eclipse plug-in - I'm using version v2.12.1-201604190915 
+* Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - I'm using version 5-2016-q1-update
 * OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team
 * GNU build tools (for Windows) - again, I'm using the one prebuilt by the GNU ARM Eclipse plug-in team
 * Saxon XSLT and XQuery Processor - I'm using version Saxon-HE 9-6-0-6J
@@ -50,7 +52,7 @@ Note: On Windows systems, in saxon_xslt_path use forward slashes rather than bac
 For debugging and for burning the boot loader, you need:
 * ST-LINK/V2  in-circuit debugger/programmer for STM8 and STM32 - either a stand-alone version, 
 or from a ST-Discovery board
-* STM-32 ST-LINK Utility - I'm using version v3.6.0
+* STM-32 ST-LINK Utility - I'm using version v3.8.0
 
 For programming via the bootloader, you need:
 * A CAN to Serial, or CAN to USB convertor, such as MERG's CAN-USB2, 3 or 4. I'm using CAN-USB2. Details can be found
