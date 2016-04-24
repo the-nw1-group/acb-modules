@@ -8,9 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
-#include "acb/can.inc"
-#include "acb/eeprom.inc"
 
 @ setup code for ACB-4TC (4 Turnout control)
 

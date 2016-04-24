@@ -8,7 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
 
 #ifdef CBUS_USE_MODULE_PARAMS
 

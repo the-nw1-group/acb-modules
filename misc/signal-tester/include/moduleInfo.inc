@@ -12,7 +12,9 @@
  * (as opposed to bootloader code)
  */
 
-#define ACB_APPLICATION
+/*#define ACB_APPLICATION*/
+
+#include "constants.inc"
 
 #include "stm/stm32f0xx.inc"
 #include "stm/startup_stm32f0xx.inc"
@@ -101,6 +103,13 @@
 #include "acb/ws2812.inc"
 
 /*
+ * Define the number of alarm slots required
+ *
+ */
+
+#define ACB_ALARM_SLOTS 2
+
+/*
  * Configure error handler to capture default handler, and all faults
  */
 
@@ -139,6 +148,9 @@
 #define ACB_SIB_MASK            ((1<<SIGTEST_BUTTON_LEFT)|(1<<SIGTEST_BUTTON_ACTION)|(1<<SIGTEST_BUTTON_RIGHT))
 #define ACB_SIB_STATE_DEPTH     8
 #define ACB_SIB_INVERT          1
+#define ACB_SID_ALARM_SLOT      2
+
+#include "acb/simpleInputDebounce.inc"
 
 /*
  * Display Constants
@@ -187,6 +199,3 @@
 #define FSM_BUTTON_RIGHT                (1<<FSM_BUTTON_RIGHT_BIT)
 
 #define FSM_BUTTON_MASK                 (FSM_BUTTON_LEFT | FSM_BUTTON_ACTION | FSM_BUTTON_RIGHT)
-
-
-#define ACB_SID_ALARM_SLOT              2

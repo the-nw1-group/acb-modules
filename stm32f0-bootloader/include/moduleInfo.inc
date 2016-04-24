@@ -42,12 +42,16 @@
 #define ACB_CANPORT                     ACB_CAN_USEPORTA
 #define ACB_CAN_REQUIRES_SYSCONFIG      1
 
+#include "acb/can.inc"
+
 /*
  * The bootloader doesn't use the FLiM switch, so turn it off here
  */
 
 #define ACB_FLIMSW_CUSTOM
 #define ACB_FLIMSW_USE 0
+
+#include "acb/common.inc"
 
 /*
  * Other defines - device electronic signature (which is missing from stm32f0xx.inc file)

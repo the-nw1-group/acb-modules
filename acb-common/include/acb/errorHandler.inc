@@ -26,12 +26,7 @@
  *
  */
 
-/*
- * immediate value to use with the SVC instruction
- *
- */
-
-ACB_FATAL_ERROR             = 0x17
+#define ACB_USE_ERROR_HANDLER
 
 /*
  *

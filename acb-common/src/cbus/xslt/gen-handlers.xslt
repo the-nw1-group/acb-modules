@@ -115,7 +115,6 @@
 @ Revision History<xsl:apply-templates select="revisionHistory/revision"/>
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
 
 #ifdef CBUS_USE_MESSAGE_HANDLERS
 

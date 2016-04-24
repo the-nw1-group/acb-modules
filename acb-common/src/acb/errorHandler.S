@@ -8,8 +8,9 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
-#include "acb/errorHandler.inc"
+
+
+#ifdef ACB_USE_ERROR_HANDLER
 
 @ public error handler routine
 
@@ -124,6 +125,8 @@ __usageFaultHandler:
 
 #endif
 
+#if defined(ACB_APPLICATION)
+
     public_override(ErrorHandler_handle)
 
 @ void ErrorHandler_handle(int errorCode)
@@ -179,5 +182,9 @@ __waitFor:                                                          @ wait Xms -
                     subs            r0, r0, #1                      @ count down the 500
                     bne             0b
                     bx              lr                              @ return when complete
+
+#endif
+
+#endif
 
     .end

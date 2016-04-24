@@ -8,8 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
-#include "acb/can.inc"
 
 @ main code for the CAN based bootloader
 @ this is based on Microchip's AN247 (since withdrawn) - modified by MERG for their CBUS modules

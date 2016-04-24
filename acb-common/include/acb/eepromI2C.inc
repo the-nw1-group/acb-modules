@@ -63,3 +63,7 @@
 #define EepromDrv_setHint            EepromI2C_setHint
 #define EepromDrv_getHint            EepromI2C_getHint
 #endif
+
+#if !defined(PENDING)
+#define PENDING 2
+#endif

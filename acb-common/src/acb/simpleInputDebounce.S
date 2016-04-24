@@ -8,7 +8,8 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
+
+#ifdef ACB_USE_SID
 
 @ Simple input debounce - input debounces one port on the device
 @ Based on ideas by Jack Ganssle
@@ -19,6 +20,7 @@
 @   ACB_SIB_MASK            which bits of the port are interesting
 @   ACB_SIB_STATE_DEPTH     how many states to compare for result
 @   ACB_SIB_INVERT          flag to indicate to invert the inputs before storing
+@   ACB_SID_ALARM_SLOT      alarm slot to use
 @
 @ Uses alarm slot 1 - samples input every 4ms
 
@@ -101,5 +103,6 @@ SimpleInputDebounce_sample:
                     bl              MsCounter_alarmIn
                     pop             {r7, pc}
 
-    .end
+#endif
 
+    .end

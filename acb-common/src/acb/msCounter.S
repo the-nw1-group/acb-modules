@@ -8,7 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
 
     .extern         Math_divu1000                                   @ unsigned integer divide by 1000
     .extern         SysTick_config                                  @ configure the SysTick core peripheral

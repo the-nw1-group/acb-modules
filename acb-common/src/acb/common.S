@@ -8,8 +8,8 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
-#include "acb/configurationManager.inc"
+
+#ifdef ACB_USE_COMMON
 
     .extern         NVIC_enableIRQ                                  @ enabled IRQ
     .extern         MsCounter_clearAlarm                            @ clear the alarm
@@ -188,6 +188,7 @@ Acb_shortFLiMPress:
                     movs            r0, #ACB_STATUS_FLIMSW_SHORTPRESS
                     b               Acb_readResetFLiMButtonStatus
 
+#ifdef ACB_USE_CONFIG_MANAGER
     public_function(Acb_initConfiguration)
 
 @ void Acb_initConfiguration(int cacheBaseAddress)
@@ -197,6 +198,7 @@ Acb_initConfiguration:
                     movs            r1, #0                          @ default to non-FLiM state (not quite SLiM...)
                     str             r1, [r0, #ConfigurationManager_acbOffset] @ and default the node number to be 0
                     bx              lr
+#endif
 
     private_function(Acb_readResetFLiMButtonStatus)
 
@@ -350,6 +352,8 @@ Acb_flimSwitchAlarmRelease:
                     orrs            r0, r0, r2
                     str             r0, [r3, #EXTI_FTSR_OFFSET]
                     bx              lr
+#endif
+
 #endif
 
     .end

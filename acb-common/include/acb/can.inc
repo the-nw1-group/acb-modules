@@ -19,6 +19,8 @@
  *
  */
 
+#define ACB_USE_CAN
+
 #define ACB_CAN_SJW     0
 #define ACB_CAN_BS1     10
 #define ACB_CAN_BS2     3

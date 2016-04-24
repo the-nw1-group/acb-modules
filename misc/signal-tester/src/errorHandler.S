@@ -8,7 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
 #include "acb/errorHandler.inc"
 
 @ override standard ACB error handler as we don't have yellow and green LEDs
@@ -17,8 +16,6 @@
 
 @ void ErrorHandler_handle(int errorCode)
 @   Last chance fatal error handler
-@   TODO: in release flash GREEN and YELLOW, otherwise just hang. This assumes that at least
-@   Acb_init has been called successfully.
 
 ErrorHandler_handle:
                     cpsid           i                               @ disable all configurable interrupts
