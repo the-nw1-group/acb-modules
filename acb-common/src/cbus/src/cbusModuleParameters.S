@@ -10,6 +10,8 @@
 #include "moduleInfo.inc"
 #include "acb/common.inc"
 
+#ifdef CBUS_USE_MODULE_PARAMS
+
 @ CBUS Module Parameters table
 
     module(CbusModuleParameters)
@@ -54,6 +56,8 @@ checksum = CBUS_MANUFACTURER + CBUS_MINOR_VERSION + CBUS_MODULE_ID + CBUS_MAX_EV
 
 __moduleName:
                     .ascii          CBUS_MODULE_NAME
+
+#endif
 
     .end
 
