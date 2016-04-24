@@ -305,9 +305,9 @@ CBUS_sendMessage:
 
     <xsl:template match="message" mode="jump-table"><xsl:choose>
         <xsl:when test="compare(acronym,'RESERVED')=0">
-    .word           CBUS_on<xsl:value-of select="acronym"/> + 1<xsl:value-of select="f:repeat-string(' ', 37 - string-length(acronym))"/>@ Reserved for future use (<xsl:value-of select="opcode"/>)</xsl:when>
+    .int            CBUS_on<xsl:value-of select="acronym"/> + 1<xsl:value-of select="f:repeat-string(' ', 37 - string-length(acronym))"/>@ Reserved for future use (<xsl:value-of select="opcode"/>)</xsl:when>
       <xsl:otherwise>
-    .word           CBUS_on<xsl:value-of select="acronym"/> + 1<xsl:value-of select="f:repeat-string(' ', 37 - string-length(acronym))"/>@ <xsl:value-of select="description"/> (<xsl:value-of select="opcode"/>)</xsl:otherwise>
+    .int            CBUS_on<xsl:value-of select="acronym"/> + 1<xsl:value-of select="f:repeat-string(' ', 37 - string-length(acronym))"/>@ <xsl:value-of select="description"/> (<xsl:value-of select="opcode"/>)</xsl:otherwise>
         </xsl:choose>
     <!-- test that we have all opcodes from 0x00 to 0xFF -->
         <xsl:choose>

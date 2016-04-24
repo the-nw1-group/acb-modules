@@ -298,9 +298,11 @@ readI2CSettings = (I2C_CR1_ERRIE | I2C_CR1_TCIE | I2C_CR1_STOPIE | I2C_CR1_NACKI
                     orrs            r2, r2, r0                      @ cause an interrupt straight away
                     str             r2, [r6, #I2C_CR1_OFFSET]
 
+#if defined(ACB_EEPROM_IRQ_REDIRECT_FN)
                     movs            r0, #DMA1_Channel2_3_IRQn
                     ldr             r1, =#EepromI2C_dmaHandler      @ use indirection to handle DMA IRQ
                     bl              ACB_EEPROM_IRQ_REDIRECT_FN
+#endif
                     movs            r0, #DMA1_Channel2_3_IRQn       @ enable DMA channel 2/3 interrupt
                     bl              NVIC_enableIRQ
                     movs            r0, #I2C1_IRQn                  @ enable I2C1 interrupts
@@ -372,9 +374,11 @@ writeI2CSettings = (I2C_CR1_ERRIE | I2C_CR1_TCIE | I2C_CR1_STOPIE | I2C_CR1_NACK
                     orrs            r2, r2, r0                      @ cause an interrupt straight away
                     str             r2, [r6, #I2C_CR1_OFFSET]
 
+#if defined(ACB_EEPROM_IRQ_REDIRECT_FN)
                     movs            r0, #DMA1_Channel2_3_IRQn
                     ldr             r1, =#EepromI2C_dmaHandler      @ use indirection to handle DMA IRQ
                     bl              ACB_EEPROM_IRQ_REDIRECT_FN
+#endif
                     movs            r0, #DMA1_Channel2_3_IRQn       @ enable DMA channel 2/3 interrupt
                     bl              NVIC_enableIRQ
                     movs            r0, #I2C1_IRQn                  @ enable I2C1 interrupts
