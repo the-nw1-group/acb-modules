@@ -8,7 +8,10 @@
  */
 
 #include "cmsis/core_cm0.inc"
-#include "stm32f0xx.inc"
+
+#include "stm/stm32f0xx.inc"
+#include "stm/system_stm32f0xx.inc"
+
 #include "acb/functionHeaders.inc"
 
 /*

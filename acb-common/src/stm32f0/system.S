@@ -54,6 +54,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef __STM32F0XX_SYSTEM
+
     module(System)
 
     .extern         System_onClockFail                              @ call when it's not possible to set the system
@@ -281,5 +283,7 @@ __setSysClockReturn:
 __setSysClockFail:
                     movs            r0, #ERROR
                     b               __setSysClockReturn
+
+#endif
 
     .end

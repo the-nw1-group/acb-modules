@@ -7,12 +7,13 @@
  *
  */
 
-#include "acb/functionHeaders.inc"
+#include "moduleInfo.inc"
 
 @ startup file for the stm32f30x series of microcontrollers
 
-    module(Startup)
+#ifdef __STM32F30X_STARTUP
 
+    module(Startup)
                                                                     @ various locations - defined in linker script
     .extern         __stack                                         @ stack top location
     .extern         _sidata                                         @ start address for the initialization values of the .data section
@@ -329,5 +330,7 @@ __runProgram:
                     bl              main
 1:
                     b               1b                              @ loop forever
+
+#endif
 
     .end

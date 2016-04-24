@@ -14,8 +14,12 @@
 
 #define ACB_APPLICATION
 
-#include "stm32f0xx.inc"
+#include "stm/stm32f0xx.inc"
+#include "stm/startup_stm32f0xx.inc"
+#include "stm/system_stm32f0xx.inc"
+
 #include "cmsis/core_cm0.inc"
+
 #include "acb/functionHeaders.inc"
 #include "acb/errorHandler.inc"
 #include "cbusNodeParameters.inc"

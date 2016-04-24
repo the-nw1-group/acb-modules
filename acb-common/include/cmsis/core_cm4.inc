@@ -40,6 +40,8 @@
 #ifndef __CORE_CM4_H_GENERIC
 #define __CORE_CM4_H_GENERIC
 
+#define __CORE_CM4_GENERIC
+
 /*  CMSIS CM4 definitions */
 #define __CM4_CMSIS_VERSION_MAIN  (0x04)                                   /* [31:16] CMSIS HAL main version */
 #define __CM4_CMSIS_VERSION_SUB   (0x00)                                   /* [15:0]  CMSIS HAL sub version */
@@ -126,7 +128,7 @@ ISR = 0
 
 GE = 16
 T  = 24
-IT = 25
+IT_BIT = 25
 
 @ CONROL
 

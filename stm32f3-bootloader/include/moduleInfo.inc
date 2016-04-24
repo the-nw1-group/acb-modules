@@ -7,8 +7,11 @@
  *
  */
 
-#include "stm32f30x.inc"
+#include "stm/stm32f30x.inc"
+#include "stm/system_stm32f30x.inc"
+
 #include "cmsis/core_cm4.inc"
+
 #include "acb/functionHeaders.inc"
 
 /*

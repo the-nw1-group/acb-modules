@@ -216,6 +216,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nobuiltin.1485162450.1629930203" name="Disable builtin (-fno-builtin)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nobuiltin.1485162450"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.toerrors.794018037.841457100" name="Generate errors instead of warnings (-Werror)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.toerrors.794018037"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.lto.1537596550.1852015777" name="Link-time optimizer (-flto)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.lto.1537596550"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.58572331" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1945423060">
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.896429949" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -294,7 +295,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="**/m4|**/stm32f30|acb/simpleInputDebounce.S|acb/ws2812.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
+						<entry excluding="acb/simpleInputDebounce.S|acb/ws2812.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
@@ -515,6 +516,7 @@
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.lto.123068809.454115575" name="Link-time optimizer (-flto)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.lto.123068809"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nobuiltin.768898296.198041735" name="Disable builtin (-fno-builtin)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.optimization.nobuiltin.768898296"/>
 							<option id="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.toerrors.523164387.2071757437" name="Generate errors instead of warnings (-Werror)" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.warnings.toerrors.523164387"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
 							<tool id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.327247951" name="Cross ARM GNU Assembler" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.1133197975">
 								<inputType id="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input.668404393" superClass="ilg.gnuarmeclipse.managedbuild.cross.tool.assembler.input"/>
 							</tool>
@@ -533,7 +535,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="**/m4|**/stm32f30|acb/simpleInputDebounce.S|acb/ws2812.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
+						<entry excluding="acb/simpleInputDebounce.S|acb/ws2812.S" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="acb-common"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>

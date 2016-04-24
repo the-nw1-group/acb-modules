@@ -59,6 +59,8 @@
 #ifdef __cplusplus
 #endif
 
+#define __STM32F0XX
+
 /** @addtogroup Library_configuration_section
   * @{
   */
