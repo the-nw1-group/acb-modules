@@ -26,6 +26,10 @@
 #include "acb/common.inc"
 #include "acb/errorHandler.inc"
 #include "acb/configurationManager.inc"
+#include "acb/math.inc"
+#include "acb/msCounter.inc"
+#include "acb/flash.inc"
+#include "acb/optionBytes.inc"
 
 #include "cbusNodeParameters.inc"
 

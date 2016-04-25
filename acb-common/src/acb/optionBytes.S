@@ -11,6 +11,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_OPTIONBYTE_HELPERS
+
     module(OptionByte)
 
     .extern         Flash_unlockWrite
@@ -112,5 +114,7 @@ __obWriteReturn:
 __obWriteFail:
                     movs            r0, #ERROR
                     b               __obWriteReturn
+
+#endif
 
     .end

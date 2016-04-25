@@ -13,6 +13,8 @@
 #include "cmsis/core_cm4.inc"
 
 #include "acb/functionHeaders.inc"
+#include "acb/flash.inc"
+#include "acb/optionBytes.inc"
 
 /*
  * Private bootloader include file

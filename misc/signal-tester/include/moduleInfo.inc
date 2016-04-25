@@ -23,6 +23,8 @@
 
 #include "acb/functionHeaders.inc"
 #include "acb/errorHandler.inc"
+#include "acb/math.inc"
+#include "acb/watchdog.inc"
 
 #include "errorCodes.inc"
 
@@ -108,6 +110,8 @@
  */
 
 #define ACB_ALARM_SLOTS 2
+
+#include "acb/msCounter.inc"
 
 /*
  * Configure error handler to capture default handler, and all faults
