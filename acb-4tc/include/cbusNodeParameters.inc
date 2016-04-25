@@ -13,6 +13,8 @@
  */
 
 #include "cbus/cbus_defs.inc"
+#include "cbus/cbusModuleParameters.inc"
+#include "cbus/cbusMessages.inc"
 
 #define CBUS_MODULE_NAME            "4TC     "
 

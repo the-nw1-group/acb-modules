@@ -37,8 +37,9 @@
    ---------------------------------------------------------------------------*/
 
 #include "moduleInfo.inc"
-#include "cmsis/core_cm0.inc"
 #include "acb/functionHeaders.inc"
+
+#ifdef __CORE_CM0_GENERIC
 
     module(core_cm0)
 
@@ -157,5 +158,7 @@ SysTick_config:
 1:
                     movs            r0, #ERROR
                     pop             {r7, pc}
+
+#endif
 
     .end

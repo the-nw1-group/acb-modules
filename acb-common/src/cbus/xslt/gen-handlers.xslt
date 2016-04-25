@@ -115,13 +115,16 @@
 @ Revision History<xsl:apply-templates select="revisionHistory/revision"/>
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
+
+#ifdef CBUS_USE_MESSAGE_HANDLERS
 
     module(cbus_messages)
     <xsl:call-template name="vector-map"/>
     <xsl:call-template name="default-message-handlers"/>
     <xsl:call-template name="handle-cbus-message"/>
     <xsl:call-template name="send-cbus-message"/>
+#endif
+
     .end
   </xsl:template>
 

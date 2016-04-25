@@ -8,7 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
 
 #ifdef ACB_USE_EEPROM
 

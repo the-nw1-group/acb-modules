@@ -7,7 +7,10 @@
  *
  */
 
+#include "moduleInfo.inc"
 #include "acb/functionHeaders.inc"
+
+#ifdef ACB_USE_MATH
 
     module(math)
 
@@ -46,5 +49,7 @@ Math_divu1000:
                     lsrs            r1, r1, #10
                     adds            r0, r2, r1
                     bx              lr
+
+#endif
 
     .end

@@ -8,14 +8,14 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
 
 @ public ACB configuration type routines
+
+#ifdef ACB_USE_CONFIG_MANAGER
 
     module(ConfigurationManager)
 
     .extern         Eeprom_getHint                                  @ Get a hint from the EEPROM sub system
-
 
 /*
  * Standard configuration is stored with 2K, with the following ranges predefined:
@@ -165,5 +165,7 @@ ConfigurationManager_initEeprom:
                     bl              EepromImpl_setHint              @ tell the cache that the whole eeprom is dirty
                     movs            r0, r7                          @ restore the base address
                     pop             {r7, pc}
+
+#endif
 
     .end

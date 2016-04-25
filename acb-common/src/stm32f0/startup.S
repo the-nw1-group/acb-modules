@@ -7,8 +7,10 @@
  *
  */
 
-#include "cmsis/core_cm0.inc"
+#include "moduleInfo.inc"
 #include "acb/functionHeaders.inc"
+
+#ifdef __STM32F0XX_STARTUP
 
 @ startup file for the stm32f04xx series of microcontrollers
 
@@ -241,5 +243,7 @@ __runProgram:
                     bl              main
 1:
                     b               1b                              @ loop forever
+
+#endif
 
     .end

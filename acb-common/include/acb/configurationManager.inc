@@ -19,3 +19,4 @@ ConfigurationManager_nodeVarsOffset     = 0x100
 ConfigurationManager_applicationOffset  = 0x200
 ConfigurationManager_eventssOffset      = 0x3E0
 
+#define ACB_USE_CONFIG_MANAGER

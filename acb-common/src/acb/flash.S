@@ -9,6 +9,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_FLASH_HELPERS
+
 @ flash writing and reading routines
 
     module(Flash)
@@ -206,5 +208,7 @@ Flash_waitForOperation:
                     str             r1, [r3, #FLASH_SR_OFFSET]
 1:
                     bx              lr
+
+#endif
 
     .end

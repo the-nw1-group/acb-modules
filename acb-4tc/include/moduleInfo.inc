@@ -14,10 +14,23 @@
 
 #define ACB_APPLICATION
 
-#include "stm32f0xx.inc"
+#include "constants.inc"
+
+#include "stm/stm32f0xx.inc"
+#include "stm/startup_stm32f0xx.inc"
+#include "stm/system_stm32f0xx.inc"
+
 #include "cmsis/core_cm0.inc"
+
 #include "acb/functionHeaders.inc"
+#include "acb/common.inc"
 #include "acb/errorHandler.inc"
+#include "acb/configurationManager.inc"
+#include "acb/math.inc"
+#include "acb/msCounter.inc"
+#include "acb/flash.inc"
+#include "acb/optionBytes.inc"
+
 #include "cbusNodeParameters.inc"
 
 /*
@@ -62,6 +75,8 @@
 #define ACB_CAN_USEPORTA                0
 #define ACB_CANPORT                     ACB_CAN_USEPORTA
 #define ACB_CAN_REQUIRES_SYSCONFIG      1
+
+#include "acb/can.inc"
 
 /*
  * Define EEPROM type, driver and connection to device

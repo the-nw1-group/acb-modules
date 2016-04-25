@@ -8,7 +8,8 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
+
+#ifdef ACB_USE_MS_COUNTER
 
     .extern         Math_divu1000                                   @ unsigned integer divide by 1000
     .extern         SysTick_config                                  @ configure the SysTick core peripheral
@@ -169,5 +170,7 @@ MsCounter_waitUntil:
                     b               0b
 1:
                     bx              lr
+
+#endif
 
     .end

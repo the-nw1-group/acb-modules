@@ -56,6 +56,8 @@
 #ifndef __STM32F30x_H
 #define __STM32F30x_H
 
+#define __STM32F30x
+
 #ifdef __cplusplus
 #endif /* __cplusplus */
 

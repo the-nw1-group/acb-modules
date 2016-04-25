@@ -7,9 +7,14 @@
  *
  */
 
-#include "stm32f30x.inc"
+#include "stm/stm32f30x.inc"
+#include "stm/system_stm32f30x.inc"
+
 #include "cmsis/core_cm4.inc"
+
 #include "acb/functionHeaders.inc"
+#include "acb/flash.inc"
+#include "acb/optionBytes.inc"
 
 /*
  * Private bootloader include file
@@ -40,12 +45,16 @@
 
 #define ACB_CANPORT ACB_CAN_USEPORTA
 
+#include "acb/can.inc"
+
 /*
  * The bootloader doesn't use the FLiM switch, so turn it off here
  */
 
 #define ACB_FLIMSW_CUSTOM
 #define ACB_FLIMSW_USE 0
+
+#include "acb/common.inc"
 
 /*
  * Other defines - device electronic signature (which is missing from stm32f30x.inc file)

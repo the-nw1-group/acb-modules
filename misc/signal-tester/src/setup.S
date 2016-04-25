@@ -8,7 +8,6 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
 
 @ setup code for Signal/Servo Tester
 

@@ -8,10 +8,10 @@
  */
 
 #include "moduleInfo.inc"
-#include "acb/common.inc"
-#include "acb/can.inc"
 
 @ public CAN routines, for sending, and receiving messages over the CAN bus
+
+#ifdef ACB_USE_CAN
 
     module(Can)
 
@@ -414,6 +414,8 @@ Can_getNextFreeTxBuffer:
 3:
                     movs            r0, #0                          @ no buffer free, return 0
                     bx              lr
+
+#endif
 
     .end
 

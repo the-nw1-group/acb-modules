@@ -37,8 +37,9 @@
    ---------------------------------------------------------------------------*/
 
 #include "moduleInfo.inc"
-#include "cmsis/core_cm4.inc"
 #include "acb/functionHeaders.inc"
+
+#ifdef __CORE_CM4_GENERIC
 
     module(core_cm4)
 
@@ -60,5 +61,7 @@ NVIC_systemReset:
                     str             r7, [r6]
                     dsb                                             @ Ensure completion of memory access
                     b               .                               @ wait until reset
+
+#endif
 
     .end

@@ -11,6 +11,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_WATCHDOG
+
     module(Watchdog)
 
 IWDG_REFRESH        = 0x0000AAAA
@@ -75,4 +77,7 @@ IWDG_reset:
                     ldr             r1, = #_IWDG_KR
                     str             r0, [r1]
                     bx              lr
+
+#endif
+
     .end

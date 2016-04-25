@@ -28,6 +28,8 @@
  *
  */
 
+#define ACB_USE_COMMON
+
 #if !defined(ACB_LED_CUSTOM)
 #define ACB_LED_USE         !DEBUG
 #define ACB_LED_PORT        GPIOA_BASE
@@ -153,7 +155,6 @@
  */
 
 OB_USER_BOOT_SEL =  (1<<23)                                         @ BOOT_SEL bit in the user option byte
-PENDING          =  2                                               @ Pending status, returned from async calls
 
 #define LOBYTE(b)       ((b)&0xFF)
 #define HIBYTE(b)       (((b)>>8)&0xFF)
