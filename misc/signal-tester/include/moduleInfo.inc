@@ -73,9 +73,19 @@
 #define ACB_DISPLAY_I2C_SCL             1
 #define ACB_DISPLAY_I2C_TIMING          0x00901850                   /* See STSW-STM32126 for details */
 
-#include "display/ssd1306.inc"
-#include "display/displayDriverI2C.inc"
-#include "display/display.inc"
+/*
+ * Other Display Constants
+ *
+ */
+
+#define DISPLAY_ADDR                    0x78
+#define DISPLAY_WIDTH                   128
+#define DISPLAY_HEIGHT                  32
+
+#include "acb/ssd1306.inc"
+#include "acb/displayDriverI2C.inc"
+#include "acb/display.inc"
+#include "acb/font.inc"
 
 /*
  * Define EEPROM type, driver and connection to device
@@ -155,15 +165,6 @@
 #define ACB_SID_ALARM_SLOT      2
 
 #include "acb/simpleInputDebounce.inc"
-
-/*
- * Display Constants
- *
- */
-
-#define DISPLAY_ADDR                    0x78
-#define DISPLAY_WIDTH                   128
-#define DISPLAY_HEIGHT                  32
 
 /*
  * Defines for various functions

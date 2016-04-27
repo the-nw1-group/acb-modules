@@ -7,6 +7,8 @@
  *
  */
 
+#define ACB_USE_SSD1306
+
 #define DisplayType_init            Ssd1306_init
 #define DisplayType_showDisplay     Ssd1306_showDisplay
 #define DisplayType_hideDisplay     Ssd1306_hideDisplay

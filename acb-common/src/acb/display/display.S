@@ -8,7 +8,8 @@
  */
 
 #include "moduleInfo.inc"
-#include "display/font.inc"
+
+#ifdef ACB_USE_DISPLAY
 
 @ Display routines
 
@@ -620,5 +621,7 @@ Display_getStringWidth:
 9:
                     movs            r0, r4                          @ return the width
                     pop             {r3-r7, pc}
+
+#endif
 
     .end

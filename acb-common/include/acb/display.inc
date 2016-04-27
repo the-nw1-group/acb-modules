@@ -7,6 +7,8 @@
  *
  */
 
+#define ACB_USE_DISPLAY
+
 /* Display Status results */
 DISPLAY_CLIPPED_HBIT    =   0
 DISPLAY_CLIPPED_VBIT    =   1

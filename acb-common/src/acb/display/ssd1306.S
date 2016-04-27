@@ -9,6 +9,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_SSD1306
+
 @ Display drivers for SSD1306 based display
 
     module(Ssd1306)
@@ -283,5 +285,7 @@ Ssd1306_drawPageByte:
                     ldr             r3, = #_buffer
                     strb            r2, [r3, r0]
                     bx              lr
+
+#endif
 
     .end

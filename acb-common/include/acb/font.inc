@@ -7,6 +7,8 @@
  *
  */
 
+#define ACB_USE_FONT
+
 FontHeader_Size                 = 8
 FontHeader_IdOffset             = 0
 FontHeader_InfoOffset           = 1

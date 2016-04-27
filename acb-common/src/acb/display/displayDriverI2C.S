@@ -9,6 +9,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_DISPLAYDRIVER_I2C
+
 @ Display drivers for I2C - current implementation doesn't use DMA, and all function calls block until completed
 
     module(DisplayDriverI2C)
@@ -317,5 +319,6 @@ waitForStatusTimeout = 0x1000
                     movs            r0, #SUCCESS
                     bx              lr
 
+#endif
 
     .end
