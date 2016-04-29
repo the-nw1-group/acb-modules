@@ -79,16 +79,6 @@ Setup_setupGPIO:
                     orrs            r0, r0, r1
                     str             r0, [r2]
 
-                    ldr             r2, = #SIGTEST_LCD_RES_GPIOBASE @ set LCD_RES# to be an output, medium speed
-                    ldr             r0, [r2, #GPIO_MODER_OFFSET]
-                    ldr             r1, = #1<<(SIGTEST_LCD_RES<<1)
-                    orrs            r0, r0, r1
-                    str             r0, [r2, #GPIO_MODER_OFFSET]
-                    ldr             r0, [r2, #GPIO_OSPEEDR_OFFSET]
-                    ldr             r1, = #1<<(SIGTEST_LCD_RES<<1)
-                    orrs            r0, r0, r1
-                    str             r0, [r2, #GPIO_OSPEEDR_OFFSET]
-
                     ldr             r2, = #SIGTEST_BUTTON_GPIOBASE  @ set BUT_* as inputs, pullups, slow
                     ldr             r0, [r2, #GPIO_PUPDR_OFFSET]    @ inputs and slow are defaults...
                     ldr             r1, = #(1<<(SIGTEST_BUTTON_LEFT<<1)) | (1<<(SIGTEST_BUTTON_ACTION<<1)) | (1<<(SIGTEST_BUTTON_RIGHT<<1))

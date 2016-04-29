@@ -85,7 +85,7 @@ FsmPwmSetup_setupPwm:
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
@@ -174,9 +174,9 @@ drawValueOffset=46
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
                     sub             sp, sp, #8
-                    movs            r3, #DISPLAY_HEIGHT
+                    movs            r3, #ACB_DISPLAY_HEIGHT
                     str             r3, [sp]
-                    movs            r3, #(DISPLAY_WIDTH - drawValueOffset)
+                    movs            r3, #(ACB_DISPLAY_WIDTH - drawValueOffset)
                     bl              Display_drawFilledRectangle
                     add             sp, sp, #8
                     movs            r0, #drawValueOffset            @ write new percentage value on the display

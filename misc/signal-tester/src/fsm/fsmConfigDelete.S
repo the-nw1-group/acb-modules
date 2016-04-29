@@ -195,7 +195,7 @@ FsmConfigDelete_areYouSureCommon:
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)

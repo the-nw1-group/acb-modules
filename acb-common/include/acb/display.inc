@@ -9,6 +9,10 @@
 
 #define ACB_USE_DISPLAY
 
+#if !defined(ACB_DISPLAY_WIDTH) || !defined(ACB_DISPLAY_HEIGHT)
+#error ACB_DISPLAY_WIDTH and ACB_DISPLAY_HEIGHT must all be defined to use this file
+#endif
+
 /* Display Status results */
 DISPLAY_CLIPPED_HBIT    =   0
 DISPLAY_CLIPPED_VBIT    =   1

@@ -202,7 +202,7 @@ drawValueOffset = 74
                     movs            r0, #drawValueOffset            @ clear the area
                     ldr             r1, = #(0 | DISPLAY_ROW)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH - drawValueOffset
+                    movs            r3, #ACB_DISPLAY_WIDTH - drawValueOffset
                     sub             sp, sp, #8
                     movs            r7, #DISPLAY_ROW_HEIGHT
                     str             r7, [sp]
@@ -248,7 +248,7 @@ FsmConfigView_showRecordDetails:
                     movs            r0, #0                          @ clear the bottom row
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
 
                     ldr             r7, = #FsmConfigView_noRecords

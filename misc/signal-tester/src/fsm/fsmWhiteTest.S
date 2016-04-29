@@ -130,7 +130,7 @@ FsmWhiteTest_setupWhiteTest:
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
@@ -188,7 +188,7 @@ FsmWhiteTest_runWhiteTest:
                     movs            r0, #0                          @ display a line to the user that we are testing
                     ldr             r1, = #(1 | DISPLAY_ROW)        @ the LEDs
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0                          @ draw the text
                     ldr             r1, = #(1 | DISPLAY_ROW)
@@ -227,7 +227,7 @@ FsmWhiteTest_waitForWhiteTest:
 @   Test an LED, and then wait to test the next one
 
 FsmWhiteTest_testLed:
-alarmSlot = 4
+alarmSlot = 2
 
                     push            {r5-r7, lr}
                     bl              Ws2812_clearBuffer              @ clear the buffer and display
@@ -280,9 +280,9 @@ drawValueOffset=69
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
                     sub             sp, sp, #8
-                    movs            r3, #DISPLAY_HEIGHT
+                    movs            r3, #ACB_DISPLAY_HEIGHT
                     str             r3, [sp]
-                    movs            r3, #(DISPLAY_WIDTH - drawValueOffset)
+                    movs            r3, #(ACB_DISPLAY_WIDTH - drawValueOffset)
                     bl              Display_drawFilledRectangle
                     add             sp, sp, #8
                     movs            r0, #drawValueOffset            @ write new number on the display

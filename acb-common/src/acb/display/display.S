@@ -157,7 +157,7 @@ Display_drawHorizontalLine:
                     movs            r2, r7
                     bl              DisplayType_drawPixel
                     adds            r5, r5, #1
-                    cmp             r5, #DISPLAY_WIDTH              @ if over the DISPLAY_WIDTH, return clipped
+                    cmp             r5, #ACB_DISPLAY_WIDTH          @ if over the ACB_DISPLAY_WIDTH, return clipped
                     bge             8f
                     subs            r4, r4, #1
                     bne             0b
@@ -193,7 +193,7 @@ Display_drawVerticalLine:
                     movs            r2, r7
                     bl              DisplayType_drawPixel
                     adds            r6, r6, #1
-                    cmp             r6, #DISPLAY_HEIGHT             @ if over the DISPLAY_HEIGHT, return clipped
+                    cmp             r6, #ACB_DISPLAY_HEIGHT         @ if over the ACB_DISPLAY_HEIGHT, return clipped
                     bge             8f
                     subs            r4, r4, #1
                     bne             0b
@@ -413,13 +413,13 @@ Display_drawAlignedString:
 0:
                     cmp             r5, #DISPLAY_CENTER_ALIGN       @ center align?
                     bne             1f
-                    movs            r5, #DISPLAY_WIDTH
+                    movs            r5, #ACB_DISPLAY_WIDTH
                     subs            r5, r5, r0
                     lsrs            r0, r5, #1
                     bl              Display_drawStringData
                     b               9f
 1:
-                    movs            r5, #DISPLAY_WIDTH              @ right align
+                    movs            r5, #ACB_DISPLAY_WIDTH          @ right align
                     subs            r5, r5, r0
                     movs            r0, r5
                     bl              Display_drawStringData
@@ -445,7 +445,7 @@ Display_checkPixelRange:
                     movs            r0, #DISPLAY_CLIPPED_HORZ
                     b               1f
 0:
-                    cmp             r7, #DISPLAY_WIDTH              @ is x > DISPLAY_WIDTH
+                    cmp             r7, #ACB_DISPLAY_WIDTH          @ is x > ACB_DISPLAY_WIDTH
                     blt             1f
                     movs            r0, #DISPLAY_CLIPPED_HORZ
 1:
@@ -454,7 +454,7 @@ Display_checkPixelRange:
                     orrs            r0, r0, r6
                     b               3f
 2:
-                    cmp             r1, #DISPLAY_WIDTH              @ is y > DISPLAY_HEIGHT
+                    cmp             r1, #ACB_DISPLAY_WIDTH          @ is y > ACB_DISPLAY_HEIGHT
                     blt             3f
                     orrs            r0, r0, r6
 3:
@@ -468,7 +468,7 @@ Display_checkPixelRange:
 @   can't be called via C/C++
 
 Display_getPixelY:
-noRows = (DISPLAY_HEIGHT / 16)
+noRows = (ACB_DISPLAY_HEIGHT / 16)
                     push            {r7, lr}
                     cmp             r1, #0                          @ if y is zero, just return
                     beq             9f

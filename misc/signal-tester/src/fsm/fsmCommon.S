@@ -56,7 +56,7 @@ FsmCommon_delayCount:
 FsmCommon_const:
 FsmCommon_title:
 welcome:            .string         "Signal / Servo Tester"
-version:            .string         "Version 1.00"
+version:            .string         "Version 1.01"
 
                     .global         FsmCommon_title                 @ Application title
 
@@ -248,7 +248,7 @@ FsmCommon_showMessageFor:
                     movs            r0, #0                          @ clear row
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
@@ -341,7 +341,7 @@ FsmCommon_drawInstruction:
                     movs            r0, #0
                     ldr             r1, = #(1 | DISPLAY_ROW)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0                          @ draw the text
                     ldr             r1, = #(1 | DISPLAY_ROW)

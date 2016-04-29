@@ -9,6 +9,10 @@
 
 #define ACB_USE_SSD1306
 
+#if !defined(ACB_DISPLAY_WIDTH) || !defined(ACB_DISPLAY_HEIGHT)
+#error ACB_DISPLAY_WIDTH and ACB_DISPLAY_HEIGHT must all be defined to use this file
+#endif
+
 #define DisplayType_init            Ssd1306_init
 #define DisplayType_showDisplay     Ssd1306_showDisplay
 #define DisplayType_hideDisplay     Ssd1306_hideDisplay

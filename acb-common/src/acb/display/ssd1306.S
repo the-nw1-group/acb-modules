@@ -21,7 +21,7 @@
     private_data(Ssd1306_private)
 
 _buffer:
-__displayBufferSize     = (DISPLAY_WIDTH * DISPLAY_HEIGHT) / 8
+__displayBufferSize     = (ACB_DISPLAY_WIDTH * ACB_DISPLAY_HEIGHT) / 8
                     .space          __displayBufferSize, 0x00       @ buffer for display
 
 @ Fundamental Command Table
@@ -82,7 +82,13 @@ __setChargePumpSetting  = 0x8D
 __ssd1306_init_data:
                     .byte           __setDisplayOff
                     .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0x82
+#if ACB_DISPLAY_HEIGHT == 32
                     .byte           __setMultiplexRatio, 0x1F
+#elif ACB_DISPLAY_HEIGHT == 64
+                    .byte           __setMultiplexRatio, 0x3F
+#else
+#error Unsupported ACB_DISPLAY_HEIGHT
+#endif
                     .byte           __setDisplayOffset, 0x00
                     .byte           __setDisplayStartLineBase
                     .byte           __setChargePumpSetting, 0x14
@@ -105,10 +111,21 @@ __ssd1306_init_data_end:
 
 Ssd1306_init:
                     push            {r7, lr}
+
+                    ldr             r2, = #ACB_DISPLAY_RES_GPIOBASE @ set LCD_RES# to be an output, medium speed
+                    ldr             r0, [r2, #GPIO_MODER_OFFSET]
+                    ldr             r1, = #1<<(ACB_DISPLAY_RES_PIN<<1)
+                    orrs            r0, r0, r1
+                    str             r0, [r2, #GPIO_MODER_OFFSET]
+                    ldr             r0, [r2, #GPIO_OSPEEDR_OFFSET]
+                    ldr             r1, = #1<<(ACB_DISPLAY_RES_PIN<<1)
+                    orrs            r0, r0, r1
+                    str             r0, [r2, #GPIO_OSPEEDR_OFFSET]
+
                     movs            r0, #100                        @ wait for 100ms, allowing the power supply to
                     bl              MsCounter_waitFor               @ settle
-                    ldr             r7, = #SIGTEST_LCD_RES_GPIOBASE @ raise the RESET line
-                    movs            r0, #1<<SIGTEST_LCD_RES
+                    ldr             r7, = #ACB_DISPLAY_RES_GPIOBASE @ raise the RESET line
+                    movs            r0, #1<<ACB_DISPLAY_RES_PIN
                     str             r0, [r7, #GPIO_BSRR_OFFSET]
                     movs            r0, #1
                     bl              MsCounter_waitFor               @ wait for at least 3us, min we can do is 1ms
@@ -261,7 +278,7 @@ Ssd1306_drawHorizontalByte:
                     strb            r1, [r0, r5]                    @ store the modified byte back
 
                     adds            r6, r6, #1
-                    cmp             r6, #DISPLAY_WIDTH
+                    cmp             r6, #ACB_DISPLAY_WIDTH
                     bge             3f
                     adds            r5, r5, #1
                     cmp             r5, #8
