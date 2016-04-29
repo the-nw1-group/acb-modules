@@ -52,7 +52,7 @@ WRITE_IN_PROGRESS       = 1
 LAST_ASYNC_STATUS       = 2
 
 ASYNC_WRITE_ALARM_SLOT  = ACB_EEPROM_ALARM_SLOT
-#if ASYNC_WRITE_ALARM_SLOT > ACB_ALARM_SLOTS
+#if ASYNC_WRITE_ALARM_SLOT >= ACB_ALARM_SLOTS
 #error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
 #endif
 

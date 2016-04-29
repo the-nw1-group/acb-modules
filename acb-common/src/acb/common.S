@@ -67,7 +67,7 @@ FLIM_SWITCH_PRESS_TIMEOUT_COUNTS = 16                               @ Number of 
 FLIM_SWITCH_SHORT_PRESS_TIMEOUT  = 500
 FLIM_SWITCH_RELEASE_TIMEOUT      = 500
 FLIM_SWITCH_ALARM_SLOT  = 1
-#if FLIM_SWITCH_ALARM_SLOT > ACB_ALARM_SLOTS
+#if FLIM_SWITCH_ALARM_SLOT >= ACB_ALARM_SLOTS
 #error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
 #endif
 
