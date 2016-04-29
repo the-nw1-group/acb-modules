@@ -376,10 +376,12 @@
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="refreshScope" versionNumber="2">
 		<configuration configurationName="Debug">
-			<resource resourceType="PROJECT" workspacePath="/assembly-blinky"/>
+			<resource resourceType="PROJECT" workspacePath="/stm32f3-bootloader"/>
+			<resource resourceType="PROJECT" workspacePath="/acb-common"/>
 		</configuration>
 		<configuration configurationName="Release">
-			<resource resourceType="PROJECT" workspacePath="/assembly-blinky"/>
+			<resource resourceType="PROJECT" workspacePath="/stm32f3-bootloader"/>
+			<resource resourceType="PROJECT" workspacePath="/acb-common"/>
 		</configuration>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
