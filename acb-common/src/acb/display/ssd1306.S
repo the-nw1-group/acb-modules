@@ -81,7 +81,7 @@ __setChargePumpSetting  = 0x8D
 
 __ssd1306_init_data:
                     .byte           __setDisplayOff
-                    .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0x82
+                    .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0x80 @ was 82
 #if ACB_DISPLAY_HEIGHT == 32
                     .byte           __setMultiplexRatio, 0x1F
 #elif ACB_DISPLAY_HEIGHT == 64
@@ -93,11 +93,13 @@ __ssd1306_init_data:
                     .byte           __setDisplayStartLineBase
                     .byte           __setChargePumpSetting, 0x14
                     .byte           __setMemoryAddressingMode, 0x00
+#if  ACB_DISPLAY_HEIGHT == 32
                     .byte           __setPageAddress, 0x00, 0x03
+#endif
                     .byte           __setSegmentRemap127
                     .byte           __setComOutputScanDirectionRemap
                     .byte           __setComPinsHardwareConfiguration, 0x12
-                    .byte           __setContrastControl, 0x10
+                    .byte           __setContrastControl, 0x20
                     .byte           __setPreChargePeriod, 0x22
                     .byte           __setVComhDeselectLevel, 0x30
                     .byte           __setEntireDisplayOn
@@ -192,7 +194,7 @@ Ssd1306_blitBuffer:
 Ssd1306_clearBuffer:
                     ldr             r0, = #_buffer
                     ldr             r1, = #(__displayBufferSize-4)
-                    movs            r2, #0
+                    ldr             r2, = #0
 0:
                     str             r2, [r0, r1]
                     subs            r1, r1, #4
