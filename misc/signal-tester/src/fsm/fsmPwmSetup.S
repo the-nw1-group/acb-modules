@@ -63,7 +63,7 @@ FsmPwmSetup_initPwmSetup:
                     push            {r7, lr}
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
@@ -83,12 +83,12 @@ FsmPwmSetup_setupPwm:
                     push            {r7, lr}
                     movs            r7, r0                          @ save off the redValue for later
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #dutyCycle
                     bl              Display_drawString
@@ -171,7 +171,7 @@ drawValueOffset=46
                     strb            r1, [r0]
 
                     movs            r0, #drawValueOffset            @ blank previous values
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     sub             sp, sp, #8
                     movs            r3, #ACB_DISPLAY_HEIGHT
@@ -180,7 +180,7 @@ drawValueOffset=46
                     bl              Display_drawFilledRectangle
                     add             sp, sp, #8
                     movs            r0, #drawValueOffset            @ write new percentage value on the display
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #FsmPwmSetup_convertBuffer
                     bl              Display_drawString

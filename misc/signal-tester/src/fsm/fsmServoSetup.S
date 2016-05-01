@@ -124,7 +124,7 @@ FsmServoSetup_initServoSetup:
                     push            {r7, lr}
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
@@ -219,12 +219,12 @@ FsmServoSetup_runServo:
                     strh            r0, [r7, #8]
 
                     movs            r0, #0                          @ display a line to the user that we are testing
-                    ldr             r1, = #(1 | DISPLAY_ROW)        @ the servo
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)   @ the servo
                     movs            r2, #0
                     movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0                          @ draw the text
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #runServoLine
                     bl              Display_drawString
@@ -290,12 +290,12 @@ FsmServoSetup_setServoValues:
                     movs            r5, r1
                     movs            r6, r2
                     movs            r0, #0                          @ clear row, and display the template
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #displayTemplate
                     bl              Display_drawString
@@ -334,7 +334,7 @@ FsmServoSetup_displayValue:
                     bl              itoa
                     movs            r3, r0
                     movs            r0, r7                          @ write value on the display
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     bl              Display_drawString
                     pop             {r7, pc}

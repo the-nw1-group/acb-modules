@@ -45,12 +45,12 @@ FsmServoSave_initServoSave:
                     push            {r7, lr}
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
                     movs            r0, #DISPLAY_LEFT_ALIGN         @ and please wait message
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #pleaseWait
                     bl              Display_drawAlignedString
@@ -89,7 +89,7 @@ drawValueOffset = 74
 8:                                                                  @ convert slot to ascii, so we can display it
 
                     movs            r0, #0                          @ clear row, and display the template
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
@@ -100,11 +100,11 @@ drawValueOffset = 74
                     bl              itoa
                     movs            r3, r0
                     movs            r0, #drawValueOffset
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     bl              Display_drawString
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #success
                     bl              Display_drawString

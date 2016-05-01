@@ -53,6 +53,8 @@ __setupCounter:
                     bl              Display_init
                     cmp             r0, #ERROR
                     beq             __setupDisplayFail
+                    ldr             r0, = #__font_data              @ set the font
+                    bl              Display_setFont
                     bl              Ws2812_init
 
 #if !defined(DEBUG)

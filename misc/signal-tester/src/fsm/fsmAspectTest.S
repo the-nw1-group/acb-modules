@@ -125,7 +125,7 @@ FsmAspectTest_initAspectTest:
                     bl              FsmAspectTest_loadConfiguration
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
@@ -268,12 +268,12 @@ FsmAspectTest_setupAspectTest:
                     push            {r7, lr}
                     movs            r7, r0                          @ save off the redValue for later
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #aspects
                     bl              Display_drawString
@@ -326,7 +326,7 @@ FsmAspectTest_adjustAspects:
 FsmAspectTest_runAspectTest:
                     push            {r7, lr}
                     movs            r0, #0                          @ display a line to the user that we are testing
-                    ldr             r1, = #(1 | DISPLAY_ROW)        @ the Aspects
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)   @ the Aspects
                     movs            r2, #0
                     movs            r3, #drawValueOffset-1
                     sub             sp, sp, #8
@@ -335,7 +335,7 @@ FsmAspectTest_runAspectTest:
                     bl              Display_drawFilledRectangle     @ fill rectangle
                     add             sp, sp, #8
                     movs            r0, #0                          @ draw the text
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #waitMessage
                     bl              Display_drawString
@@ -372,12 +372,12 @@ FsmAspectTest_waitForAspectTest:
                     bne             9f
 
                     movs            r0, #0                          @ reset the display
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #aspects
                     bl              Display_drawString
@@ -448,7 +448,7 @@ drawValueOffset=35
                     ldr             r7, [r1, r0]
 
                     movs            r0, #drawValueOffset            @ blank previous values
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     sub             sp, sp, #8
                     movs            r3, #ACB_DISPLAY_HEIGHT
@@ -457,7 +457,7 @@ drawValueOffset=35
                     bl              Display_drawFilledRectangle
                     add             sp, sp, #8
                     movs            r0, #drawValueOffset            @ write new aspect and type
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     movs            r3, r7
                     bl              Display_drawString
