@@ -22,6 +22,11 @@
     .extern         DisplayType_hideDisplay                         @ Turn off the display
     .extern         DisplayType_setContrast                         @ Set the display contrast
 
+   private_data(Display_private)
+
+fontPtr:            .word           0                               @ pointer to currently selected font
+
+
     public_function(Display_init)
 
 @ bool Display_init(void)
@@ -342,6 +347,26 @@ Display_fillRow:
                     add             sp, sp, #8
                     pop             {r7, pc}
 
+    public_function(Display_setFont)
+
+@ void Display_setFont(__font_data* font)
+@   sets the font for any text/character drawing operations
+
+Display_setFont:
+                    ldr             r1, = #fontPtr
+                    str             r0, [r1]
+                    bx              lr
+
+    public_function(Display_getFont)
+
+@ __font_data* Display_setFont()
+@   gets the font for any text/character drawing operations
+
+Display_getFont:
+                    ldr             r1, = #fontPtr
+                    ldr             r0, [r1]
+                    bx              lr
+
     public_function(Display_drawChar)
 
 @ int Display_drawChar(int x, int yOrRow, byte colour, char c)
@@ -468,18 +493,20 @@ Display_checkPixelRange:
 @   can't be called via C/C++
 
 Display_getPixelY:
-noRows = (ACB_DISPLAY_HEIGHT / 16)
-                    push            {r7, lr}
+                    push            {r3-r4, r7, lr}
                     cmp             r1, #0                          @ if y is zero, just return
                     beq             9f
-                    ldr             r7, = #DISPLAY_ROW              @ if the DISPLAY_ROW bit isn't set, then just return
+                    ldr             r7, = #DISPLAY_ROW_MASK         @ if the DISPLAY_ROW bits aren't set, then just return
                     tst             r1, r7
                     beq             9f
-                    movs            r7, #(noRows-1)
-                    ands            r1, r1, r7
-                    lsls            r1, r1, #4
+                    movs            r4, r1                          @ convert row into pixel offset
+                    bics            r4, r4, r7                      @ get just the y value
+                    beq             9f                              @ if it's zero then just return
+                    ands            r1, r1, r7                      @ get the height of the rows
+                    lsrs            r1, r1, #8
+                    muls            r1, r1, r4
 9:
-                    pop             {r7, pc}
+                    pop             {r3-r4, r7, pc}
 
     private_function(Display_drawFontGlyph)
 
@@ -503,7 +530,8 @@ charDataOffset  = FontGlyphEntry_CharDataOffset                     @ blank top 
                     push            {r4-r6}
 
                     uxtb            r3, r3                          @ zero extend character
-                    ldr             r7, = #__font_data
+                    ldr             r7, = #fontPtr
+                    ldr             r7, [r7]
                     ldrh            r6, [r7, #minChar]              @ check if character is out of range...
                     cmp             r3, r6
                     blt             8f

@@ -21,8 +21,10 @@ DISPLAY_OK              =   0x00
 DISPLAY_CLIPPED_HORZ    =   (1<<DISPLAY_CLIPPED_HBIT)
 DISPLAY_CLIPPED_VERT    =   (1<<DISPLAY_CLIPPED_VBIT)
 
-DISPLAY_ROW_BIT         =   9                                       /* flag to set in Y to use row's instead of pixels */
-DISPLAY_ROW             =   (1<<DISPLAY_ROW_BIT)                    /* A row is 16 pixels high */
+DISPLAY_ROW_MASK        =   0x3F00                                  /* bits 8-13 indicate a row, whose height is the */
+DISPLAY_ROW_SHIFT       =   8                                       /* value. A value of 0 in bits 16-21 means the value */
+                                                                    /* is a pixel value, otherwise it's a row value. */
+                                                                    /* allows for rows of 1 to 63 pixels high */
 
 /* colours */
 DISPLAY_BLACK   = 0
@@ -37,6 +39,3 @@ DISPLAY_CENTER_ALIGN    =   (1<<DISPLAY_CENTER_ALIGN_BIT)
 DISPLAY_RIGHT_ALIGN     =   (1<<DISPLAY_RIGHT_ALIGN_BIT)
 
 DISPLAY_ALIGN_MASK      =   (DISPLAY_CENTER_ALIGN|DISPLAY_RIGHT_ALIGN)
-
-/* Other stuff */
-DISPLAY_ROW_HEIGHT      = 16
