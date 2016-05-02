@@ -39,3 +39,17 @@ DISPLAY_CENTER_ALIGN    =   (1<<DISPLAY_CENTER_ALIGN_BIT)
 DISPLAY_RIGHT_ALIGN     =   (1<<DISPLAY_RIGHT_ALIGN_BIT)
 
 DISPLAY_ALIGN_MASK      =   (DISPLAY_CENTER_ALIGN|DISPLAY_RIGHT_ALIGN)
+
+/* font constants */
+
+FontHeader_Size                 = 8
+FontHeader_IdOffset             = 0
+FontHeader_InfoOffset           = 1
+FontHeader_MinCharOffset        = 2
+FontHeader_MaxCharOffset        = 4
+FontHeader_CharHeightOffset     = 6
+
+FontGlyphEntry_Size             = 4
+FontGlyphEntry_CharWidthOffset  = 0
+FontGlyphEntry_CharDataOffset   = 0
+

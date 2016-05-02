@@ -7,4 +7,5 @@
  *
  */
 
-#define ACB_USE_FONT
+#define ACB_USE_SMALLFONT
+
