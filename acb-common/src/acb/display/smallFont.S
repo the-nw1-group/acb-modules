@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2015 The NW1 Group
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ */
+
 #include "moduleInfo.inc"
 
 #ifdef ACB_USE_SMALLFONT
@@ -1268,53 +1277,52 @@ __smallFont_data:
                     .byte           0x00
 
 /***********************************
- * Character - 127 ()
+ * Character - 127 (up arrow)
  ***********************************/
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
+                    .byte           0x18
+                    .byte           0x18
+                    .byte           0x3C
+                    .byte           0x3C
+                    .byte           0x7E
+                    .byte           0x7E
+                    .byte           0xFF
+                    .byte           0xFF
 
 /***********************************
- * Character - 128 ()
+ * Character - 128 (right arrow)
  ***********************************/
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
+                    .byte           0xC0
+                    .byte           0xF0
+                    .byte           0xFC
+                    .byte           0xFF
+                    .byte           0xFF
+                    .byte           0xFC
+                    .byte           0xF0
+                    .byte           0xC0
 
 /***********************************
- * Character - 129 ()
+ * Character - 129 (down arrow)
  ***********************************/
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
+                    .byte           0xFF
+                    .byte           0xFF
+                    .byte           0x7E
+                    .byte           0x7E
+                    .byte           0x3C
+                    .byte           0x3C
+                    .byte           0x18
+                    .byte           0x18
 
 /***********************************
- * Character - 130 ()
+ * Character - 130 (left arrow)
  ***********************************/
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-                    .byte           0x00
-
+                    .byte           0x03
+                    .byte           0x0F
+                    .byte           0x3F
+                    .byte           0xFF
+                    .byte           0xFF
+                    .byte           0x3F
+                    .byte           0x0F
+                    .byte           0x03
 
 #endif
 
