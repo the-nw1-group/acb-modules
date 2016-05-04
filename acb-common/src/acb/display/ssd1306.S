@@ -253,8 +253,23 @@ Ssd1306_clearPixel:
 @   returns a display status
 
 Ssd1306_drawHorizontalByte:
+                    mov             r12, r7
+                    ldr             r7, = #0xFF00
+                    orrs            r3, r3, r7
+                    mov             r7, r12
+                    b               Ssd1306_drawHorizontalClippedByte
+
+    public_function(Ssd1306_drawHorizontalClippedByte)
+
+@ int Ssd1306_drawHorizontalClippedByte(int x, int y, bool colour, short byteToWriteAndMask)
+@   draw a horiztonal byte into the display buffer, determined by the mask. This doesn't write to the display.
+@   Returns a display status. byteToWriteAndMask is comprised of the low byte of the byteToWrite, and the high
+@   byte is the mask, 1 to write the bit to the screen, 0 not to write that bit
+
+Ssd1306_drawHorizontalClippedByte:
                     push            {r3-r7, lr}
-                    movs            r7, #DISPLAY_OK                 @ set status...
+                    rev16           r7, r3                          @ get mask of which bits to draw
+                    lsls            r7, r7, #24                     @ and push to the last byte of the word
                     cmp             r2, #DISPLAY_BLACK              @ if colour is 0, then invert the byteToWrite
                     bne             0f
                     mvns            r3, r3
@@ -264,34 +279,39 @@ Ssd1306_drawHorizontalByte:
                     ands            r2, r2, r1
                     movs            r5, #0xf8                       @ and get which page
                     ands            r1, r1, r5
-                    lsls            r1, r1, #4                      @ and use that as an offset into our buffer memory for vertical
+                    lsls            r1, r1, #4                      @ and use that as an offset into our buffer memory
                     adds            r0, r0, r1                      @ and then add onto that the horiztonal offset
                     ldr             r1, = #_buffer
                     adds            r0, r0, r1
                     movs            r5, #0                          @ use as a counter
+                    movs            r4, #1                          @ destination mask
+                    lsls            r4, r4, r2
 2:
+                    lsls            r7, r7, #1                      @ check if we write this bit?
+                    bcc             3f
                     ldrb            r1, [r0, r5]                    @ copy the byte from the buffer
-                    movs            r4, #1                          @ get which bit to set/clear
-                    lsls            r4, r5
-                    ands            r4, r4, r3                      @ get bit
-                    lsrs            r4, r4, r5                      @ shift back to start
-                    lsls            r4, r4, r2                      @ shift to correct place in byte to write
-                    eors            r1, r1, r4                      @ set/clear bit
+                    lsrs            r3, r3, #1
+                    bcs             5f
+                    bics            r1, r1, r4                      @ clear the bit
+                    b               6f
+5:
+                    orrs            r1, r1, r4                      @ set the bit
+6:
                     strb            r1, [r0, r5]                    @ store the modified byte back
-
+3:
                     adds            r6, r6, #1
                     cmp             r6, #ACB_DISPLAY_WIDTH
-                    bge             3f
+                    bge             4f
                     adds            r5, r5, #1
                     cmp             r5, #8
                     bge             1f
                     b               2b
-3:
-                    movs            r7, #DISPLAY_CLIPPED_HBIT       @ clipped whilst drawing...
-1:
-                    movs            r0, r7                          @ return status
+4:
+                    movs            r0, #DISPLAY_CLIPPED_HBIT       @ clipped whilst drawing...
                     pop             {r3-r7, pc}
-
+1:
+                    movs            r0, #DISPLAY_OK
+                    pop             {r3-r7, pc}
 
     public_function(Ssd1306_drawPageByte)
 

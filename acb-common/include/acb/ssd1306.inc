@@ -19,12 +19,13 @@
 #define DisplayType_setContrast     Ssd1306_setContrast
 #define DisplayType_blitBuffer      Ssd1306_blitBuffer
 
-#define DisplayType_clearBuffer             Ssd1306_clearBuffer
-#define DisplayType_drawPixel               Ssd1306_drawPixel
-#define DisplayType_setPixel                Ssd1306_setPixel
-#define DisplayType_clearPixel              Ssd1306_clearPixel
-#define DisplayType_drawHorizontalByte      Ssd1306_drawHorizontalByte
-#define DisplayType_drawPageByte            Ssd1306_drawPageByte
+#define DisplayType_clearBuffer                 Ssd1306_clearBuffer
+#define DisplayType_drawPixel                   Ssd1306_drawPixel
+#define DisplayType_setPixel                    Ssd1306_setPixel
+#define DisplayType_clearPixel                  Ssd1306_clearPixel
+#define DisplayType_drawHorizontalByte          Ssd1306_drawHorizontalByte
+#define DisplayType_drawHorizontalClippedByte   Ssd1306_drawHorizontalClippedByte
+#define DisplayType_drawPageByte                Ssd1306_drawPageByte
 
 /* Status results */
 DISPLAY_CLIPPED_HBIT    =   0
