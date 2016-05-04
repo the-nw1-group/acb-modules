@@ -38,7 +38,7 @@ __endOfParameters:                                                  @ zero fill 
 @ relies on __moduleName and CBUS_LOAD_ADDRESS *not* changing...
 
 LOAD_ADDRESS = 0x08000C00
-MODULE_NAME  = (0x08001188+(__moduleName-cbus_moduleParameters))
+MODULE_NAME  = (0x08001214+(__moduleName-cbus_moduleParameters))
 
 baseParameterCount =  __endOfParameters - cbus_moduleParameters
 
