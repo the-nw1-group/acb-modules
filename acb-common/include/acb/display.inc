@@ -53,3 +53,10 @@ FontGlyphEntry_Size             = 4
 FontGlyphEntry_CharWidthOffset  = 0
 FontGlyphEntry_CharDataOffset   = 0
 
+/* bitmap constants */
+
+BitmapHeader_Flags              = 0
+BitmapHeader_DisplayWidth       = 2
+BitmapHeader_DisplayHeight      = 4
+BitmapHeader_DataWidth          = 6
+BitmapData                      = 8
