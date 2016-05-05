@@ -228,7 +228,7 @@ DisplayDriverSPI_send:
 
                     ldr             r7, = #ACB_DISPLAY_SPI_BASE
                     ldr             r1, [r7, #SPI_CR2_OFFSET]
-                    movs            r0, #SPI_CR2_TXDMAEN
+                    movs            r0, #SPI_CR2_TXDMAEN | SPI_CR2_TXEIE
                     orrs            r1, r1, r0
                     str             r1, [r7, #SPI_CR2_OFFSET]
                     ldr             r1, [r7, #SPI_CR1_OFFSET]
