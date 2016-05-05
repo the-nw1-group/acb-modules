@@ -94,12 +94,12 @@ Display_clearDisplayBuffer:
 @   Returns a display status
 
 Display_drawPixel:
-                    mov             r12, lr                         @ save off link return
-                    movs            r5, r0                          @ save off x
+                    mov             r12, lr
+                    movs            r3, r0                          @ save off x
                     bl              Display_checkPixelRange
                     cmp             r0, #DISPLAY_OK
                     bne             9f
-                    movs            r0, r5                          @ restore x
+                    movs            r0, r3                          @ restore x
                     b               DisplayType_drawPixel
 9:
                     bx              r12
@@ -111,12 +111,12 @@ Display_drawPixel:
 @   Returns a display status
 
 Display_setPixel:
-                    mov             r12, lr                         @ save off link return
-                    movs            r5, r0                          @ save off x
+                    mov             r12, lr
+                    movs            r3, r0                          @ save off x
                     bl              Display_checkPixelRange
                     cmp             r0, #DISPLAY_OK
                     bne             9f
-                    movs            r0, r5                          @ restore x
+                    movs            r0, r3                          @ restore x
                     b               DisplayType_setPixel
 9:
                     bx              r12
@@ -128,12 +128,11 @@ Display_setPixel:
 @   Returns a display status
 
 Display_clearPixel:
-                    mov             r12, lr                         @ save off link return
-                    movs            r5, r0                          @ save off x
+                    movs            r3, r0                          @ save off x
                     bl              Display_checkPixelRange
                     cmp             r0, #DISPLAY_OK
                     bne             9f
-                    movs            r0, r5                          @ restore x
+                    movs            r0, r3                          @ restore x
                     b               DisplayType_clearPixel
 9:
                     bx              r12
@@ -341,7 +340,8 @@ Display_drawFilledRectangle:
 Display_fillRow:
                     push            {r7, lr}
                     sub             sp, sp, #8
-                    movs            r7, #DISPLAY_ROW_HEIGHT
+                    rev16           r7, r1
+                    uxtb            r7, r7
                     str             r7, [sp]
                     bl              Display_drawFilledRectangle     @ fill rectangle
                     add             sp, sp, #8
@@ -621,7 +621,6 @@ Display_getPixelY:
                     beq             9f
                     movs            r4, r1                          @ convert row into pixel offset
                     bics            r4, r4, r7                      @ get just the y value
-                    beq             9f                              @ if it's zero then just return
                     ands            r1, r1, r7                      @ get the height of the rows
                     lsrs            r1, r1, #8
                     muls            r1, r1, r4
