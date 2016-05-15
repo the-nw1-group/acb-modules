@@ -101,6 +101,7 @@ Display_drawPixel:
                     bne             9f
                     movs            r0, r3                          @ restore x
                     b               DisplayType_drawPixel
+                    movs            r0, #DISPLAY_OK
 9:
                     bx              r12
 
@@ -118,6 +119,7 @@ Display_setPixel:
                     bne             9f
                     movs            r0, r3                          @ restore x
                     b               DisplayType_setPixel
+                    movs            r0, #DISPLAY_OK
 9:
                     bx              r12
 
@@ -134,6 +136,7 @@ Display_clearPixel:
                     bne             9f
                     movs            r0, r3                          @ restore x
                     b               DisplayType_clearPixel
+                    movs            r0, #DISPLAY_OK
 9:
                     bx              r12
 
