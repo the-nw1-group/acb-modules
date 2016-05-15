@@ -81,7 +81,7 @@ __setChargePumpSetting  = 0x8D
 
 __ssd1306_init_data:
                     .byte           __setDisplayOff
-                    .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0x80 @ was 82
+                    .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0xF0 @ was 0x82
 #if ACB_DISPLAY_HEIGHT == 32
                     .byte           __setMultiplexRatio, 0x1F
 #elif ACB_DISPLAY_HEIGHT == 64
@@ -99,12 +99,22 @@ __ssd1306_init_data:
                     .byte           __setSegmentRemap127
                     .byte           __setComOutputScanDirectionRemap
                     .byte           __setComPinsHardwareConfiguration, 0x12
-                    .byte           __setContrastControl, 0x20
+                    .byte           __setContrastControl, 0x60 @ was 0x20
                     .byte           __setPreChargePeriod, 0x22
                     .byte           __setVComhDeselectLevel, 0x30
                     .byte           __setEntireDisplayOn
                     .byte           __setNormalDisplay
 __ssd1306_init_data_end:
+                                                                    @ each start up command's size is listed in this
+                                                                    @ word. a 0 for 1 byte command, and a 1 for a 2
+                                                                    @ byte command.
+#if ACB_DISPLAY_HEIGHT == 32
+__ssd1305_init_data_size = 0b0011110011101110
+#elif ACB_DISPLAY_HEIGHT == 64
+__ssd1305_init_data_size = 0b0001111001101110
+#else
+#error Unsupported ACB_DISPLAY_HEIGHT
+#endif
 
     public_function(Ssd1306_init)
 
@@ -123,17 +133,26 @@ Ssd1306_init:
                     ldr             r1, = #1<<(ACB_DISPLAY_RES_PIN<<1)
                     orrs            r0, r0, r1
                     str             r0, [r2, #GPIO_OSPEEDR_OFFSET]
+                    movs            r0, #1<<ACB_DISPLAY_RES_PIN     @ force reset low
+                    str             r0, [r2, #GPIO_BRR_OFFSET]
 
-                    movs            r0, #100                        @ wait for 100ms, allowing the power supply to
-                    bl              MsCounter_waitFor               @ settle
+                    movs            r0, #100                        @ wait for at 100ms for the supply to settle
+                    bl              MsCounter_waitFor
                     ldr             r7, = #ACB_DISPLAY_RES_GPIOBASE @ raise the RESET line
                     movs            r0, #1<<ACB_DISPLAY_RES_PIN
                     str             r0, [r7, #GPIO_BSRR_OFFSET]
                     movs            r0, #1
                     bl              MsCounter_waitFor               @ wait for at least 3us, min we can do is 1ms
-                    ldr             r0, = #__ssd1306_init_data
+#if !defined(ACB_SEND_INIT_WITHOUT_DMA)
+                    ldr             r0, = #__ssd1306_init_data      @ we can use DMA to send the init commands
                     movs            r1, #(__ssd1306_init_data_end - __ssd1306_init_data)
                     bl              DisplayDrv_init
+#else
+                    movs            r0, #0                          @ can't use DMA, so we'll send the commands one, by
+                    movs            r1, #0                          @ one
+                    bl              DisplayDrv_init
+                    bl              Ssd1306_sendInitCommands
+#endif
 9:
                     pop             {r7, pc}
 
@@ -324,6 +343,41 @@ Ssd1306_drawPageByte:
                     ldr             r3, = #_buffer
                     strb            r2, [r3, r0]
                     bx              lr
+
+    private_function(Ssd1306_sendInitCommands)
+
+@ int Ssd1306_sendInitCommands(void)
+@   send the init commands to the display driver a command at a time.
+@   returns a display status
+
+Ssd1306_sendInitCommands:
+                    push            {r5-r7, lr}
+                    ldr             r7, =#__ssd1306_init_data
+                    movs            r6, #(__ssd1306_init_data_end - __ssd1306_init_data)
+                    ldr             r5, =#__ssd1305_init_data_size
+0:
+                    lsrs            r5, r5, #1
+                    bcc             sic_sendByte
+sic_sendShort:
+                    ldrb            r0, [r7]
+                    ldrb            r1, [r7, #1]
+                    bl              DisplayDrv_sendCommandAndParameter
+                    cmp             r0, #ERROR
+                    beq             9f
+                    adds            r7, r7, #2
+                    subs            r6, r6, #2
+                    b               1f
+sic_sendByte:
+                    ldrb            r0, [r7]
+                    bl              DisplayDrv_sendCommand
+                    cmp             r0, #ERROR
+                    beq             9f
+                    adds            r7, r7, #1
+                    subs            r6, r6, #1
+1:
+                    bne             0b
+9:
+                    pop             {r5-r7, pc}
 
 #endif
 

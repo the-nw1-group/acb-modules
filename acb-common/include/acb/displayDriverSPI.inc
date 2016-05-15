@@ -14,12 +14,9 @@
 #error ACB_DISPLAY_SPI_BASE, ACB_DISPLAY_SPI_GPIOBASE, ACB_DISPLAY_SPI_ALARM_SLOT, ACB_DISPLAY_SPI_CLK, ACB_DISPLAY_SPI_MOSI and ACB_DISPLAY_SPI_PRESCALER must all be defined to use this file
 #endif
 
-#if !defined(ACB_DISPLAY_SPI_ISR) || !defined(ACB_DISPLAY_SPI_IRQ)
-#error ACB_DISPLAY_SPI_ISR and ACB_DISPLAY_SPI_IRQ must all be defined to use this file
-#endif
-
-#if !defined(ACB_DISPLAY_SPI_DMA_CHANNEL)
-#error ACB_DISPLAY_SPI_DMA_CHANNEL must all be defined to use this file
+#if !defined(ACB_DISPLAY_SPI_DMA_CHANNEL) || !defined(ACB_DISPLAY_DMA_ISR) || !defined(ACB_DISPLAY_DMA_IRQ)\
+    || !defined(ACB_DISPLAY_DMA) || !defined(ACB_DISPLAY_DMA_DONE) || !defined(ACB_DISPLAY_DMA_CLEAR)
+#error ACB_DISPLAY_DMA, ACB_DISPLAY_DMA_DONE, ACB_DISPLAY_DMA_CLEAR, ACB_DISPLAY_SPI_DMA_CHANNEL, ACB_DISPLAY_DMA_ISR and ACB_DISPLAY_DMA_IRQ must all be defined to use this file
 #endif
 
 #if !defined(ACB_DISPLAY_RES_GPIOBASE) || !defined(ACB_DISPLAY_RES_PIN)
