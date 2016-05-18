@@ -87,6 +87,23 @@ Display_blitDisplayBuffer:
 Display_clearDisplayBuffer:
                     b               DisplayType_clearBuffer
 
+    public_function(Display_fillDisplayBuffer)
+
+@ void Display_fillDisplayBuffer(int pattern)
+@   fill the contents of the display buffer with the pattern supplied. This doesn't write to the display
+
+Display_fillDisplayBuffer:
+                    b               DisplayType_fillBuffer
+
+    public_function(Display_generateTestPattern)
+
+@ void Display_generateTestPattern(void)
+@   generate a test pattern in the display buffer. This doesn't write to the display
+
+Display_generateTestPattern:
+                    ldr             r0, = #0xAA55AA55
+                    b               DisplayType_fillBuffer
+
     public_function(Display_drawPixel)
 
 @ int Display_drawPixel(int x, int y, bool colour)

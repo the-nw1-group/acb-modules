@@ -99,9 +99,9 @@ __ssd1306_init_data:
                     .byte           __setSegmentRemap127
                     .byte           __setComOutputScanDirectionRemap
                     .byte           __setComPinsHardwareConfiguration, 0x12
-                    .byte           __setContrastControl, 0x60 @ was 0x20
+                    .byte           __setContrastControl, 0x80 @ was 0x20
                     .byte           __setPreChargePeriod, 0x22
-                    .byte           __setVComhDeselectLevel, 0x30
+                    .byte           __setVComhDeselectLevel, 0x20 @ was 0x30
                     .byte           __setEntireDisplayOn
                     .byte           __setNormalDisplay
 __ssd1306_init_data_end:
@@ -211,12 +211,20 @@ Ssd1306_blitBuffer:
 @   clear the contents of the display buffer. This doesn't write to the display
 
 Ssd1306_clearBuffer:
-                    ldr             r0, = #_buffer
-                    ldr             r1, = #(__displayBufferSize-4)
-                    ldr             r2, = #0
+                    movs            r0, #0
+                    b               Ssd1306_fillBuffer
+
+    public_function(Ssd1306_fillBuffer)
+
+@ void Ssd1306_fillBuffer(int pattern)
+@   fill the contents of the display buffer with the pattern supplied. This doesn't write to the display
+
+Ssd1306_fillBuffer:
+                    ldr             r1, = #_buffer
+                    ldr             r2, = #(__displayBufferSize-4)
 0:
-                    str             r2, [r0, r1]
-                    subs            r1, r1, #4
+                    str             r0, [r1, r2]
+                    subs            r2, r2, #4
                     bcs             0b
                     bx              lr
 

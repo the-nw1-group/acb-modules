@@ -20,6 +20,7 @@
 #define DisplayType_blitBuffer      Ssd1306_blitBuffer
 
 #define DisplayType_clearBuffer                 Ssd1306_clearBuffer
+#define DisplayType_fillBuffer                  Ssd1306_fillBuffer
 #define DisplayType_drawPixel                   Ssd1306_drawPixel
 #define DisplayType_setPixel                    Ssd1306_setPixel
 #define DisplayType_clearPixel                  Ssd1306_clearPixel
