@@ -15,7 +15,7 @@
 
     module(DisplayDriverSPI)
 
-   private_data(DisplayDriverSPI_private)
+    private_data(DisplayDriverSPI_private)
 
 #if ACB_DISPLAY_SPI_ALARM_SLOT >= ACB_ALARM_SLOTS
 #error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
@@ -148,10 +148,10 @@ DisplayDriverSPI_setupSPI:
 
 __spiSetupPeripheral:
                     ldr             r3, = #ACB_DISPLAY_SPI_BASE     @ select simplex, tx only, baud rate as defined in
-                                                                    @ in the header file, master mode, CPOL=1 CPHA=1,
+                                                                    @ in the header file, master mode, CPOL=0 CPHA=0,
                                                                     @ 8-bit data, NSS in software
                     ldr             r0, = #SPI_CR1_BIDIMODE | SPI_CR1_BIDIOE | SPI_CR1_SSM | SPI_CR1_SSI |\
-                                           (ACB_DISPLAY_SPI_PRESCALER<<3) | SPI_CR1_MSTR | SPI_CR1_CPOL | SPI_CR1_CPHA
+                                           (ACB_DISPLAY_SPI_PRESCALER<<3) | SPI_CR1_MSTR
                     str             r0, [r3, #SPI_CR1_OFFSET]
                     ldr             r0, = #SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
                     str             r0, [r3, #SPI_CR2_OFFSET]
@@ -180,6 +180,11 @@ ACB_DISPLAY_DMA_ISR:
 9:
                     ldr             r1, = #ACB_DISPLAY_DMA_CLEAR
                     str             r1, [r0, #DMA_IFCR_OFFSET]
+                    ldr             r2, = #ACB_DISPLAY_SPI_DMA_CHANNEL @ disable the DMA channel
+                    ldr             r1, [r2, #DMA_Channel_CCR_OFFSET]
+                    ldr             r0, = #DMA_CCR_EN
+                    bics            r1, r1, r0
+                    str             r1, [r2, #DMA_Channel_CCR_OFFSET]
                     b               DisplayDriverSPI_waitForTxEnd
 
     private_function(DisplayDriverSPI_waitForTxEnd)
@@ -189,8 +194,8 @@ ACB_DISPLAY_DMA_ISR:
 
 DisplayDriverSPI_waitForTxEnd:
                     ldr             r3, = #ACB_DISPLAY_SPI_BASE
-                    ldr             r2, [r3, #SPI_SR_OFFSET]
-                    ldr             r1, = #SPI_SR_BSY
+                    ldr             r1, = #SPI_SR_FTLVL | SPI_SR_BSY    @ wait until Tx FIFO is empty, and SPI isn't
+                    ldr             r2, [r3, #SPI_SR_OFFSET]            @ busy
                     tst             r2, r1
                     beq             DisplayDriverSPI_endTx
                     movs            r0, #ACB_DISPLAY_SPI_ALARM_SLOT @ set an alarm for 1ms to recheck the BSY flag
@@ -262,7 +267,7 @@ DisplayDriverSPI_sendCmd:
 1:
                     strh            r0, [r7, #SPI_DR_OFFSET]        @ write the short to send
 2:
-                    ldr             r2, = #SPI_SR_BSY
+                    ldr             r2, = #SPI_SR_FTLVL | SPI_SR_BSY
 0:
                     ldr             r3, [r7, #SPI_SR_OFFSET]        @ wait until the data has been sent
                     tst             r3, r2
@@ -272,7 +277,7 @@ DisplayDriverSPI_sendCmd:
                     movs            r0, #SUCCESS
                     pop             {r7, pc}
 
-    public_function(DisplayDriverSPI_readyToSend)
+    private_function(DisplayDriverSPI_readyToSend)
 
 @ void DisplayDriverSPI_readyToSend(void)
 @   blocks until the SPI bus is ready to send more data. This waits until CS line goes high. Implementation note: this
@@ -288,23 +293,21 @@ DisplayDriverSPI_readyToSend:
                     beq             0b
                     pop             {r7, pc}
 
-    public_function(DisplayDriverSPI_readyToSend)
+    private_function(DisplayDriverSPI_endTx)
 
-@ void DisplayDriverSPI_readyToSend(void)
+@ void DisplayDriverSPI_endTx(void)
 @   disables the DMA Channel, SPI module, and raises CS
 
 DisplayDriverSPI_endTx:
-                    ldr             r2, = #ACB_DISPLAY_SPI_DMA_CHANNEL @ disable the DMA channel
-                    ldr             r1, [r2, #DMA_Channel_CCR_OFFSET]
-                    ldr             r0, = #DMA_CCR_EN
-                    bics            r1, r1, r0
-                    str             r1, [r2, #DMA_Channel_CCR_OFFSET]
-
                     ldr             r3, = #ACB_DISPLAY_SPI_BASE
                     ldr             r2, [r3, #SPI_CR1_OFFSET]       @ disable the SPI module
                     ldr             r1, = #SPI_CR1_SPE
                     bics            r2, r2, r1
                     str             r2, [r3, #SPI_CR1_OFFSET]
+                    ldr             r2, [r3, #SPI_CR2_OFFSET]       @ clear TXDMAEN flag
+                    movs            r1, #SPI_CR2_TXDMAEN
+                    bics            r2, r2, r1
+                    str             r2, [r3, #SPI_CR2_OFFSET]
 
                     ldr             r3, = #ACB_DISPLAY_CS_GPIOBASE  @ raise CS to finish communication with the display
                     ldr             r1, = #1<<ACB_DISPLAY_CS_PIN
