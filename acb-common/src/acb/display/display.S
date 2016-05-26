@@ -56,7 +56,7 @@ Display_showDisplay:
     public_function(Display_hideDisplay)
 
 @ bool Display_hideDisplay(void)
-@   Turn the display on. Returns TRUE if the initialisation was successful, otherwise FALSE
+@   Turn the display off. Returns TRUE if the initialisation was successful, otherwise FALSE
 
 Display_hideDisplay:
                     b               DisplayType_hideDisplay

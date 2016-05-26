@@ -81,7 +81,7 @@ __setChargePumpSetting  = 0x8D
 
 __ssd1306_init_data:
                     .byte           __setDisplayOff
-                    .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0xF0 @ was 0x82
+                    .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0xF0
 #if ACB_DISPLAY_HEIGHT == 32
                     .byte           __setMultiplexRatio, 0x1F
 #elif ACB_DISPLAY_HEIGHT == 64
@@ -99,9 +99,9 @@ __ssd1306_init_data:
                     .byte           __setSegmentRemap127
                     .byte           __setComOutputScanDirectionRemap
                     .byte           __setComPinsHardwareConfiguration, 0x12
-                    .byte           __setContrastControl, 0x80 @ was 0x20
+                    .byte           __setContrastControl, 0x60
                     .byte           __setPreChargePeriod, 0x22
-                    .byte           __setVComhDeselectLevel, 0x20 @ was 0x30
+                    .byte           __setVComhDeselectLevel, 0x20
                     .byte           __setEntireDisplayOn
                     .byte           __setNormalDisplay
 __ssd1306_init_data_end:
