@@ -14,19 +14,29 @@ The Modules
 The modules are based around either STM32F042 ARM Cortex-M0 microcontroller, or various PIC24/dsPIC33 microcontrollers. 
 All of the boards have been designed, with only the ACB-16IO requiring the Gerbers to be drawn. 
 
-| Module     | Microcontroller | Description |
-| ---------- | --------------- | ------------------------------------------------------------------------------------- |
-| ACB-4TC    | STM32F042K6     | For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving                 |
-| ACB-8IOMV  | STM32F042F6     | 8 configuration input or outputs, configurable for various voltages and other options |
-| ACB-8IO    | STM32F042F6     | 8 configurable open drain inputs or outputs, 5V tolerant                              |
-| ACB-16IO   | STM32F042F6     | 16 configurable open drain inputs or outputs, 5V tolerant                             |
-| ACB-16LED  | STM32F042F6     | 16 constant current LED outputs                                                       |
-| ACB-90LED  | STM32F303CB     | 90 LED driver using Charlie Plexing to drive LEDs                                     |
-| ACB-RF     | STM32F042F6     | Wireless link                                                                         |
-| ACB-ETH100 | PIC24HJ128GP504 | CAN to Ethernet bridge                                                                |
-| ACB-BRIDGE | PIC24EP512GP806 | CAN to CAN bridge                                                                     |
+| Module     | Microcontroller  | Description |
+| ---------- | ---------------- | ------------------------------------------------------------------------------------- |
+| ACB-4TC    | STM32F042K6      | For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving                 |
+| ACB-8IOMV  | STM32F042F6      | 8 configuration input or outputs, configurable for various voltages and other options |
+| ACB-8IO    | STM32F042F6      | 8 configurable open drain inputs or outputs, 5V tolerant                              |
+| ACB-16IO   | STM32F042F6      | 16 configurable open drain inputs or outputs, 5V tolerant                             |
+| ACB-16LED  | STM32F042F6      | 16 constant current LED outputs                                                       |
+| ACB-90LED  | STM32F303CB      | 90 LED driver using Charlie Plexing to drive LEDs                                     |
+| ACB-RF     | dsPIC33EPxxGP502 | Wireless link                                                                         |
+| ACB-ETH    | STM32F767V6      | CAN to CAN and Ethernet bridge                                                                |
  
 Most of the code is written in assembler - yeah I know...  
+
+Other Projects
+--------------
+
+Whilst developing the modules listed above, a number of side projects have evolved.
+
+| Module        | Microcontroller  | Description |
+| ------------- | ---------------- | --------------------------------------------------------------------------------- |
+| Signal Tester | STM32F042F6      | For testing serial RGB LEDs and for testing and positioning Servos                |
+| CBUS Monitor  | STM32F042F6      | Display messages on the CAN bus, decode, graph, and send test messages            |
+| QUAD-IR       | STM32F030F4      | Based on the MERG "Hector", use reflected IR to detect trains                     | 
 
 Building and Debugging
 ----------------------
