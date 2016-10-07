@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Other Projects :: Signal Tester</title>
+    <title>Other Projects :: QUAD-IR</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -15,22 +15,26 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Signal Tester</h1>
-        <p>For testing serial RGB LEDs and for testing and positioning Servos</p>
+        <h1>QUAD-IR</h1>
+        <p>Based on the MERG "Hector", use reflected IR to detect trains</p>
 
-        <p class="view"><a href="https://github.com/the-nw1-group/acb-modules/tree/master/misc/signal-tester">View stable on master branch <small>the-nw1-group/acb-modules/misc/signal-tester</small></a></p>
-        <p class="view"><a href="https://github.com/the-nw1-group/acb-modules/tree/develop/misc/signal-tester">View latest on develop branch <small>the-nw1-group/acb-modules/misc/signal-tester</small></a></p>
+        <p class="view"><a href="https://github.com/the-nw1-group/acb-modules/tree/master/misc/quad-ir">View stable on master branch <small>the-nw1-group/acb-modules/misc/quad-ir</small></a></p>
+        <p class="view"><a href="https://github.com/the-nw1-group/acb-modules/tree/develop/misc/quad-ir">View latest on develop branch <small>the-nw1-group/acb-modules/misc/quad-ir</small></a></p>
 
       </header>
       <section>
         <h1>
-<a id="another-control-bus" class="anchor" href="#another-control-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Signal Tester</h1>
+<a id="another-control-bus" class="anchor" href="#another-control-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>QUAD-IR</h1>
 
-<p>A side project for testing serial RGB LEDs (WS2182B ) and for testing and positioning Servos. It also has a 
-feature to try different PWM levels for a simple LED connection. It's powered from 3 AAA batteries, with a 
-simple OLED display, 3 analog inputs and 3 buttons for navigation. Settings can be saved into EEPROM, which
-can be reviewed at a later date. It uses an STM32F042F which is a TSSOP20 device and is all fitted onto a board
-5.5cm x 4.5cm.</p>
+<p>Derived from the Hector design by Bryan Knight and Pete Brownlow, to whom due credit is acknowledged. This version uses a small ARM processor (the so called
+32-bits for 32 cents processor), which allowed 4 inputs over the original 2 inputs. A consequence of this is that the circuit voltage is reduced from 5V to 3.3V,
+requiring the use of low voltage op-amps. The circuit works by taking a reading of the IR level with the IR LED turned off, then takes a reading when turned on.
+If it's above the sense threshold the output is pulled low for that detector. If it then goes below the sense threshold a small amount of debouncing is applied
+before turning the output high.</p>
+
+<p>There are a couple of other changes from the original design: The IR LED current is sourced from the input supply rather than the regulated 3.3V; only occupied
+outputs are available and these are 3.3V push-pull logic levels, with occupied indicated by a low output; supply voltage can be in the range 4.5V-12V.
+Finally, then on board status led shows the detection without any debouncing, rather than a logical “or” of the outputs.</p>
 
 <h2>
 <a id="the-modules" class="anchor" href="#pin-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Pin Functions</h2>
@@ -57,13 +61,13 @@ can be reviewed at a later date. It uses an STM32F042F which is a TSSOP20 device
         <td>2</td>
         <td>PF0</td>
         <td>I/O</td>
-        <td>I2C SDA</td>
+        <td>(IN) Device Enable</td>
     </tr>
     <tr>
         <td>3</td>
         <td>PF1</td>
         <td>I/O</td>
-        <td>I2C SCL</td>
+        <td>(OUT) Detect 4 Output</td>
     </tr>
     <tr>
         <td>4</td>
@@ -81,55 +85,55 @@ can be reviewed at a later date. It uses an STM32F042F which is a TSSOP20 device
         <td>6</td>
         <td>PA0</td>
         <td>I/0</td>
-        <td>(Analog) Blue Input</td>
+        <td>(OUT) Detect 3 Output</td>
     </tr>
     <tr>
         <td>7</td>
         <td>PA1</td>
         <td>I/0</td>
-        <td>(Analog) Green Input</td>
+        <td>Not Used</td>
     </tr>
     <tr>
         <td>8</td>
         <td>PA2</td>
         <td>I/0</td>
-        <td>(Analog) Red Input</td>
+        <td>(Analog) Sense Threshold</td>
     </tr>
     <tr>
         <td>9</td>
         <td>PA3</td>
         <td>I/0</td>
-        <td>Not Used</td>
+        <td>(Analog) Sense from Head 4</td>
     </tr>
     <tr>
         <td>10</td>
         <td>PA4</td>
         <td>I/0</td>
-        <td>(OUT) Display #RESET</td>
+        <td>(Analog) Sense from Head 3</td>
     </tr>
     <tr>
         <td>11</td>
         <td>PA5</td>
         <td>I/0</td>
-        <td>Not Used</td>
+        <td>(Analog) Sense from Head 2</td>
     </tr>
     <tr>
         <td>12</td>
         <td>PA6</td>
         <td>I/0</td>
-        <td>Not Used</td>
+        <td>(Analog) Sense from Head 1</td>
     </tr>
     <tr>
         <td>13</td>
         <td>PA7</td>
         <td>I/0</td>
-        <td>(IN) Button Back</td>
+        <td>(OUT) IR LED Enable</td>
     </tr>
     <tr>
         <td>14</td>
         <td>PB1</td>
         <td>I/0</td>
-        <td>(OUT) Signal/Servo Output</td>
+        <td>(OUT) LED Status</td>
     </tr>
     <tr>
         <td>15</td>
@@ -147,14 +151,14 @@ can be reviewed at a later date. It uses an STM32F042F which is a TSSOP20 device
         <td>17</td>
         <td>PA9</td>
         <td>I/0</td>
-        <td>(IN) Button Action</td>
+        <td>(OUT) Detect 2 Output</td>
     </tr>
 
     <tr>
         <td>18</td>
         <td>PA10</td>
         <td>I/0</td>
-        <td>(IN) Button Forward</td>
+        <td>(OUT) Detect 1 Output</td>
     </tr>
     <tr>
         <td>19</td>
@@ -185,12 +189,8 @@ can be reviewed at a later date. It uses an STM32F042F which is a TSSOP20 device
 </thead>
 <tbody>
 <tr>
-<td>24AA16</td>
-<td>16K I2C Serial EEPROM</td>
-</tr>
-<tr>
-<td>ER-OLED010-1</td>
-<td>OLED 1" Display</td>
+<td>LMV324</td>
+<td>Quad Low-Voltage Rail-to-Rail Output Operational Amplifier</td>
 </tr>
 </tbody>
 </table>
@@ -199,21 +199,21 @@ can be reviewed at a later date. It uses an STM32F042F which is a TSSOP20 device
         <a id="schematic" class="anchor" href="#schematic" aria-hidden="true"><span class="octicon octicon-link"></span></a>Schematic
     </h2>
 
-    <a href="assets/misc/signal-tester/signal-tester.pdf"><img src="assets/misc/signal-tester/signal-tester-sch.png" alt="Signal Tester Schematic"/></a>
+    <a href="assets/misc/quad-ir/quad-ir.pdf"><img src="assets/misc/quad-ir/quad-ir-sch.png" alt="Quad IR Schematic"/></a>
     <p>Click on the image above for a PDF version.</p>
 
     <h2>
         <a id="the-modules" class="anchor" href="#board-layout" aria-hidden="true"><span class="octicon octicon-link"></span></a>Board Layout
     </h2>
 
-    <img src="assets/misc/signal-tester/signal-tester-pcb-top.png" alt="Signal Tester top layout" />
+    <img src="assets/misc/quad-ir/quad-ir-pcb-top.png" alt="Quad IR top layout" />
     <p>The top of the board.</p>
 
-    <img src="assets/misc/signal-tester/signal-tester-pcb-bottom.png" alt="Signal Tester bottom layout" />
-    <p>The bottom of the board (although top when used).</p>
+    <img src="assets/misc/quad-ir/quad-ir-pcb-bottom.png" alt="Quad IR bottom layout" />
+    <p>The bottom of the board.</p>
 
-    <img src="assets/misc/signal-tester/signal-tester.jpg" alt="Populated board" />
-    <p>Populated board, with prototype 4 signal head connected.</p>
+    <!--<img src="assets/misc/signal-tester/signal-tester.jpg" alt="Populated board" />
+    <p>Populated board, with prototype 4 signal head connected.</p>-->
 
       </section>
       <footer>
