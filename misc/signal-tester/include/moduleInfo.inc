@@ -90,8 +90,8 @@
 #include "acb/display.inc"
 #include "acb/font.inc"
 
-#define DISPLAY_ROW_HEIGHT              16
-#define DISPLAY_ROW_FLAG                (DISPLAY_ROW_HEIGHT<<DISPLAY_ROW_SHIFT)
+#define DISPLAY_ROW_HEIGHT  16
+#define DISPLAY_ROW_FLAG    ((DISPLAY_ROW_HEIGHT << DISPLAY_ROW_SHIFT))
 
 /*
  * Define EEPROM type, driver and connection to device
