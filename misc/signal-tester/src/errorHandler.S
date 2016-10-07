@@ -10,6 +10,8 @@
 #include "moduleInfo.inc"
 #include "acb/errorHandler.inc"
 
+    module(ErrorHandler)
+
 @ override standard ACB error handler as we don't have yellow and green LEDs
 
     public_function(ErrorHandler_handle)
