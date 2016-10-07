@@ -9,6 +9,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_FONT
+
     module(font)
 
 /*
@@ -18,7 +20,6 @@
  * Font data:  Height: 12 pixels, 1 bit per pixel
  *
  */
-
 
 	static_data(__font_data)
     .global __font_data
@@ -1720,5 +1721,7 @@ __font_data:
                     .byte           0x03
                     .byte           0x00
                     .byte           0x00
+
+#endif
 
     .end

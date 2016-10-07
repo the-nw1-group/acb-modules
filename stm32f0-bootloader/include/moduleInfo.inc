@@ -16,6 +16,8 @@
 #include "acb/flash.inc"
 #include "acb/optionBytes.inc"
 
+#include "constants.inc"
+
 /*
  * Private bootloader include file
  *

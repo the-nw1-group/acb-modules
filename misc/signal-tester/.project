@@ -3,6 +3,7 @@
 	<name>signal-tester</name>
 	<comment></comment>
 	<projects>
+		<project>acb-common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

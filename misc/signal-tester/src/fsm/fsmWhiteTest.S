@@ -79,7 +79,7 @@ FsmWhiteTest_initWhiteTest:
                     bl              FsmWhiteTest_loadConfiguration
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
@@ -128,12 +128,12 @@ FsmWhiteTest_setupWhiteTest:
                     push            {r7, lr}
                     movs            r7, r0                          @ save off the redValue for later
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #noLeds
                     bl              Display_drawString
@@ -186,12 +186,12 @@ FsmWhiteTest_adjustNumber:
 FsmWhiteTest_runWhiteTest:
                     push            {r7, lr}
                     movs            r0, #0                          @ display a line to the user that we are testing
-                    ldr             r1, = #(1 | DISPLAY_ROW)        @ the LEDs
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)   @ the LEDs
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0                          @ draw the text
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #waitMessage
                     bl              Display_drawString
@@ -227,7 +227,7 @@ FsmWhiteTest_waitForWhiteTest:
 @   Test an LED, and then wait to test the next one
 
 FsmWhiteTest_testLed:
-alarmSlot = 4
+alarmSlot = 2
 
                     push            {r5-r7, lr}
                     bl              Ws2812_clearBuffer              @ clear the buffer and display
@@ -277,16 +277,16 @@ drawValueOffset=69
                     bl              itoa
 
                     movs            r0, #drawValueOffset            @ blank previous values
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     sub             sp, sp, #8
-                    movs            r3, #DISPLAY_HEIGHT
+                    movs            r3, #ACB_DISPLAY_HEIGHT
                     str             r3, [sp]
-                    movs            r3, #(DISPLAY_WIDTH - drawValueOffset)
+                    movs            r3, #(ACB_DISPLAY_WIDTH - drawValueOffset)
                     bl              Display_drawFilledRectangle
                     add             sp, sp, #8
                     movs            r0, #drawValueOffset            @ write new number on the display
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #FsmWhiteTest_convertBuffer
                     bl              Display_drawString

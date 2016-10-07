@@ -56,7 +56,7 @@ FsmCommon_delayCount:
 FsmCommon_const:
 FsmCommon_title:
 welcome:            .string         "Signal / Servo Tester"
-version:            .string         "Version 1.00"
+version:            .string         "Version 1.02"
 
                     .global         FsmCommon_title                 @ Application title
 
@@ -246,12 +246,12 @@ FsmCommon_showMessageFor:
                     push            {r0-r1, r7, lr}
                     movs            r7, r2
                     movs            r0, #0                          @ clear row
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     movs            r3, r7
                     bl              Display_drawString
@@ -339,12 +339,12 @@ FsmCommon_drawInstruction:
                     push            {r7, lr}
                     movs            r7, r0                          @ save off r0
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0                          @ draw the text
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     movs            r3, r7
                     bl              Display_drawString
@@ -359,12 +359,12 @@ FsmCommon_drawInstruction:
 FsmCommon_showSplash:
                     push            {r7, lr}
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #welcome
                     bl              Display_drawAlignedString
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #version
                     bl              Display_drawAlignedString

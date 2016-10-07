@@ -90,12 +90,12 @@ FsmSignalSave_initCommon:
                     movs            r6, r1
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     movs            r3, r6
                     bl              Display_drawAlignedString
                     movs            r0, #DISPLAY_LEFT_ALIGN         @ and please wait message
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #pleaseWait
                     bl              Display_drawAlignedString

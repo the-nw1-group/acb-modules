@@ -9,6 +9,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_DISPLAYDRIVER_I2C
+
 @ Display drivers for I2C - current implementation doesn't use DMA, and all function calls block until completed
 
     module(DisplayDriverI2C)
@@ -47,7 +49,7 @@ DisplayDriverI2C_sendCommands:
                     ble             8f
                     movs            r5, r0                          @ save off parameters
                     movs            r6, r1
-                    movs            r0, #DISPLAY_ADDR
+                    movs            r0, #ACB_DISPLAY_ADDR
                     lsls            r1, r1, #17                     @ send 2 bytes for every command
                     ldr             r2, = #I2C_CR2_AUTOEND
                     orrs            r1, r1, r2
@@ -77,7 +79,7 @@ DisplayDriverI2C_sendCommands:
 DisplayDriverI2C_sendCommand:
                     push            {r5-r7, lr}
                     movs            r5, r0
-                    movs            r0, #DISPLAY_ADDR
+                    movs            r0, #ACB_DISPLAY_ADDR
                     ldr             r1, = #(2<<16) | I2C_CR2_AUTOEND @ write data bytes
                     bl              _doStart
                     cmp             r0, #ERROR
@@ -96,7 +98,7 @@ DisplayDriverI2C_sendCommandAndParameter:
                     push            {r5-r7, lr}
                     movs            r5, r0
                     movs            r6, r1
-                    movs            r0, #DISPLAY_ADDR
+                    movs            r0, #ACB_DISPLAY_ADDR
                     ldr             r1, = #(4<<16) | I2C_CR2_AUTOEND @ write data bytes
                     bl              _doStart
                     cmp             r0, #ERROR
@@ -127,21 +129,21 @@ DisplayDriverI2C_sendData:
 _sdi2c_sendDataBlockLoop:
                     cmp             r6, #255                        @ do we need to send more than one block of data?
                     bgt             0f
-                    ldr             r1, = #I2C_CR2_AUTOEND | DISPLAY_ADDR   @ last block to send, so we autoend
+                    ldr             r1, = #I2C_CR2_AUTOEND | ACB_DISPLAY_ADDR   @ last block to send, so we autoend
                     lsls            r2, r6, #16                     @ shift length of remaining bytes into the correct place
                     orrs            r1, r1, r2
                     movs            r4, r6                          @ byte counter
                     movs            r6, #0                          @ set 0 bytes left to send
                     b               1f
 0:
-                    ldr             r1, = #(255<<16) | I2C_CR2_RELOAD | DISPLAY_ADDR    @ send the max. no bytes in one block (255)
+                    ldr             r1, = #(255<<16) | I2C_CR2_RELOAD | ACB_DISPLAY_ADDR    @ send the max. no bytes in one block (255)
                     subs            r6, r6, #255                    @ and store reminder left in count
                     movs            r4, #255                        @ byte counter
 1:
                     cmp             r7, #1                          @ first time through?
                     bne             _sdi2c_nextBlocks               @ nope...
 _sdi2c_firstTime:
-                    movs            r0, #DISPLAY_ADDR               @ send start
+                    movs            r0, #ACB_DISPLAY_ADDR           @ send start
                     bl              _doStart
                     cmp             r0, #ERROR
                     beq             9f
@@ -317,5 +319,6 @@ waitForStatusTimeout = 0x1000
                     movs            r0, #SUCCESS
                     bx              lr
 
+#endif
 
     .end

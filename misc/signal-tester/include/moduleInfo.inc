@@ -73,9 +73,25 @@
 #define ACB_DISPLAY_I2C_SCL             1
 #define ACB_DISPLAY_I2C_TIMING          0x00901850                   /* See STSW-STM32126 for details */
 
-#include "display/ssd1306.inc"
-#include "display/displayDriverI2C.inc"
-#include "display/display.inc"
+#define ACB_DISPLAY_RES_GPIOBASE        GPIOA_BASE
+#define ACB_DISPLAY_RES_PIN             4
+
+/*
+ * Other Display Constants
+ *
+ */
+
+#define ACB_DISPLAY_ADDR                0x78
+#define ACB_DISPLAY_WIDTH               128
+#define ACB_DISPLAY_HEIGHT              32
+
+#include "acb/ssd1306.inc"
+#include "acb/displayDriverI2C.inc"
+#include "acb/display.inc"
+#include "acb/font.inc"
+
+#define DISPLAY_ROW_HEIGHT  16
+#define DISPLAY_ROW_FLAG    ((DISPLAY_ROW_HEIGHT << DISPLAY_ROW_SHIFT))
 
 /*
  * Define EEPROM type, driver and connection to device
@@ -102,6 +118,7 @@
 
 #define ACB_WS2812_DRIVER                   3
 #define ACB_WS2812_IRQ_REDIRECT_FN          FsmCommon_interceptIsr
+
 #include "acb/ws2812.inc"
 
 /*
@@ -109,7 +126,7 @@
  *
  */
 
-#define ACB_ALARM_SLOTS 2
+#define ACB_ALARM_SLOTS 3
 
 #include "acb/msCounter.inc"
 
@@ -130,9 +147,6 @@
 #define SIGTEST_BUTTON_ACTION           9
 #define SIGTEST_BUTTON_RIGHT            10
 
-#define SIGTEST_LCD_RES_GPIOBASE        GPIOA_BASE
-#define SIGTEST_LCD_RES                 4
-
 #define SIGTEST_RGB_GPIOBASE            GPIOA_BASE
 #define SIGTEST_R                       0
 #define SIGTEST_G                       1
@@ -152,18 +166,9 @@
 #define ACB_SIB_MASK            ((1<<SIGTEST_BUTTON_LEFT)|(1<<SIGTEST_BUTTON_ACTION)|(1<<SIGTEST_BUTTON_RIGHT))
 #define ACB_SIB_STATE_DEPTH     8
 #define ACB_SIB_INVERT          1
-#define ACB_SID_ALARM_SLOT      2
+#define ACB_SID_ALARM_SLOT      0
 
 #include "acb/simpleInputDebounce.inc"
-
-/*
- * Display Constants
- *
- */
-
-#define DISPLAY_ADDR                    0x78
-#define DISPLAY_WIDTH                   128
-#define DISPLAY_HEIGHT                  32
 
 /*
  * Defines for various functions

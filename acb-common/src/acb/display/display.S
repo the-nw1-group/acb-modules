@@ -8,7 +8,8 @@
  */
 
 #include "moduleInfo.inc"
-#include "display/font.inc"
+
+#ifdef ACB_USE_DISPLAY
 
 @ Display routines
 
@@ -20,6 +21,11 @@
     .extern         DisplayType_showDisplay                         @ Turn on the display
     .extern         DisplayType_hideDisplay                         @ Turn off the display
     .extern         DisplayType_setContrast                         @ Set the display contrast
+
+   private_data(Display_private)
+
+fontPtr:            .word           0                               @ pointer to currently selected font
+
 
     public_function(Display_init)
 
@@ -50,7 +56,7 @@ Display_showDisplay:
     public_function(Display_hideDisplay)
 
 @ bool Display_hideDisplay(void)
-@   Turn the display on. Returns TRUE if the initialisation was successful, otherwise FALSE
+@   Turn the display off. Returns TRUE if the initialisation was successful, otherwise FALSE
 
 Display_hideDisplay:
                     b               DisplayType_hideDisplay
@@ -81,6 +87,23 @@ Display_blitDisplayBuffer:
 Display_clearDisplayBuffer:
                     b               DisplayType_clearBuffer
 
+    public_function(Display_fillDisplayBuffer)
+
+@ void Display_fillDisplayBuffer(int pattern)
+@   fill the contents of the display buffer with the pattern supplied. This doesn't write to the display
+
+Display_fillDisplayBuffer:
+                    b               DisplayType_fillBuffer
+
+    public_function(Display_generateTestPattern)
+
+@ void Display_generateTestPattern(void)
+@   generate a test pattern in the display buffer. This doesn't write to the display
+
+Display_generateTestPattern:
+                    ldr             r0, = #0xAA55AA55
+                    b               DisplayType_fillBuffer
+
     public_function(Display_drawPixel)
 
 @ int Display_drawPixel(int x, int y, bool colour)
@@ -88,13 +111,14 @@ Display_clearDisplayBuffer:
 @   Returns a display status
 
 Display_drawPixel:
-                    mov             r12, lr                         @ save off link return
-                    movs            r5, r0                          @ save off x
+                    mov             r12, lr
+                    movs            r3, r0                          @ save off x
                     bl              Display_checkPixelRange
                     cmp             r0, #DISPLAY_OK
                     bne             9f
-                    movs            r0, r5                          @ restore x
+                    movs            r0, r3                          @ restore x
                     b               DisplayType_drawPixel
+                    movs            r0, #DISPLAY_OK
 9:
                     bx              r12
 
@@ -105,13 +129,14 @@ Display_drawPixel:
 @   Returns a display status
 
 Display_setPixel:
-                    mov             r12, lr                         @ save off link return
-                    movs            r5, r0                          @ save off x
+                    mov             r12, lr
+                    movs            r3, r0                          @ save off x
                     bl              Display_checkPixelRange
                     cmp             r0, #DISPLAY_OK
                     bne             9f
-                    movs            r0, r5                          @ restore x
+                    movs            r0, r3                          @ restore x
                     b               DisplayType_setPixel
+                    movs            r0, #DISPLAY_OK
 9:
                     bx              r12
 
@@ -122,13 +147,13 @@ Display_setPixel:
 @   Returns a display status
 
 Display_clearPixel:
-                    mov             r12, lr                         @ save off link return
-                    movs            r5, r0                          @ save off x
+                    movs            r3, r0                          @ save off x
                     bl              Display_checkPixelRange
                     cmp             r0, #DISPLAY_OK
                     bne             9f
-                    movs            r0, r5                          @ restore x
+                    movs            r0, r3                          @ restore x
                     b               DisplayType_clearPixel
+                    movs            r0, #DISPLAY_OK
 9:
                     bx              r12
 
@@ -156,7 +181,7 @@ Display_drawHorizontalLine:
                     movs            r2, r7
                     bl              DisplayType_drawPixel
                     adds            r5, r5, #1
-                    cmp             r5, #DISPLAY_WIDTH              @ if over the DISPLAY_WIDTH, return clipped
+                    cmp             r5, #ACB_DISPLAY_WIDTH          @ if over the ACB_DISPLAY_WIDTH, return clipped
                     bge             8f
                     subs            r4, r4, #1
                     bne             0b
@@ -192,7 +217,7 @@ Display_drawVerticalLine:
                     movs            r2, r7
                     bl              DisplayType_drawPixel
                     adds            r6, r6, #1
-                    cmp             r6, #DISPLAY_HEIGHT             @ if over the DISPLAY_HEIGHT, return clipped
+                    cmp             r6, #ACB_DISPLAY_HEIGHT         @ if over the ACB_DISPLAY_HEIGHT, return clipped
                     bge             8f
                     subs            r4, r4, #1
                     bne             0b
@@ -335,11 +360,32 @@ Display_drawFilledRectangle:
 Display_fillRow:
                     push            {r7, lr}
                     sub             sp, sp, #8
-                    movs            r7, #DISPLAY_ROW_HEIGHT
+                    rev16           r7, r1
+                    uxtb            r7, r7
                     str             r7, [sp]
                     bl              Display_drawFilledRectangle     @ fill rectangle
                     add             sp, sp, #8
                     pop             {r7, pc}
+
+    public_function(Display_setFont)
+
+@ void Display_setFont(__font_data* font)
+@   sets the font for any text/character drawing operations
+
+Display_setFont:
+                    ldr             r1, = #fontPtr
+                    str             r0, [r1]
+                    bx              lr
+
+    public_function(Display_getFont)
+
+@ __font_data* Display_setFont()
+@   gets the font for any text/character drawing operations
+
+Display_getFont:
+                    ldr             r1, = #fontPtr
+                    ldr             r0, [r1]
+                    bx              lr
 
     public_function(Display_drawChar)
 
@@ -412,18 +458,138 @@ Display_drawAlignedString:
 0:
                     cmp             r5, #DISPLAY_CENTER_ALIGN       @ center align?
                     bne             1f
-                    movs            r5, #DISPLAY_WIDTH
+                    movs            r5, #ACB_DISPLAY_WIDTH
                     subs            r5, r5, r0
                     lsrs            r0, r5, #1
                     bl              Display_drawStringData
                     b               9f
 1:
-                    movs            r5, #DISPLAY_WIDTH              @ right align
+                    movs            r5, #ACB_DISPLAY_WIDTH          @ right align
                     subs            r5, r5, r0
                     movs            r0, r5
                     bl              Display_drawStringData
 9:
                     pop             {r5-r7, pc}
+8:
+                    movs            r0, #DISPLAY_OK
+                    b               9b
+
+    static_data(Display_drawBitmapMasks)
+Display_drawBitmapMasks:
+                    .byte           255, 254, 252, 248, 240, 224, 192, 128
+
+    public_function(Display_drawBitmap)
+
+@ int Display_drawBitmap(int x, int yOrRow, Bitmap* bitmap)
+@   draw a bitmap at the supplied position. Returns a display status
+
+Display_drawBitmap:
+                    push            {r3-r7, lr}
+                    mov             r4, r8                          @ save r8-r11
+                    mov             r5, r9
+                    mov             r6, r10
+                    mov             r7, r11
+                    push            {r4-r7}
+                    sub             sp, sp, #8
+
+                    bl              Display_getPixelY               @ convert Y to pixel, if it's a row value
+                    movs            r5, r0                          @ save x
+                    bl              Display_checkPixelRange         @ check initial x and y are in range
+                    cmp             r0, #DISPLAY_OK
+                    bne             9f
+                    str             r5, [sp]
+                    str             r1, [sp, #4]
+
+                    ldrh            r6, [r2, #BitmapHeader_DisplayWidth] @ check the image has at least width, and height!
+                    cmp             r6, #0
+                    beq             8f
+                    ldrh            r5, [r2, #BitmapHeader_DisplayHeight]
+                    cmp             r5, #0
+                    beq             8f
+                    ldrh            r4, [r2, #BitmapHeader_DataWidth]
+                    cmp             r6, r4
+                    beq             0f
+
+                    ldr             r3, = #Display_drawBitmapMasks  @ get the bitmap mask for the last byte if it's
+                    subs            r0, r4, r6                      @ not a multiple of 8
+                    ldrb            r3, [r3, r0]
+                    lsls            r3, r3, #8
+                    mov             r10, r3
+0:                                                                  @ at this point:
+                    lsrs            r4, r4, #3                      @ r4 = data width in bytes
+                    mov             r8, r6                          @ r8 = bitmap width in pixels
+                    movs            r6, #0                          @ r6 = row counter
+                    mov             r11, r6                         @ r11 = result status
+                    mov             r9, r5                          @ r9 = height
+                    movs            r7, r2
+                    adds            r7, r7, #BitmapData             @ r7 = >bitmapData
+                                                                    @ r10 = bitmap mask for last row byte
+                                                                    @ r4 = data width in bytes
+                                                                    @ frame: [sp] = x, [sp, #4] = y
+__db_drawRow:
+                    cmp             r6, r9
+                    beq             __db_returnStatus
+                    movs            r5, #0                          @ column counter
+__db_drawCol:
+                    cmp             r5, r4
+                    beq             __db_nextRow
+
+                    lsls            r0, r5, #3                      @ are we on the last byte and is the bitmap width
+                    adds            r0, r0, #8                      @ in pixels not a multiple of 8
+                    cmp             r0, r8
+                    bgt             __db_drawClipped
+
+                    mov             r0, r4                          @ calc offset into data
+                    muls            r0, r0, r6
+                    adds            r3, r5, r0
+                    ldrb            r3, [r7, r3]                    @ get byte to draw
+                    ldr             r0, [sp]                        @ get x position
+                    lsls            r1, r5, #3
+                    adds            r0, r0, r1
+                    ldr             r1, [sp, #4]                    @ get y position
+                    adds            r1, r1, r6
+                    movs            r2, #1                          @ don't invert
+                    bl              DisplayType_drawHorizontalByte
+__db_checkStatus:
+                    mov             r3, r11                         @ save status
+                    orrs            r3, r3, r0
+                    mov             r11, r3
+                    movs            r1, #DISPLAY_CLIPPED_VERT       @ if vertically clipped, no point printing the
+                    tst             r0, r1                          @ rest of this bitmap
+                    bne             __db_returnStatus
+                    movs            r1, #DISPLAY_CLIPPED_HORZ       @ if horizontally clipped, move to next row
+                    tst             r1, r0
+                    bne             __db_nextRow
+                    adds            r5, r5, #1
+                    b               __db_drawCol
+__db_drawClipped:
+                    mov             r0, r4                          @ calc offset into data
+                    muls            r0, r0, r6
+                    adds            r3, r5, r0
+                    ldrb            r3, [r7, r3]                    @ get byte to draw
+                    mov             r0, r10                         @ add mask
+                    orrs            r3, r3, r0
+                    ldr             r0, [sp]                        @ get x position
+                    lsls            r1, r5, #3
+                    adds            r0, r0, r1
+                    ldr             r1, [sp, #4]                    @ get y position
+                    adds            r1, r1, r6
+                    movs            r2, #1                          @ don't invert
+                    bl              DisplayType_drawHorizontalClippedByte
+                    b               __db_checkStatus
+__db_nextRow:
+                    adds            r6, r6, #1
+                    bne             __db_drawRow
+__db_returnStatus:
+                    mov             r0, r11                         @ return the clipping status
+9:
+                    add             sp, sp, #8
+                    pop             {r4-r7}                         @ restore r8-r10
+                    mov             r8, r4
+                    mov             r9, r5
+                    mov             r10, r6
+                    mov             r11, r7
+                    pop             {r3-r7, pc}
 8:
                     movs            r0, #DISPLAY_OK
                     b               9b
@@ -444,7 +610,7 @@ Display_checkPixelRange:
                     movs            r0, #DISPLAY_CLIPPED_HORZ
                     b               1f
 0:
-                    cmp             r7, #DISPLAY_WIDTH              @ is x > DISPLAY_WIDTH
+                    cmp             r7, #ACB_DISPLAY_WIDTH          @ is x > ACB_DISPLAY_WIDTH
                     blt             1f
                     movs            r0, #DISPLAY_CLIPPED_HORZ
 1:
@@ -453,7 +619,7 @@ Display_checkPixelRange:
                     orrs            r0, r0, r6
                     b               3f
 2:
-                    cmp             r1, #DISPLAY_WIDTH              @ is y > DISPLAY_HEIGHT
+                    cmp             r1, #ACB_DISPLAY_WIDTH          @ is y > ACB_DISPLAY_HEIGHT
                     blt             3f
                     orrs            r0, r0, r6
 3:
@@ -467,18 +633,19 @@ Display_checkPixelRange:
 @   can't be called via C/C++
 
 Display_getPixelY:
-noRows = (DISPLAY_HEIGHT / 16)
-                    push            {r7, lr}
+                    push            {r3-r4, r7, lr}
                     cmp             r1, #0                          @ if y is zero, just return
                     beq             9f
-                    ldr             r7, = #DISPLAY_ROW              @ if the DISPLAY_ROW bit isn't set, then just return
+                    ldr             r7, = #DISPLAY_ROW_MASK         @ if the DISPLAY_ROW bits aren't set, then just return
                     tst             r1, r7
                     beq             9f
-                    movs            r7, #(noRows-1)
-                    ands            r1, r1, r7
-                    lsls            r1, r1, #4
+                    movs            r4, r1                          @ convert row into pixel offset
+                    bics            r4, r4, r7                      @ get just the y value
+                    ands            r1, r1, r7                      @ get the height of the rows
+                    lsrs            r1, r1, #8
+                    muls            r1, r1, r4
 9:
-                    pop             {r7, pc}
+                    pop             {r3-r4, r7, pc}
 
     private_function(Display_drawFontGlyph)
 
@@ -502,7 +669,8 @@ charDataOffset  = FontGlyphEntry_CharDataOffset                     @ blank top 
                     push            {r4-r6}
 
                     uxtb            r3, r3                          @ zero extend character
-                    ldr             r7, = #__font_data
+                    ldr             r7, = #fontPtr
+                    ldr             r7, [r7]
                     ldrh            r6, [r7, #minChar]              @ check if character is out of range...
                     cmp             r3, r6
                     blt             8f
@@ -620,5 +788,7 @@ Display_getStringWidth:
 9:
                     movs            r0, r4                          @ return the width
                     pop             {r3-r7, pc}
+
+#endif
 
     .end

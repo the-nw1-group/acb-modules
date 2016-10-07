@@ -189,12 +189,12 @@ FsmMenus_initMenu:
                     movs            r7, r2
                     bl              Display_clearDisplayBuffer
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     movs            r3, r7
                     bl              Display_drawAlignedString
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, [r5]
                     bl              Display_drawString
@@ -252,13 +252,13 @@ FsmMenus_handleMenu:
                     b               actionReturn                    @ same menu
 8:
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
 
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     lsls            r6, r6, #3
                     ldr             r7, [r7]

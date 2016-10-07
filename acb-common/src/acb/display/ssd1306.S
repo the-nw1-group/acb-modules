@@ -9,6 +9,8 @@
 
 #include "moduleInfo.inc"
 
+#ifdef ACB_USE_SSD1306
+
 @ Display drivers for SSD1306 based display
 
     module(Ssd1306)
@@ -19,7 +21,7 @@
     private_data(Ssd1306_private)
 
 _buffer:
-__displayBufferSize     = (DISPLAY_WIDTH * DISPLAY_HEIGHT) / 8
+__displayBufferSize     = (ACB_DISPLAY_WIDTH * ACB_DISPLAY_HEIGHT) / 8
                     .space          __displayBufferSize, 0x00       @ buffer for display
 
 @ Fundamental Command Table
@@ -79,22 +81,40 @@ __setChargePumpSetting  = 0x8D
 
 __ssd1306_init_data:
                     .byte           __setDisplayOff
-                    .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0x82
+                    .byte           __setDisplayClockDivideRatioOscillatorFrequency, 0xF0
+#if ACB_DISPLAY_HEIGHT == 32
                     .byte           __setMultiplexRatio, 0x1F
+#elif ACB_DISPLAY_HEIGHT == 64
+                    .byte           __setMultiplexRatio, 0x3F
+#else
+#error Unsupported ACB_DISPLAY_HEIGHT
+#endif
                     .byte           __setDisplayOffset, 0x00
                     .byte           __setDisplayStartLineBase
                     .byte           __setChargePumpSetting, 0x14
                     .byte           __setMemoryAddressingMode, 0x00
+#if  ACB_DISPLAY_HEIGHT == 32
                     .byte           __setPageAddress, 0x00, 0x03
+#endif
                     .byte           __setSegmentRemap127
                     .byte           __setComOutputScanDirectionRemap
                     .byte           __setComPinsHardwareConfiguration, 0x12
-                    .byte           __setContrastControl, 0x10
+                    .byte           __setContrastControl, 0x60
                     .byte           __setPreChargePeriod, 0x22
-                    .byte           __setVComhDeselectLevel, 0x30
+                    .byte           __setVComhDeselectLevel, 0x20
                     .byte           __setEntireDisplayOn
                     .byte           __setNormalDisplay
 __ssd1306_init_data_end:
+                                                                    @ each start up command's size is listed in this
+                                                                    @ word. a 0 for 1 byte command, and a 1 for a 2
+                                                                    @ byte command.
+#if ACB_DISPLAY_HEIGHT == 32
+__ssd1305_init_data_size = 0b0011110011101110
+#elif ACB_DISPLAY_HEIGHT == 64
+__ssd1305_init_data_size = 0b0001111001101110
+#else
+#error Unsupported ACB_DISPLAY_HEIGHT
+#endif
 
     public_function(Ssd1306_init)
 
@@ -103,16 +123,36 @@ __ssd1306_init_data_end:
 
 Ssd1306_init:
                     push            {r7, lr}
-                    movs            r0, #100                        @ wait for 100ms, allowing the power supply to
-                    bl              MsCounter_waitFor               @ settle
-                    ldr             r7, = #SIGTEST_LCD_RES_GPIOBASE @ raise the RESET line
-                    movs            r0, #1<<SIGTEST_LCD_RES
+
+                    ldr             r2, = #ACB_DISPLAY_RES_GPIOBASE @ set LCD_RES# to be an output, medium speed
+                    ldr             r0, [r2, #GPIO_MODER_OFFSET]
+                    ldr             r1, = #1<<(ACB_DISPLAY_RES_PIN<<1)
+                    orrs            r0, r0, r1
+                    str             r0, [r2, #GPIO_MODER_OFFSET]
+                    ldr             r0, [r2, #GPIO_OSPEEDR_OFFSET]
+                    ldr             r1, = #1<<(ACB_DISPLAY_RES_PIN<<1)
+                    orrs            r0, r0, r1
+                    str             r0, [r2, #GPIO_OSPEEDR_OFFSET]
+                    movs            r0, #1<<ACB_DISPLAY_RES_PIN     @ force reset low
+                    str             r0, [r2, #GPIO_BRR_OFFSET]
+
+                    movs            r0, #100                        @ wait for at 100ms for the supply to settle
+                    bl              MsCounter_waitFor
+                    ldr             r7, = #ACB_DISPLAY_RES_GPIOBASE @ raise the RESET line
+                    movs            r0, #1<<ACB_DISPLAY_RES_PIN
                     str             r0, [r7, #GPIO_BSRR_OFFSET]
                     movs            r0, #1
                     bl              MsCounter_waitFor               @ wait for at least 3us, min we can do is 1ms
-                    ldr             r0, = #__ssd1306_init_data
+#if !defined(ACB_SEND_INIT_WITHOUT_DMA)
+                    ldr             r0, = #__ssd1306_init_data      @ we can use DMA to send the init commands
                     movs            r1, #(__ssd1306_init_data_end - __ssd1306_init_data)
                     bl              DisplayDrv_init
+#else
+                    movs            r0, #0                          @ can't use DMA, so we'll send the commands one, by
+                    movs            r1, #0                          @ one
+                    bl              DisplayDrv_init
+                    bl              Ssd1306_sendInitCommands
+#endif
 9:
                     pop             {r7, pc}
 
@@ -171,12 +211,20 @@ Ssd1306_blitBuffer:
 @   clear the contents of the display buffer. This doesn't write to the display
 
 Ssd1306_clearBuffer:
-                    ldr             r0, = #_buffer
-                    ldr             r1, = #(__displayBufferSize-4)
-                    movs            r2, #0
+                    movs            r0, #0
+                    b               Ssd1306_fillBuffer
+
+    public_function(Ssd1306_fillBuffer)
+
+@ void Ssd1306_fillBuffer(int pattern)
+@   fill the contents of the display buffer with the pattern supplied. This doesn't write to the display
+
+Ssd1306_fillBuffer:
+                    ldr             r1, = #_buffer
+                    ldr             r2, = #(__displayBufferSize-4)
 0:
-                    str             r2, [r0, r1]
-                    subs            r1, r1, #4
+                    str             r0, [r1, r2]
+                    subs            r2, r2, #4
                     bcs             0b
                     bx              lr
 
@@ -232,8 +280,23 @@ Ssd1306_clearPixel:
 @   returns a display status
 
 Ssd1306_drawHorizontalByte:
+                    mov             r12, r7
+                    ldr             r7, = #0xFF00
+                    orrs            r3, r3, r7
+                    mov             r7, r12
+                    b               Ssd1306_drawHorizontalClippedByte
+
+    public_function(Ssd1306_drawHorizontalClippedByte)
+
+@ int Ssd1306_drawHorizontalClippedByte(int x, int y, bool colour, short byteToWriteAndMask)
+@   draw a horiztonal byte into the display buffer, determined by the mask. This doesn't write to the display.
+@   Returns a display status. byteToWriteAndMask is comprised of the low byte of the byteToWrite, and the high
+@   byte is the mask, 1 to write the bit to the screen, 0 not to write that bit
+
+Ssd1306_drawHorizontalClippedByte:
                     push            {r3-r7, lr}
-                    movs            r7, #DISPLAY_OK                 @ set status...
+                    rev16           r7, r3                          @ get mask of which bits to draw
+                    lsls            r7, r7, #24                     @ and push to the last byte of the word
                     cmp             r2, #DISPLAY_BLACK              @ if colour is 0, then invert the byteToWrite
                     bne             0f
                     mvns            r3, r3
@@ -243,34 +306,39 @@ Ssd1306_drawHorizontalByte:
                     ands            r2, r2, r1
                     movs            r5, #0xf8                       @ and get which page
                     ands            r1, r1, r5
-                    lsls            r1, r1, #4                      @ and use that as an offset into our buffer memory for vertical
+                    lsls            r1, r1, #4                      @ and use that as an offset into our buffer memory
                     adds            r0, r0, r1                      @ and then add onto that the horiztonal offset
                     ldr             r1, = #_buffer
                     adds            r0, r0, r1
                     movs            r5, #0                          @ use as a counter
+                    movs            r4, #1                          @ destination mask
+                    lsls            r4, r4, r2
 2:
+                    lsls            r7, r7, #1                      @ check if we write this bit?
+                    bcc             3f
                     ldrb            r1, [r0, r5]                    @ copy the byte from the buffer
-                    movs            r4, #1                          @ get which bit to set/clear
-                    lsls            r4, r5
-                    ands            r4, r4, r3                      @ get bit
-                    lsrs            r4, r4, r5                      @ shift back to start
-                    lsls            r4, r4, r2                      @ shift to correct place in byte to write
-                    eors            r1, r1, r4                      @ set/clear bit
+                    lsrs            r3, r3, #1
+                    bcs             5f
+                    bics            r1, r1, r4                      @ clear the bit
+                    b               6f
+5:
+                    orrs            r1, r1, r4                      @ set the bit
+6:
                     strb            r1, [r0, r5]                    @ store the modified byte back
-
+3:
                     adds            r6, r6, #1
-                    cmp             r6, #DISPLAY_WIDTH
-                    bge             3f
+                    cmp             r6, #ACB_DISPLAY_WIDTH
+                    bge             4f
                     adds            r5, r5, #1
                     cmp             r5, #8
                     bge             1f
                     b               2b
-3:
-                    movs            r7, #DISPLAY_CLIPPED_HBIT       @ clipped whilst drawing...
-1:
-                    movs            r0, r7                          @ return status
+4:
+                    movs            r0, #DISPLAY_CLIPPED_HBIT       @ clipped whilst drawing...
                     pop             {r3-r7, pc}
-
+1:
+                    movs            r0, #DISPLAY_OK
+                    pop             {r3-r7, pc}
 
     public_function(Ssd1306_drawPageByte)
 
@@ -283,5 +351,42 @@ Ssd1306_drawPageByte:
                     ldr             r3, = #_buffer
                     strb            r2, [r3, r0]
                     bx              lr
+
+    private_function(Ssd1306_sendInitCommands)
+
+@ int Ssd1306_sendInitCommands(void)
+@   send the init commands to the display driver a command at a time.
+@   returns a display status
+
+Ssd1306_sendInitCommands:
+                    push            {r5-r7, lr}
+                    ldr             r7, =#__ssd1306_init_data
+                    movs            r6, #(__ssd1306_init_data_end - __ssd1306_init_data)
+                    ldr             r5, =#__ssd1305_init_data_size
+0:
+                    lsrs            r5, r5, #1
+                    bcc             sic_sendByte
+sic_sendShort:
+                    ldrb            r0, [r7]
+                    ldrb            r1, [r7, #1]
+                    bl              DisplayDrv_sendCommandAndParameter
+                    cmp             r0, #ERROR
+                    beq             9f
+                    adds            r7, r7, #2
+                    subs            r6, r6, #2
+                    b               1f
+sic_sendByte:
+                    ldrb            r0, [r7]
+                    bl              DisplayDrv_sendCommand
+                    cmp             r0, #ERROR
+                    beq             9f
+                    adds            r7, r7, #1
+                    subs            r6, r6, #1
+1:
+                    bne             0b
+9:
+                    pop             {r5-r7, pc}
+
+#endif
 
     .end
