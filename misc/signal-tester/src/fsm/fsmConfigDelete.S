@@ -174,7 +174,7 @@ FsmConfigDelete_initDeleteCommon:
                     movs            r7, r1
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     movs            r3, r7
                     bl              Display_drawAlignedString
@@ -193,12 +193,12 @@ FsmConfigDelete_initDeleteCommon:
 FsmConfigDelete_areYouSureCommon:
                     push            {r0-r1, r7, lr}
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     pop             {r3}
                     bl              Display_drawString

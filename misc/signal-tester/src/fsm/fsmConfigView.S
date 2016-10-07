@@ -96,7 +96,7 @@ FsmConfigView_initViewCommon:
                     movs            r7, r1
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_LEFT_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     movs            r3, r7
                     bl              Display_drawAlignedString
@@ -200,9 +200,9 @@ FsmConfigView_showRecordIndicator:
 drawValueOffset = 74
                     push            {r7, lr}
                     movs            r0, #drawValueOffset            @ clear the area
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH - drawValueOffset
+                    movs            r3, #ACB_DISPLAY_WIDTH - drawValueOffset
                     sub             sp, sp, #8
                     movs            r7, #DISPLAY_ROW_HEIGHT
                     str             r7, [sp]
@@ -232,7 +232,7 @@ drawValueOffset = 74
                     bl              itoa
 
                     movs            r0, #1<<DISPLAY_RIGHT_ALIGN_BIT
-                    ldr             r1, = #(0 | DISPLAY_ROW)        @ write to the buffer
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)        @ write to the buffer
                     movs            r2, #1
                     ldr             r3, = #FsmConfigView_convertBuffer
                     bl              Display_drawAlignedString
@@ -246,9 +246,9 @@ drawValueOffset = 74
 FsmConfigView_showRecordDetails:
                     push            {r4-r7, lr}
                     movs            r0, #0                          @ clear the bottom row
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
 
                     ldr             r7, = #FsmConfigView_noRecords
@@ -271,7 +271,7 @@ FsmConfigView_showRecordDetails:
 9:
                     movs            r3, r0
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     bl              Display_drawString
                     pop             {r4-r7, pc}

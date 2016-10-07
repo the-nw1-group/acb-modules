@@ -67,7 +67,7 @@ FsmHelp_initHelp:
                     push            {r7, lr}
                     bl              Display_clearDisplayBuffer      @ display title
                     movs            r0, #DISPLAY_CENTER_ALIGN
-                    ldr             r1, = #(0 | DISPLAY_ROW)
+                    ldr             r1, = #(0 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #title
                     bl              Display_drawAlignedString
@@ -92,12 +92,12 @@ FsmHelp_exitHelp:
                     bne             9f
 
                     movs            r0, #0                          @ display the press any key button
-                    ldr             r1, = #(1 | DISPLAY_ROW)        @ (yes a bit of a kludge)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)   @ (yes a bit of a kludge)
                     movs            r2, #0
-                    movs            r3, #DISPLAY_WIDTH
+                    movs            r3, #ACB_DISPLAY_WIDTH
                     bl              Display_fillRow
                     movs            r0, #0
-                    ldr             r1, = #(1 | DISPLAY_ROW)
+                    ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #1
                     ldr             r3, = #help99
                     bl              Display_drawString
