@@ -15,7 +15,7 @@
  *      sync jump width = 1*Tq
  *      PROP_SEQ+PHASE_SEG1 = 11*Tq
  *      PHASE_SEG2 = 4*Tq
- *      Baud rate prescale = 24/Fosc (based on a clock speed of 48Mhz)
+ *      Baud rate prescale = 24/Fosc (based on a clock speed of 48Mhz) or predefined before including this fil
  *
  */
 
@@ -24,7 +24,9 @@
 #define ACB_CAN_SJW     0
 #define ACB_CAN_BS1     10
 #define ACB_CAN_BS2     3
+#if !defined(ACB_CAN_BRP)
 #define ACB_CAN_BRP     23
+#endif
 
 /*
  * Port definitions
