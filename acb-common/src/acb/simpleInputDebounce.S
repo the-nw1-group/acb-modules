@@ -30,9 +30,9 @@
     .extern         MsCounter_waitFor                               @ wait for a number of milliseconds
 
 SID_SAMPLE_TIME = 4
-SID_ALARM_SLOT  = ACB_SID_ALARM_SLOT
-#if SID_ALARM_SLOT > ACB_ALARM_SLOTS
-#error Not enough alarm slots defined for async write operation. Adjust ACB_ALARM_SLOTS
+SID_ALARM_SLOT = ACB_SID_ALARM_SLOT
+#if ACB_SID_ALARM_SLOT >= ACB_ALARM_SLOTS
+#error Not enough alarm slots defined for simple input debouncing. Adjust ACB_ALARM_SLOTS
 #endif
 
     private_data(SimpleInputDebounce_privateData)
@@ -47,7 +47,7 @@ Sid_stateBuffer:    .space          2 * ACB_SIB_STATE_DEPTH, 0      @ state buff
 
 SimpleInputDebounce_setup:
                     push            {r7, lr}
-                    movs            r0, #SID_ALARM_SLOT             @ set an alarm in ACB_EEPROM_WRITETIME time
+                    movs            r0, #SID_ALARM_SLOT             @ set an alarm in SID_SAMPLE_TIME time
                     movs            r1, #SID_SAMPLE_TIME
                     ldr             r2, = #(SimpleInputDebounce_sample+1)
                     bl              MsCounter_alarmIn

@@ -16,6 +16,8 @@
 #include "acb/flash.inc"
 #include "acb/optionBytes.inc"
 
+#include "constants.inc"
+
 /*
  * Private bootloader include file
  *
@@ -43,12 +45,7 @@
 #define ACB_CAN_USEPORTB 1
 #define ACB_CAN_USEOTHER 2
 
-/*
- * Change baud rate based on 36Mhz clock, which is the max speed for APB1
- */
-
 #define ACB_CANPORT ACB_CAN_USEPORTA
-#define ACB_CAN_BRP 17
 
 #include "acb/can.inc"
 

@@ -17,7 +17,10 @@
  * bytes) for the exception and core peripherial devices,  and usually have 4K pages (unlike the low density M0 devices
  * that have 1K pages). So the location of the CBUS parameter block needs to be at least 4628 bytes from the nominal
  * application origin (0x08000000). The parameter block is therefore placed at location 0x1214 (4628) after the
- * application origin, so that it's in a common location across all cortex devices.
+ * application origin, so that it's in a common location across all cortex devices. 
+ *
+ * If CBUS_MOD_VARS changes then modify MODULE_NAME in cbusModuleParameters.S file. If the FLASH_VTOR changes, then 
+ * modify LOAD_ADDRESS in cbusModuleParameters.S file.
  *
  * This does mean that this creates a gap in the application image on m0 devices (as they only have a 32 entry vector 
  * table, or 128 bytes, with the same set of exception handlers as the other cortex devices, making 192 bytes), in

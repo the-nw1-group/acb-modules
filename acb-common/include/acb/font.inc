@@ -8,14 +8,3 @@
  */
 
 #define ACB_USE_FONT
-
-FontHeader_Size                 = 8
-FontHeader_IdOffset             = 0
-FontHeader_InfoOffset           = 1
-FontHeader_MinCharOffset        = 2
-FontHeader_MaxCharOffset        = 4
-FontHeader_CharHeightOffset     = 6
-
-FontGlyphEntry_Size             = 4
-FontGlyphEntry_CharWidthOffset  = 0
-FontGlyphEntry_CharDataOffset   = 0

@@ -123,6 +123,11 @@
     <xsl:call-template name="default-message-handlers"/>
     <xsl:call-template name="handle-cbus-message"/>
     <xsl:call-template name="send-cbus-message"/>
+    
+#ifdef CBUS_USE_MESSAGE_ACRONYM_DECODE
+    <xsl:call-template name="message-name-decode"/>
+#endif    
+    
 #endif
 
     .end
@@ -458,5 +463,45 @@ CBUS_sendMessage_<xsl:value-of select="$arg-format"/>:
         </xsl:otherwise></xsl:choose>
                     
     </xsl:template>
+
+<!-- template name send-cbus-message - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <xsl:template name="message-name-decode">
+    static_data(__cbus_name_strings)
+
+__cbus_name_strings:
+<xsl:apply-templates select="message[compare(acronym,'RESERVED')!=0]" mode="message-name">
+            <xsl:sort select="f:hexToDec(opcode)" order="ascending" data-type="number"/>
+        </xsl:apply-templates>__RESERVED_name:    .string         "RESERVED"
+
+    static_data(__cbus_name_offset)
+
+__cbus_name_offset:<xsl:apply-templates select="message" mode="message-name-offset">
+            <xsl:sort select="f:hexToDec(opcode)" order="ascending" data-type="number"/>
+        </xsl:apply-templates>
+
+    public_function(CBUS_getAcronym)
+
+@ const char* CBUS_getAcronym(byte opCode)
+@   Returns the acronym for a given op-code
+
+CBUS_getAcronym:
+                    ldr             r1, = #__cbus_name_offset
+                    lsls            r0, r0, #2
+                    ldr             r0, [r1, r0]
+                    bx              lr
+    </xsl:template>
+
+<!-- template match message (message name) - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <xsl:template match="message" mode="message-name">
+<xsl:value-of select="concat('__',acronym,'_name:')"/><xsl:value-of select="f:repeat-string(' ', 12 - string-length(acronym))"/>.string         "<xsl:value-of select="acronym"/>"
+</xsl:template>
     
+<!-- template match message (message name offset)  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <xsl:template match="message" mode="message-name-offset">
+                    .word           <xsl:value-of select="concat('__',acronym,'_name')"/>
+</xsl:template>
+
 </xsl:transform>
