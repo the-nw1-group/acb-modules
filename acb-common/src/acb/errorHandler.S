@@ -41,6 +41,7 @@ __svcHandler:
                     beq             2f                              @ redirect, as beq jump range too short
                     bx              lr                              @ if not ACB_FATAL_ERROR return
 2:
+                    mov             r1, lr
                     bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
                                                                     @ expect to return here...
 
@@ -51,6 +52,7 @@ __svcHandler:
 
 System_onClockFail:
                     movs            r0, #ACB_ERROR_CLOCKFAIL
+                    mov             r1, lr
                     bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
                                                                     @ expect to return here...
 
@@ -63,9 +65,9 @@ System_onClockFail:
 
 __defaultHandler:
                     movs            r0, #ACB_ERROR_IN_DEFAULT_HANDLER
+                    mov             r1, lr
                     bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
                                                                     @ expect to return here...
-
 #endif
 
 #if defined(ACB_ERRORHANDLER_HANDLEFAULTS)
@@ -77,6 +79,7 @@ __defaultHandler:
 
 __nmiHandler:
                     movs            r0, #ACB_ERROR_NMI
+                    mov             r1, lr
                     bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
                                                                     @ expect to return here...
 
@@ -87,6 +90,7 @@ __nmiHandler:
 
 __hardFaultHandler:
                     movs            r0, #ACB_ERROR_HARD_FAULT
+                    mov             r1, lr
                     bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
                                                                     @ expect to return here...
 
@@ -99,6 +103,7 @@ __hardFaultHandler:
 
 __memManageHandler:
                     movs            r0, #ACB_ERROR_MEM_MANAGE
+                    mov             r1, lr
                     bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
                                                                     @ expect to return here...
 
@@ -109,6 +114,7 @@ __memManageHandler:
 
 __busFaultHandler:
                     movs            r0, #ACB_ERROR_BUS_FAULT
+                    mov             r1, lr
                     bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
                                                                     @ expect to return here...
 
@@ -119,6 +125,7 @@ __busFaultHandler:
 
 __usageFaultHandler:
                     movs            r0, #ACB_ERROR_USAGE_FAULT
+                    mov             r1, lr
                     bl              ErrorHandler_handle             @ uses bl as b range too short - although we don't
                                                                     @ expect to return here...
 #endif
@@ -129,7 +136,7 @@ __usageFaultHandler:
 
     public_override(ErrorHandler_handle)
 
-@ void ErrorHandler_handle(int errorCode)
+@ void ErrorHandler_handle(int errorCode, long lr)
 @   Last chance fatal error handler, in release flash GREEN and YELLOW, otherwise just hang. This assumes that at least
 @   Acb_init has been called successfully.
 
