@@ -86,6 +86,53 @@ NVIC_disableIRQ:
                     str             r1, [r0]
                     bx              lr
 
+    av_public_function(NVIC_getPendingIRQ)
+
+@ void NVIC_getPendingIRQ(int irq)
+@   Reads the pending register in the NVIC and returns the pending bit for the specified interrupt
+
+NVIC_getPendingIRQ:
+                    movs            r1, #0
+                    lsls            r1, r1, r0
+                    movs            r0, #0x1F
+                    ands            r0, r0, r1
+                    ldr             r2, = #NVIC_ISPR
+                    ldr             r1, [r2]
+                    tst             r0, r1
+                    bne             0f
+                    bx              lr
+0:
+                    movs            r0, #0
+                    bx              lr
+
+    av_public_function(NVIC_setPendingIRQ)
+
+@ void NVIC_setPendingIRQ(int irq)
+@   Sets the pending bit of an external interrupt.
+
+NVIC_setPendingIRQ:
+                    movs            r1, #0
+                    lsls            r1, r1, r0
+                    movs            r0, #0x1F
+                    ands            r0, r0, r1
+                    ldr             r2, = #NVIC_ISPR
+                    str             r0, [r2]
+                    bx              lr
+
+    av_public_function(NVIC_clearPendingIRQ)
+
+@ void NVIC_clearPendingIRQ(int irq)
+@   Clears the pending bit of an external interrupt.
+
+NVIC_clearPendingIRQ:
+                    movs            r1, #0
+                    lsls            r1, r1, r0
+                    movs            r0, #0x1F
+                    ands            r0, r0, r1
+                    ldr             r2, = #NVIC_ICPR
+                    str             r0, [r2]
+                    bx              lr
+
     av_public_function(NVIC_setPriority)
 
 @ void NVIC_setPriority(int irq, uint priority)

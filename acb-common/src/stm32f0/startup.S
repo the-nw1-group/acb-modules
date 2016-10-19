@@ -115,6 +115,41 @@ __vectorMap:
     .word           __usart34IRQHandler
     .word           __cecCanIRQHandler
     .word           __usbIRQHandler
+ #elif defined(STM32F030)
+    .word           __wwdgIRQHandler
+    .word           0
+    .word           __rtcIRQHandler
+    .word           __flashIRQHandler
+    .word           __rccCrsIRQHandler
+    .word           __exti01IRQHandler
+    .word           __exti23IRQHandler
+    .word           __exti415IRQHandler
+    .word           0
+    .word           __dma1Channel1IRQHandler
+    .word           __dma1Channel23IRQHandler
+    .word           __dma1Channel4567IRQHandler
+    .word           __adc1CompIRQHandler
+    .word           __tim1BrkUpTrgComIRQHandler
+    .word           __tim1CcIRQHandler
+    .word           0
+    .word           __tim3IRQHandler
+    .word           0
+    .word           0
+    .word           __tim14IRQHandler
+    .word           __tim15IRQHandler
+    .word           __tim16IRQHandler
+    .word           __tim17IRQHandler
+    .word           __i2c1IRQHandler
+    .word           __i2c2IRQHandler
+    .word           __spi1IRQHandler
+    .word           __spi2IRQHandler
+    .word           __usart1IRQHandler
+    .word           __usart2IRQHandler
+    .word           0
+    .word           0
+    .word           0
+ #else
+ #error Unsupported Processor type
  #endif
 __vectorMapEnd:
 

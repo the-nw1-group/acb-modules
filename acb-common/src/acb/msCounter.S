@@ -53,6 +53,32 @@ MsCounter_init:
                     bl              SysTick_config
                     pop             {r7, pc}
 
+    public_function(MsCounter_pause)
+
+@ void  MsCounter_pause()
+@   stop the SysTick timer temporarily
+
+MsCounter_pause:
+                    ldr             r3, = #SysTick_BASE
+                    ldr             r2, [r3, #SysTick_CTRL_OFFSET]
+                    movs            r1, #SysTick_CTRL_ENABLE_Msk
+                    bics            r2, r2, r1
+                    str             r2, [r3, #SysTick_CTRL_OFFSET]
+                    bx              lr
+
+    public_function(MsCounter_restart)
+
+@ void  MsCounter_pause()
+@   restart the SysTick timer
+
+MsCounter_restart:
+                    ldr             r3, = #SysTick_BASE
+                    ldr             r2, [r3, #SysTick_CTRL_OFFSET]
+                    movs            r1, #SysTick_CTRL_ENABLE_Msk
+                    orrs            r2, r2, r1
+                    str             r2, [r3, #SysTick_CTRL_OFFSET]
+                    bx              lr
+
     public_function(__sysTickHandler)
 
 @ void __sysTickHandler()
