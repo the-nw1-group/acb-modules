@@ -61,8 +61,8 @@
 #define CBUSNA_LED1_TIMBASE             TIM16_BASE
 #define CBUSNA_LED1_PIN                 8
 #define CBUSNA_LED1_AFNO                2
-#define CBUSNA_LED1_DIM                 12000
-#define CBUSNA_LED1_DIMSHIFT            2
+#define CBUSNA_LED1_DIM                 100
+#define CBUSNA_LED1_DIMSHIFT            1
 
 #define CBUSNA_LED2_AHBENR              RCC_APB1ENR_TIM14EN
 #define CBUSNA_LED2_GPIOBASE            GPIOA_BASE

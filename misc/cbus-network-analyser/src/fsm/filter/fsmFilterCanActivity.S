@@ -35,7 +35,7 @@ FsmFilterCanActivity_errorIndicator:
                     .word           CBUSNA_LED1_DIM                 @ when to start dimming
                     .byte           CBUSNA_LED1_PIN                 @ which PIN
                     .byte           CBUSNA_LED1_AFNO                @ which AF
-                    .byte           CBUSNA_LED2_DIMSHIFT            @ how much to dim
+                    .byte           CBUSNA_LED1_DIMSHIFT            @ how much to dim
                     .byte           0
 
     public_function(FsmFilterCanActivity_setup)
@@ -67,6 +67,7 @@ FsmFilterCanActivity_filter:
                     movs            r1, #FSM_STATE_CAN_ERR          @ check if we had any CAN errors
                     ands            r1, r1, r7
                     ldr             r0, = #FsmFilterCanActivity_errorIndicator
+
                     bl              LedPwm_pulse
                     pop             {r7, pc}
 
