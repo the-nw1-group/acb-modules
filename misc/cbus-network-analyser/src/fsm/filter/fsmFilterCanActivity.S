@@ -21,9 +21,9 @@ FsmFilterCanActivity_messageIndicator:
                     .word           CBUSNA_LED2_GPIOBASE            @ which GPIO
                     .word           0
                     .word           CBUSNA_LED2_DIM                 @ when to start dimming
+                    .word           CBUSNA_LED2_DIMSUB              @ how much to dim
                     .byte           CBUSNA_LED2_PIN                 @ which PIN
                     .byte           CBUSNA_LED2_AFNO                @ which AF
-                    .byte           CBUSNA_LED2_DIMSHIFT            @ how much to dim
                     .byte           0
 
     .align 4
@@ -33,9 +33,9 @@ FsmFilterCanActivity_errorIndicator:
                     .word           CBUSNA_LED1_GPIOBASE            @ which GPIO
                     .word           0
                     .word           CBUSNA_LED1_DIM                 @ when to start dimming
+                    .word           CBUSNA_LED1_DIMSUB              @ how much to dim
                     .byte           CBUSNA_LED1_PIN                 @ which PIN
                     .byte           CBUSNA_LED1_AFNO                @ which AF
-                    .byte           CBUSNA_LED1_DIMSHIFT            @ how much to dim
                     .byte           0
 
     public_function(FsmFilterCanActivity_setup)

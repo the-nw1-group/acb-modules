@@ -21,10 +21,10 @@ LedPwmData_timBase  = 0                                             @ word, time
 LedPwmData_gpioBase = 4                                             @ word, gpio of output
 LedPwmData_count    = 8                                             @ word, counter
 LedPwmData_dimCount = 12                                            @ word, when to start diming the output
-LedPwmData_pin      = 16                                            @ byte, gpio pin of output
-LedPwmData_af       = 17                                            @ byte, af number of timer/pin combination
-LedPwmData_dimShift = 18                                            @ byte, right shift PWM value when dimming
-LedPwmData_state    = 19                                            @ byte, state of LED PWM
+LedPwmData_dimSub   = 16                                            @ byte, subtract this value when dimming
+LedPwmData_pin      = 20                                            @ byte, gpio pin of output
+LedPwmData_af       = 21                                            @ byte, af number of timer/pin combination
+LedPwmData_state    = 22                                            @ byte, state of LED PWM
 
 LedPwmState_off     = 0                                             @ LED PWM is off (Timer running, but output not enabled
 LedPwmState_full    = 1                                             @ LED PWM is on full brightness
@@ -130,10 +130,14 @@ lpp_noPulse:
 lpp_dim:
                     movs            r1, #0
                     str             r1, [r0, #LedPwmData_count]     @ yes, reset the count
-                    ldrb            r2, [r0, #LedPwmData_dimShift]  @ get the shift
+                    ldr             r2, [r0, #LedPwmData_dimSub]    @ get the subtract value
                     ldr             r3, [r0, #LedPwmData_timBase]
                     ldr             r1, [r3, #TIM_CCR1_OFFSET]      @ dim LED, by reducing the cycle rate
-                    lsrs            r1, r1, r2
+                    subs            r1, r1, r2
+                    cmp             r1, #0
+                    bge             1f
+                    movs            r1, #0
+1:
                     str             r1, [r3, #TIM_CCR1_OFFSET]
                     cmp             r1, #0
                     beq             1f
