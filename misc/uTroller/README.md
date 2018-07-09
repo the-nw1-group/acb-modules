@@ -1,18 +1,18 @@
 uTroller
 ========
 
-A small (3S) LiPo battery powered PWM model railway contoller. Control is via a centre detent potentiometer which is 
-read and averaged by the STM32F042 ADC, which is then used to derive the direction and PWM ontime. The frequency can be
-adjusted using config #0 jumper: jumper out low fequency PWM; jummper in high frequence PWM. Config #1 controls the
+A small (3S) LiPo battery powered PWM model railway controller. Control is via a centre detent potentiometer which is 
+read and averaged by the STM32F042 ADC, which is then used to derive the direction and PWM on-time. The frequency can be
+adjusted using config #0 jumper: jumper out low frequency PWM; jumper in high frequency PWM. Config #1 controls the
 current limit: jumper out 2A current limit; jumper in 1A current limit. 
 
 Output voltage to the rails is limited to a maximum of 9v.
 
-The board also includes passthrough for charging of the battery, without having to remove the front or rear panels of
-the box, and a low battery indicator. It is recommended to use LiPo batteries with inbuilt charging and undervoltage 
+The board also includes pass through for charging of the battery, without having to remove the front or rear panels of
+the box, and a low battery indicator. It is recommended to use LiPo batteries with inbuilt charging and under-voltage 
 cut off protection (such as Turnigy 2.2AH 9XR 11.1V transmitter pack)
 
-Power On LED and Track On LED also indiciate various error conditions:
+Power On LED and Track On LED also indicate various error conditions:
 
 | LED   | Status     | Description                                                           |
 |:-----:| ---------- | --------------------------------------------------------------------- |
@@ -24,8 +24,6 @@ Power On LED and Track On LED also indiciate various error conditions:
 | Track | On         | Track power applied                                                   |
 | Track | Slow Flash | 75% of current limit drawn                                            | 
 | Track | Fast Flash | Current limit exceeded, track output turned off                       |
-|:-----:| ---------- | --------------------------------------------------------------------- |
- 
 
 Pin functions are
 
@@ -51,7 +49,6 @@ Pin functions are
 | 18  | PA10     | I/O  | (IN) Config #0             |
 | 19  | PA13     | I/O  | SWD - SWDIO                |
 | 20  | PA14     | I/O  | SWD - SWCLK                |
-|:---:| -------- | ---- | -------------------------- |
 
 Other notable IC's/Devices on the board
 
