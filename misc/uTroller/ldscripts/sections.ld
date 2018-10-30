@@ -167,6 +167,15 @@ PROVIDE ( _vector_table_size = SIZEOF(.isr_vector) ) ;
 
     } >FLASH
 
+    .eeprom_emulation :
+    {
+
+        . = ALIGN(4);
+
+        *(.eeprom_emulation .eeprom_emulation.*)   /* eeprom emulation */
+        KEEP(*(.eeprom_emulation .eeprom_emulation.*))
+    } >EEPROM
+
     /* ARM magic sections */
     .ARM.extab :
     {

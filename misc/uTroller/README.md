@@ -25,6 +25,23 @@ Power On LED and Track On LED also indicate various error conditions:
 | Track | Slow Flash | 75% of current limit drawn                                            | 
 | Track | Fast Flash | Current limit exceeded, track output turned off                       |
 
+When the unit is used for the first time, the potentiometer values for full left, full right, and center position
+must be configured. To indicate this, the Power LED is turned off, and the Track LED flashes using the following:
+
+| Flash                          | Description                                                         |
+|:------------------------------:| ------------------------------------------------------------------- |
+| One Fast Flash, every 0.5s     | Turn the potentiometer all the way to the left, and leave it there  |
+| Three Fast Flashes, every 0.5s | Turn the potentiometer all the way to the right, and leave it there |
+| Two Fast Flashes, every 0.5s   | Turn the potentiometer to the center, and leave it there            |
+
+The configuration procedure is for the Track LED to flash once per 0.5s, the user must move the potentiometer fully to
+the left. Once the unit has a stable ADC reading, under a threshold value, typically over 10s, the unit will then
+flash the Track LED three times per 0.5s, and the user then must move the potentiometer fully to the right. Again, once
+a stable ADC reading, over a threshold value, typically over 10s, the unit will then flash the Track LED two times per 
+0.5s. The user then moves the potentiometer to the centre, detent, position, and once a stable ADC reading between two
+thresholds is achieved, these are stored permanently within the uProcessors flash memory, and the uProcessor rebooted.
+On reboot, these values are read, and used for the values for end and centre stops.
+
 Pin functions are
 
 | Pin | Function | Type | Description                |
@@ -40,7 +57,7 @@ Pin functions are
 | 9   | PA3      | I/O  | (OUT) PWM EN1 (DRV8816)    |
 | 10  | PA4      | I/O  | (Analog) Vpropi (DRV8816)  |
 | 11  | PA5      | I/O  | (Analog) Speed Control     |
-| 12  | PA6      | I/O  | Tied to analog  ground     |
+| 12  | PA6      | I/O  | (IN) Tied to analog ground |
 | 13  | PA7      | I/O  | (OUT) PWM Power LED        |
 | 14  | PB1      | I/O  | (OUT) PWM Track LED        |
 | 15  | VSS      | S    | Ground                     |

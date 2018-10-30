@@ -27,21 +27,15 @@
 @ System Timing functions
 
 @       =============================================================================
-@       System Clock source                    | PLL (HSI)
+@       System Clock source                    | HSI48
 @       -----------------------------------------------------------------------------
-@       SYSCLK(Hz)                             | 8000000
+@       SYSCLK(Hz)                             | 48000000
 @       -----------------------------------------------------------------------------
-@       HCLK(Hz)                               | 8000000
+@       HCLK(Hz)                               | 48000000
 @       -----------------------------------------------------------------------------
 @       AHB Prescaler                          | 1
 @       -----------------------------------------------------------------------------
 @       APB Prescaler                          | 1
-@       -----------------------------------------------------------------------------
-@       HSE Frequency(Hz)                      | NA
-@       -----------------------------------------------------------------------------
-@       PLLMUL                                 | 12
-@       -----------------------------------------------------------------------------
-@       PREDIV                                 | 2
 @       -----------------------------------------------------------------------------
 @       Flash Latency(WS)                      | 1
 @       -----------------------------------------------------------------------------
@@ -65,7 +59,7 @@
     .global         System_coreClock
 
 SystemCoreClock:
-System_coreClock:   .word           8000000
+System_coreClock:   .word           48000000
 
 @ private static data
 
@@ -167,7 +161,7 @@ _ccu_HSI:                                                           @ uses the d
 _ccu_HSE:                                                           @ uses the define HSE_VALUE
                     ldr             r1, = #HSE_VALUE
                     b               _ccu_calcHCLK
-_ccu_HSI48:                                                         @ uses the define HSI_VALUE
+_ccu_HSI48:                                                         @ uses the define HSI48_VALUE
                     ldr             r1, = #HSI48_VALUE
                     b               _ccu_calcHCLK
 _ccu_PLL:                                                           @ calcuates the values based on the running
@@ -220,16 +214,31 @@ _setSysClock:
                                                                     @ Enable Prefetch Buffer and set Flash Latency
                     ldr             r1, = #FLASH_R_BASE
                     ldr             r0, [r1, #FLASH_ACR_OFFSET]
-                    movs            r2, #FLASH_ACR_PRFTBE
+                    movs            r2, #(FLASH_ACR_LATENCY | FLASH_ACR_PRFTBE)
                     orrs            r0, r0, r2
                     str             r0, [r1, #FLASH_ACR_OFFSET]
-                                                                    @ HCLK = PCLK = SYSCLK
-                    ldr             r0, [r7, #RCC_CFGR_OFFSET]
-                    ldr             r1, = #~(RCC_CFGR_PLLSRC | RCC_CFGR_PLLXTPRE | RCC_CFGR_PLLMULL)
-                    ands            r0, r0, r1
-                    ldr             r1, = #(RCC_CFGR_HPRE_DIV1 | RCC_CFGR_PPRE_DIV1)
+                                                                    @ enable the HSI48 clock, and wait for it to be
+                                                                    @ ready
+                    ldr             r7, = #RCC_BASE
+                    ldr             r0, [r7, #RCC_CR2_OFFSET]
+                    ldr             r1, = #RCC_CR2_HSI48ON
                     orrs            r0, r0, r1
-                    str             r0, [r7, #RCC_CFGR_OFFSET]
+                    str             r0, [r7, #RCC_CR2_OFFSET]
+                    ldr             r1, = #RCC_CR2_HSI48RDY
+0:
+                    ldr             r0, [r7, #RCC_CR2_OFFSET]
+                    tst             r0, r1
+                    beq             0b
+                                                                    @ Switch to HSI48, and wait for it to be ready
+                    movs            r1, #(RCC_CFGR_SW_1 | RCC_CFGR_SW_0)
+                    ldr             r0, [r7, #RCC_CFGR_OFFSET]
+                    orrs            r1, r1, r0
+                    str             r1, [r7, #RCC_CFGR_OFFSET]
+                    movs            r0,  #(RCC_CFGR_SWS_1 | RCC_CFGR_SWS_0)
+0:
+                    ldr             r1, [r7, #RCC_CFGR_OFFSET]
+                    tst             r1, r0
+                    beq             0b
 
                     movs            r0, #SUCCESS                    @ function succeeded
 __setSysClockReturn:
