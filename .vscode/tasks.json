@@ -110,7 +110,7 @@
             }
         },
         {
-            "label": "DEBUG Build signal-tester",
+            "label": "DEBUG Build signal-testersi",
             "type": "shell",
             "command": "make",
             "options": {
