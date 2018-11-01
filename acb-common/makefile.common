@@ -1,0 +1,113 @@
+# Common makefile for ACB modules
+
+# Prologue
+all :
+BUILD = debug
+BUILD_DIR = $(BUILD)
+
+# Binaries
+PREFIX = arm-none-eabi-
+# The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
+# either it can be added to the PATH environment variable.
+ifdef GCC_PATH
+CC = $(GCC_PATH)/$(PREFIX)gcc
+AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
+CP = $(GCC_PATH)/$(PREFIX)objcopy
+SZ = $(GCC_PATH)/$(PREFIX)size
+LD = $(GCC_PATH)/$(PREFIX)g++
+else
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp
+CP = $(PREFIX)objcopy
+SZ = $(PREFIX)size
+LD = $(PREFIX)g++
+endif
+HEX = $(CP) -O ihex
+BIN = $(CP) -O binary -S
+
+ifdef JAVA_HOME
+JAVA = $(JAVA_HOME)/bin/java
+else
+JAVA = java
+endif
+ifdef SAXON_PATH
+SAXON = $(JAVA) -jar $(SAXON_PATH)/saxon9he.jar
+else
+SAXON = $(JAVA) -jar saxon9he.jar
+endif
+
+# Defines
+CDEFINES.debug = \
+	-DDEBUG
+
+CDEFINES.release =
+
+# Build Flags
+MCU = -mcpu=$(CPU) -mtune=$(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+
+CFLAGS.debug = \
+	-Og \
+	-g3
+
+CFLAGS.release = \
+	-O3
+
+CFLAGS.common = \
+	$(MCU) \
+	-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -fno-move-loop-invariants \
+	-Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wpadded -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal
+
+CFLAGS = \
+	$(CFLAGS.common) \
+	-Wa,-adhlns="$(@:%.o=%.o.lst)" \
+	-MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" \
+	$(CFLAGS.$(BUILD))
+
+# Linker Flags
+LIBS = -lc -lm -lnosys
+
+LIBDIR =
+
+LDFLAGS = \
+	$(CFLAGS.common) \
+	$(LDSCRIPTS) \
+	$(LIBS) \
+	$(LIBDIR) \
+	-nostartfiles -Xlinker --gc-sections --specs=nano.specs -v -lc -lnosys \
+	-Wl,-Map,$(BUILD_DIR)/$(TARGET).map,--cref
+
+# Other Flags
+SZFLAGS = --format=sysv --totals -x
+
+# Build the application
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+
+OBJECTS  = $(addprefix $(BUILD_DIR)/,$(filter %.o,$(notdir $(CSOURCES:.S=.o))))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(filter %.o,$(notdir $(CSOURCES:.c=.o))))
+vpath %.S $(dir $(CSOURCES))
+vpath %.c $(dir $(CSOURCES))
+
+$(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR) 
+	$(AS) -c $(CFLAGS) $(CDEFINES) $(CINCLUDE_PATHS) $< -o $@
+
+$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
+	$(CC) -c $(CFLAGS) $(CDEFINES) $(CINCLUDE_PATHS) $< -o $@
+
+$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+	$(LD) $(LDFLAGS) $(OBJECTS) -o $@
+	$(SZ) $(SZFLAGS) $@
+
+$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+	$(HEX) $< $@
+	
+$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+	$(BIN) $< $@
+
+$(BUILD_DIR):
+	mkdir $@
+
+.PHONY: clean all
+
+clean:
+	rm -rf $(BUILD_DIR)
+    

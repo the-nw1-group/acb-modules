@@ -1,9 +1,6 @@
 # Folders
-.metadata/
-RemoteSystemsTempFiles/
-.settings/
-Debug/
-Release/
+debug/
+release/
 
 # Auto-generated files
 cbusMessages.S
