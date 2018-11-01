@@ -31,7 +31,7 @@ else
 JAVA = java
 endif
 ifdef SAXON_PATH
-SAXON = $(JAVA) -jar $(SAXON_PATH)/saxon9he.jar
+SAXON = $(JAVA) -jar "$(SAXON_PATH)/saxon9he.jar"
 else
 SAXON = $(JAVA) -jar saxon9he.jar
 endif
@@ -110,4 +110,14 @@ $(BUILD_DIR):
 
 clean:
 	rm -rf $(BUILD_DIR)
-    
+
+# Yeah the following is a massive hack...
+ifneq (,$(findstring ../acb-common/src/cbus/src/cbusMessages.S, $(CSOURCES)))
+../acb-common/src/cbus/src/cbusMessages.S: ../acb-common/src/cbus/xslt/gen-handlers.xslt Makefile | $(BUILD_DIR) 
+	$(SAXON) -xsl:$< -o:$@ -s:../acb-common/src/cbus/xml/CBUS-messages.xml
+endif
+
+ifneq (,$(findstring ../../acb-common/src/cbus/src/cbusMessages.S, $(CSOURCES)))
+../../acb-common/src/cbus/src/cbusMessages.S: ../../acb-common/src/cbus/xslt/gen-handlers.xslt Makefile | $(BUILD_DIR) 
+	$(SAXON) -xsl:$< -o:$@ -s:../../acb-common/src/cbus/xml/CBUS-messages.xml
+endif

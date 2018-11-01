@@ -5,6 +5,10 @@ release/
 # Auto-generated files
 cbusMessages.S
 
+# Debugging files
+.cortex-debug.peripherals.state.json
+.cortex-debug.registers.state.json
+
 # =========================
 # Operating System Files
 # =========================

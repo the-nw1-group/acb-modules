@@ -16,6 +16,8 @@ CSOURCES = \
 	../acb-common/src/acb/eeprom/eeprom.S \
 	../acb-common/src/acb/eeprom/eepromCache.S \
 	../acb-common/src/acb/eeprom/eepromI2C.S \
+	../acb-common/src/cbus/src/cbusModuleParameters.S \
+	../acb-common/src/cbus/src/cbusMessages.S \
 	../acb-common/src/stm32f0/startup.S \
 	../acb-common/src/stm32f0/system.S \
 	../acb-common/src/cmsis/m0/core_cm0.S
