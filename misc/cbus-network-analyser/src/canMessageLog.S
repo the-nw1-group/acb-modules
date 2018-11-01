@@ -43,7 +43,7 @@ CanMessageLog_setup:
                     push            {r7, lr}
                     ldr             r3, =#CAN_BASE
                     ldr             r2, [r3, #CAN_IER_OFFSET]       @ enable error and receive interrupts
-                    ldr             r1, = #CAN_IER_ERRIE | CAN_IER_FMPIE0 | CAN_IER_FMPIE1
+                    ldr             r1, = #CAN_IER_ERRIE | CAN_IER_LECIE | CAN_IER_FMPIE0 | CAN_IER_FMPIE1
                     orrs            r2, r2, r1
                     str             r2, [r3, #CAN_IER_OFFSET]
                     movs            r0, #CEC_CAN_IRQn
@@ -57,6 +57,10 @@ CanMessageLog_setup:
 
 __cecCanIRQHandler:
                     ldr             r3, =#CAN_BASE                  @ work out what caused the interrupt
+                    ldr             r2, [r3, #CAN_ESR_OFFSET]       @ check if last error was set
+                    movs            r1, #CAN_ESR_LEC
+                    tst             r1, r2
+                    bne             6f
                     ldr             r2, [r3, #CAN_MSR_OFFSET]
                     movs            r1, #CAN_MSR_ERRI               @ check if it's an error
                     tst             r1, r2
@@ -114,8 +118,8 @@ __cecCanIRQHandler:
 9:
                     bx              lr
 0:                                                                  @ handle error interrupts
-                    bics            r2, r2, r1                      @ acknowledge the interrupts
-                    str             r2, [r3, #CAN_MSR_OFFSET]
+                    str             r1, [r3, #CAN_MSR_OFFSET]       @ acknowledge the interrupts
+6:
                     ldr             r3, = #CanMessageLog_state      @ and set the error state
                     ldrb            r2, [r3]
                     movs            r1, #(1 << CanMessageLogStatus_hasError)

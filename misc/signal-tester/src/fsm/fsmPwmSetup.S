@@ -174,7 +174,7 @@ drawValueOffset=46
                     ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     sub             sp, sp, #8
-                    movs            r3, #ACB_DISPLAY_HEIGHT
+                    movs            r3, #DISPLAY_ROW_HEIGHT
                     str             r3, [sp]
                     movs            r3, #(ACB_DISPLAY_WIDTH - drawValueOffset)
                     bl              Display_drawFilledRectangle

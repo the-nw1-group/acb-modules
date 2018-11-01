@@ -281,6 +281,7 @@ FsmAspectTest_setupAspectTest:
 
                     movs            r0, r7
                     bl              FsmAspectTest_displayAspects    @ adjust number of Aspects and Type
+
                     ldr             r0, = #FsmAspectTest_adjustAspects
                     pop             {r7, pc}
 
@@ -447,13 +448,14 @@ drawValueOffset=35
                     lsls            r0, r0, #2
                     ldr             r7, [r1, r0]
 
+
                     movs            r0, #drawValueOffset            @ blank previous values
                     ldr             r1, = #(1 | DISPLAY_ROW_FLAG)
                     movs            r2, #0
                     sub             sp, sp, #8
-                    movs            r3, #ACB_DISPLAY_HEIGHT
+                    movs            r3, #DISPLAY_ROW_HEIGHT
                     str             r3, [sp]
-                    movs            r3, #(ACB_DISPLAY_WIDTH - drawValueOffset)
+                    movs            r3, #(ACB_DISPLAY_WIDTH - drawValueOffset) - 1
                     bl              Display_drawFilledRectangle
                     add             sp, sp, #8
                     movs            r0, #drawValueOffset            @ write new aspect and type
@@ -462,6 +464,7 @@ drawValueOffset=35
                     movs            r3, r7
                     bl              Display_drawString
                     bl              Display_blitDisplayBuffer
+
                     pop             {r7, pc}
 
        .end

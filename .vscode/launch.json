@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug signal-tester",
+            "cwd": "${workspaceRoot}/misc/signal-tester",
+            "executable": "./debug/signal-tester.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F042F6",
+            "runToMain": true,
+            "svdFile": "${env:DEV_ROOT}\\cmsis-svd-master\\data\\STMicro\\STM32F042x.svd",
+            "configFiles": [
+                "interface\\stlink.cfg",
+                "target\\stm32f0x.cfg"
+            ]
+        }
+    ]
+}

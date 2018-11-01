@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 The NW1 Group
+ * Copyright (c) 2018 The NW1 Group
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,12 +20,15 @@ ErrorHandler_stackFrame:
                     .space          4 * 9                           @ stack frame for faults (plus an extra for r0)
 #endif
 
+
 @ override standard ACB error handler as we don't have yellow and green LEDs
 
     public_function(ErrorHandler_handle)
 
-@ void ErrorHandler_handle(int errorCode)
-@   Last chance fatal error handler
+@ void ErrorHandler_handle(int errorCode, long lr)
+@   Last chance fatal error handler, in debug mode, try to break. Then fast flash the status LED to indicate some
+@   is wrong. This assumes we at least got to setup the status led, but the timing is purely based on loops
+@    as we can't rely on any timers, or the MsCounter...
 
 ErrorHandler_handle:
                     cpsid           i                               @ disable all configurable interrupts
@@ -50,6 +53,15 @@ ErrorHandler_handle:
                     bkpt            #0                              @ debug break
 
 #endif
-                    b               .
-
+@                    ldr             r2, = #QUADIR_STATUS_GPIOBASE
+@                    ldr             r1, =#1<<QUADIR_STATUS
+@                    movs            r3, #16
+0:
+@                    str             r1, [r2, GPIO_BSRR_OFFSET]
+@                    ldr             r0, = #150000
+1:
+@                    subs            r0, r0, #1
+@                    bne             1b
+@                    rors            r1, r1, r3
+                    b               0b
    .end
