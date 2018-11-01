@@ -32,6 +32,7 @@ CSOURCES = \
 	../../acb-common/src/acb/watchdog.S \
 	../../acb-common/src/acb/simpleInputDebounce.S \
 	../../acb-common/src/acb/flash.S \
+	../../acb-common/src/cbus/src/cbusMessages.S \
 	../../acb-common/src/acb/optionBytes.S \
 	../../acb-common/src/acb/transports/can.S \
 	../../acb-common/src/acb/display/display.S \
