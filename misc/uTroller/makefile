@@ -4,10 +4,15 @@ TARGET := utroller
 
 # Source and Include Files
 CSOURCES = \
+	src/analog.S \
+	src/configuration.S \
 	src/errorHandler.S \
 	src/main.S \
+	src/setup.S \
 	src/system.S \
 	../../acb-common/src/stm32f0/startup.S \
+	../../acb-common/src/acb/msCounter.S \
+	../../acb-common/src/acb/math.S \
 	../../acb-common/src/cmsis/m0/core_cm0.S
 
 CINCLUDE_PATHS = \

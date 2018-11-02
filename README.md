@@ -47,6 +47,7 @@ Whilst developing the modules listed above, a number of side projects have evolv
 | DTC4          |                  | Based on the MERG "DTC8", uses current transform to detect trains, 4 input        |
 | PSU4V5        |                  | Simple DC/DC Buck convertor                                                       |
 | 8OUT-PP       |                  | 8 Output 5V push/pull addon for ACB-6IOMV/ACB-8IOMV                               |
+| uTroller      | STM32F042F6      | Simple DC model railway controller                                                |
 
 Building and Debugging
 ----------------------
@@ -95,7 +96,7 @@ or from a ST-Discovery board
 * STM-32 ST-LINK Utility - I'm using version v4.3.0
 
 For programming via the bootloader, you need:
-* A CAN to Serial, or CAN to USB convertor, such as MERG's CAN-USB2, 3 or 4. I'm using CAN-USB2. Details can be found
+* A CAN to Serial, or CAN to USB convertor, such as MERG's CAN-USB2, 3 or 4. I'm using CAN-USB4. Details can be found
 on the  <http://www.merg.org.uk/kits.php> website
 
 I'm using Gitflow, so the most up-to-date version will be on the `develop` branch, rather than on `master`, which

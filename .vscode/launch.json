@@ -2,7 +2,37 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug signal-tester",
+            "name": "cbus-network-analyser",
+            "cwd": "${workspaceRoot}/misc/cbus-network-analyser",
+            "executable": "./debug/cbus-network-analyser.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F042F6",
+            "runToMain": true,
+            "svdFile": "${env:DEV_ROOT}\\cmsis-svd-master\\data\\STMicro\\STM32F042x.svd",
+            "configFiles": [
+                "interface\\stlink.cfg",
+                "target\\stm32f0x.cfg"
+            ]
+        },
+        {
+            "name": "quad-ir",
+            "cwd": "${workspaceRoot}/misc/quad-ir",
+            "executable": "./debug/quad-ir.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F030F4",
+            "runToMain": true,
+            "svdFile": "${env:DEV_ROOT}\\cmsis-svd-master\\data\\STMicro\\STM32F030.svd",
+            "configFiles": [
+                "interface\\stlink.cfg",
+                "target\\stm32f0x.cfg"
+            ]
+        },
+        {
+            "name": "signal-tester",
             "cwd": "${workspaceRoot}/misc/signal-tester",
             "executable": "./debug/signal-tester.elf",
             "request": "launch",
@@ -15,6 +45,66 @@
                 "interface\\stlink.cfg",
                 "target\\stm32f0x.cfg"
             ]
-        }
+        },
+        {
+            "name": "uTroller",
+            "cwd": "${workspaceRoot}/misc/uTroller",
+            "executable": "./debug/utroller.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F042F6",
+            "runToMain": true,
+            "svdFile": "${env:DEV_ROOT}\\cmsis-svd-master\\data\\STMicro\\STM32F042x.svd",
+            "configFiles": [
+                "interface\\stlink.cfg",
+                "target\\stm32f0x.cfg"
+            ]
+        },
+        {
+            "name": "stm32f0-bootloader",
+            "cwd": "${workspaceRoot}/bootloader/stm32f0-bootloader",
+            "executable": "./debug/stm32f0-bootloader.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F042F6",
+            "runToMain": true,
+            "svdFile": "${env:DEV_ROOT}\\cmsis-svd-master\\data\\STMicro\\STM32F042x.svd",
+            "configFiles": [
+                "interface\\stlink.cfg",
+                "target\\stm32f0x.cfg"
+            ]
+        },
+        {
+            "name": "stm32f3-bootloader",
+            "cwd": "${workspaceRoot}/bootloader/stm32f3-bootloader",
+            "executable": "./debug/stm32f3-bootloader.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F303CB",
+            "runToMain": true,
+            "svdFile": "${env:DEV_ROOT}\\cmsis-svd-master\\data\\STMicro\\STM32F303.svd",
+            "configFiles": [
+                "interface\\stlink.cfg",
+                "target\\stm32f3x.cfg"
+            ]
+        },
+        {
+            "name": "acb-4tc",
+            "cwd": "${workspaceRoot}/acb-4tc",
+            "executable": "./debug/acb-4tc.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F042K6",
+            "runToMain": true,
+            "svdFile": "${env:DEV_ROOT}\\cmsis-svd-master\\data\\STMicro\\STM32F042x.svd",
+            "configFiles": [
+                "interface\\stlink.cfg",
+                "target\\stm32f0x.cfg"
+            ]
+        },
     ]
 }
