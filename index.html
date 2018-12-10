@@ -1,203 +1,284 @@
 ﻿<!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>ACB Modules by the-nw1-group</title>
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <title>ACB Modules by the-nw1-group</title>
+
+  <link rel="stylesheet" href="stylesheets/styles.css">
+  <link rel="stylesheet" href="stylesheets/github-light.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-  </head>
-  <body>
-    <div class="wrapper">
-      <header>
-        <h1>ACB Modules</h1>
-        <p>Another-Control-Bus modules for model railways</p>
+</head>
 
-        <p class="view"><a href="https://github.com/the-nw1-group/acb-modules">View the Project on GitHub <small>the-nw1-group/acb-modules</small></a></p>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>ACB Modules</h1>
+      <p>Another-Control-Bus modules for model railways</p>
+
+      <p class="view"><a href="https://github.com/the-nw1-group/acb-modules">View the Project on GitHub <small>the-nw1-group/acb-modules</small></a></p>
 
 
+      <ul>
+        <li><a href="https://github.com/the-nw1-group/acb-modules/zipball/master">Download <strong>ZIP File</strong></a></li>
+        <li><a href="https://github.com/the-nw1-group/acb-modules/tarball/master">Download <strong>TAR Ball</strong></a></li>
+        <li><a href="https://github.com/the-nw1-group/acb-modules">View On <strong>GitHub</strong></a></li>
+      </ul>
+    </header>
+    <section>
+      <h1>
+        <a id="another-control-bus" class="anchor" href="#another-control-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Another
+        Control Bus</h1>
+
+      <p>or Accessory Control Bus - a CBUS like control bus for model railway accessories such as control panels,
+        servos,
+        signals and the like. More details on CBUS can be found on the <a href="http://www.merg.org.uk/merg_resources/cbus.php">http://www.merg.org.uk/merg_resources/cbus.php</a>
+        website.
+        These modules should be compatible with CBUS as described in the Developers Guide version 6a to CBUS 4.0
+        Specification
+        Revision 8c. The modules only support FLiM (The Full Layout implementation Model)</p>
+
+      <h2>
+        <a id="the-modules" class="anchor" href="#the-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>The
+        Modules</h2>
+
+      <p>The modules are based around either STM32F042 ARM Cortex-M0 microcontroller, or more powerful STM32F3xxx, or
+        STM32F7xxx
+        microontrollers.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Microcontroller</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ACB-1TC</td>
+            <td>STM32F042F6</td>
+            <td>For 1 turnouts, operates 1 servos, 1 relays, and 2 inputs for proving</td>
+          </tr>
+          <tr>
+            <td>ACB-2TC</td>
+            <td>STM32F042G6</td>
+            <td>For 2 turnouts, operates 2 servos, 2 relays, and 4 inputs for proving, additional 2 outputs</td>
+          </tr>
+          <tr>
+            <td><a href="acb-4tc.html">ACB-4TC</a></td>
+            <td>STM32F042K6</td>
+            <td>For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving</td>
+          </tr>
+          <tr>
+            <td>ACB-6IOMV</td>
+            <td>STM32F042F6</td>
+            <td>6 configuration input or outputs, configurable for various voltages and other options</td>
+          </tr>
+          <tr>
+            <td>ACB-8IOMV2</td>
+            <td>STM32F042G6</td>
+            <td>6 configuration input or outputs, configurable for various voltages and other options</td>
+          </tr>
+          <tr>
+            <td>ACB-16LED</td>
+            <td>STM32F042F6</td>
+            <td>16 constant current LED outputs</td>
+          </tr>
+          <tr>
+            <td>ACB-90LED</td>
+            <td>STM32F303CB</td>
+            <td>90 LED driver using Charlie Plexing to drive LEDs</td>
+          </tr>
+          <tr>
+            <td>ACB-SND4</td>
+            <td>STM32F730RB</td>
+            <td>4 Mono sound output, with 8 inputs</td>
+          </tr>
+          <tr>
+            <td>ACB-ETH2</td>
+            <td>STM32F767V6</td>
+            <td>CAN to CAN and Ethernet bridge</td>
+          </tr>
+          <tr>
+            <td>ACB-BLE-CAB</td>
+            <td>STM32L031K6</td>
+            <td>Wireless Bluetooth Low Energy DCC Cab</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Most of the code is written in assembler - yeah I know... </p>
+
+      <h2>
+        <a id="" class="anchor" href="#other-projects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other
+        Projects</h2>
+
+      <p>Other projects and distractions, again based around STM32F ARM Cortex-M microcontrollers.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Microcontroller</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="signal-tester.html">Signal Tester</a></td>
+            <td>STM32F042F6</td>
+            <td>For testing serial RGB LEDs and for testing and positioning Servos</td>
+          </tr>
+          <tr>
+            <td>CBUS Monitor</td>
+            <td>STM32F042F6</td>
+            <td>Display messages on the CAN bus, decode, graph, and send test messages</td>
+          </tr>
+          <tr>
+            <td><a href="quad-ir.html">QUAD-IR</a></td>
+            <td>STM32F030F4</td>
+            <td>Based on the MERG "Hector", use reflected IR to detect trains</td>
+          </tr>
+
+          <tr>
+            <td>BCO</td>
+            <td>STM32F030F4</td>
+            <td>Based on the MERG "DCO", Block cutout for DCC</td>
+          </tr>
+          <tr>
+            <td>2RELAY</td>
+            <td>&nbsp;</td>
+            <td>2 Relay board for Finder 32.21-x000 type relays</td>
+          </tr>
+          <tr>
+            <td>4RELAY</td>
+            <td>&nbsp;</td>
+            <td>4 Relay board for Finder 34.51-x000 type relays</td>
+          </tr>
+          <tr>
+            <td>1DTC</td>
+            <td>&nbsp;</td>
+            <td>Based on the MERG "DTC8", uses current transformer to detect trains, 1 input</td>
+          </tr>
+          <tr>
+            <td>2DTC</td>
+            <td>&nbsp;</td>
+            <td>Based on the MERG "DTC8", uses current transformer to detect trains, 2 input</td>
+          </tr>
+          <tr>
+            <td>4DTC</td>
+            <td>&nbsp;</td>
+            <td>Based on the MERG "DTC8", uses current transformer to detect trains, 1 input</td>
+          </tr>
+          <tr>
+            <td>PSU4V5</td>
+            <td>&nbsp;</td>
+            <td>Simple DC/DC Buck convertor</td>
+          </tr>
+          <tr>
+            <td>8OUT-PP</td>
+            <td>&nbsp;</td>
+            <td>8 Output 5V push/pull addon for ACB-6IOMV/ACB-8IOMV</td>
+          </tr>
+          <tr>
+            <td>uTroller</td>
+            <td>STM32F042F6</td>
+            <td>Simple DC model railway controller</td>
+          </tr>
+
+        </tbody>
+      </table>
+
+
+      <h2>
+        <a id="building-and-debugging" class="anchor" href="#building-and-debugging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building
+        and Debugging</h2>
+
+      <p>You'll need the following tools to build the source code, all version numbers are the versions I'm currently using, not
+        required versions:</p>
+
+      <ul>
+        <li>Visual Studio code - version 1.29.1</li>
         <ul>
-          <li><a href="https://github.com/the-nw1-group/acb-modules/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/the-nw1-group/acb-modules/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/the-nw1-group/acb-modules">View On <strong>GitHub</strong></a></li>
+          <li><code>ARM Extension</code> - version 0.3.0</li>
+          <li><code>C/C++</code> - version 0.20.1</li>
+          <li><code>Cortex-Debug</code> - version 0.1.21</li>
         </ul>
-      </header>
-      <section>
-        <h1>
-<a id="another-control-bus" class="anchor" href="#another-control-bus" aria-hidden="true"><span class="octicon octicon-link"></span></a>Another Control Bus</h1>
+        <li>Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - version 7-2018-q2</li>
+        <li>OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team - version 0.10.0-10-20181020-0522</li>
+        <li>GNU make (for Windows) - from <a href='http://gnuwin32.sourceforge.net/packages/make.htm'>here</a></li>
+        <li>Saxon XSLT and XQuery Processor - version Saxon-HE 9-9-0-1J</li>
+        <li>CMSIS-SVD-master from <a href='https://github.com/posborne/cmsis-svd'>here</a></li>
+      </ul>
 
-<p>or Accessory Control Bus - a CBUS like control bus for model railway accessories such as control panels, servos,
-signals and the like. More details on CBUS can be found on the <a href="http://www.merg.org.uk/merg_resources/cbus.php">http://www.merg.org.uk/merg_resources/cbus.php</a> website.
-These modules should be compatible with CBUS as described in the Developers Guide version 6a to CBUS 4.0 Specification 
-Revision 8c. The modules only support FLiM (The Full Layout implementation Model)</p>
+      <p>I have the tools installed into the following folders:</p>
+      <ul>
+        <li>${DEV_ROOT}</li>
+        <ul>
+          <li>cmsis-svd-master</li>
+          <li>GNU MCU Eclipse/OpenOCD</li>
+          <li>GNU Tools ARM Embedded/7-2018-q2</li>
+          <li>GnuWin32</li>
+          <li>saxon-he</li>
+        </ul>
+      </ul>
 
-<h2>
-<a id="the-modules" class="anchor" href="#the-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Modules</h2>
+      <p>You'll need to define DEV_ROOT environment variable to point to the top of the installation - with normal windows path,
+        and you'll also need to DEV_ROOT_ environment variable to point to the same location but in MINGW64 file path format. I've
+        also added the following on my PATH:</p>
 
-<p>The modules are based around either STM32F042 ARM Cortex-M0 microcontroller, or various PIC24/dsPIC33 microcontrollers. 
-All of the boards have been designed, with only the ACB-16IO requiring the Gerbers to be drawn. </p>
+      <ul>
+        <li><code>${DEV_ROOT}\GnuWin32\bin</code></li>
+        <li><code>${DEV_ROOT}\GNU Tools ARM Embedded\7-2018-q2\arm-none-eabi\bin</code></li>
+        <li><code>${DEV_ROOT}\GNU Tools ARM Embedded\7-2018-q2\bin</code></li>
+      </ul>
 
-<table>
-<thead>
-<tr>
-<th>Module</th>
-<th>Microcontroller</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="acb-4tc.html">ACB-4TC</a></td>
-<td>STM32F042K6</td>
-<td>For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving</td>
-</tr>
-<tr>
-<td>ACB-8IOMV</td>
-<td>STM32F042F6</td>
-<td>8 configuration input or outputs, configurable for various voltages and other options</td>
-</tr>
-<tr>
-<td>ACB-8IO</td>
-<td>STM32F042F6</td>
-<td>8 configurable open drain inputs or outputs, 5V tolerant</td>
-</tr>
-<tr>
-<td>ACB-16IO</td>
-<td>STM32F042F6</td>
-<td>16 configurable open drain inputs or outputs, 5V tolerant</td>
-</tr>
-<tr>
-<td>ACB-16LED</td>
-<td>STM32F042F6</td>
-<td>16 constant current LED outputs</td>
-</tr>
-<tr>
-<td>ACB-90LED</td>
-<td>STM32F303CB</td>
-<td>90 LED driver using Charlie Plexing to drive LEDs</td>
-</tr>
-<tr>
-<td>ACB-RF</td>
-<td>dsPIC33EPxxGP502</td>
-<td>Wireless link</td>
-</tr>
-<tr>
-<td>ACB-ETH</td>
-<td>STM32F767V6</td>
-<td>CAN to CAN and Ethernet bridge</td>
-</tr>
-</tbody>
-</table>
+      <p>Finally, at last you say, you'll need the following in your user settings (settings.json) within visual studio code:</p>
 
-<p>Most of the code is written in assembler - yeah I know...  </p>
+      <pre><code>{
+        "terminal.integrated.env.windows": {
+            "SAXON_PATH": "${env:DEV_ROOT_}saxon-he"
+        },
+        "cortex-debug.openocdPath": "${env:DEV_ROOT}\\GNU MCU Eclipse\\OpenOCD\\0.10.0-10-20181020-0522\\bin\\openocd.exe"
+      }</code></pre>
 
-<h2>
-<a id="" class="anchor" href="#other-projects" aria-hidden="true"><span class="octicon octicon-link"></span></a>Other Projects</h2>
+      <p>I've not tried this on OSX or any form of linux</p>
 
-<p>Other projects and distractions, again based around STM32F ARM Cortex-M microcontrollers.</p>
+      <p>For debugging and for burning the boot loader, you need:</p>
 
-<table>
-<thead>
-<tr>
-<th>Module</th>
-<th>Microcontroller</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="signal-tester.html">Signal Tester</a></td>
-<td>STM32F042F6</td>
-<td>For testing serial RGB LEDs and for testing and positioning Servos</td>
-</tr>
-<tr>
-<td>CBUS Monitor</td>
-<td>STM32F042F6</td>
-<td>Display messages on the CAN bus, decode, graph, and send test messages</td>
-</tr>
-<tr>
-<td><a href="quad-ir.html">QUAD-IR</a></td>
-<td>STM32F030F4</td>
-<td>Based on the MERG "Hector", use reflected IR to detect trains</td>
-</tr>
-</tbody>
-</table>
+      <ul>
+        <li>ST-LINK/V2 in-circuit debugger/programmer for STM8 and STM32 - either a stand-alone version,
+          or from a ST-Discovery board</li>
+        <li>STM-32 ST-LINK Utility - I'm using version v4.3.0</li>
+      </ul>
 
+      <p>For programming via the bootloader, you need:</p>
 
-<h2>
-<a id="building-and-debugging" class="anchor" href="#building-and-debugging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building and Debugging</h2>
+      <ul>
+        <li>A CAN to Serial, or CAN to USB convertor, such as MERG's CAN-USB2, 3 or 4. I'm using CAN-USB2. Details can
+          be found
+          on the <a href="http://www.merg.org.uk/kits.php">http://www.merg.org.uk/kits.php</a> website</li>
+      </ul>
 
-<p>You'll need the following tools to build the source code:</p>
+      <p>I'm using Gitflow, so the most up-to-date version will be on the <code>develop</code> branch, rather than on
+        <code>master</code>, which will only be updated periodically. <a href="http://nvie.com/posts/a-successful-git-branching-model/">http://nvie.com/posts/a-successful-git-branching-model/</a>
+        has a brilliant description of working with Gitflow.</p>
 
-<ul>
-<li>Eclipse CDT - I'm using Eclipse Neon.1 Release (4.6.1) Build id: 20160913-0900</li>
-<li>GNU ARM Eclipse plug-in - I'm using version v3.1.1-201606210758</li>
-<li>Pre-built GNU toolchain from ARM Cortex-M &amp; Cortex-R processors - I'm using version 5.4-2016-q3-update</li>
-<li>OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team</li>
-<li>GNU build tools (for Windows) - again, I'm using the one prebuilt by the GNU ARM Eclipse plug-in team</li>
-<li>Saxon XSLT and XQuery Processor - I'm using version Saxon-HE 9-6-0-6J</li>
-</ul>
+      <p>Hopefully they should build after a clone from GIT, but if I've missed something, please let me know, and I'll
+        try to correct it. </p>
+    </section>
+    <footer>
+      <p>This project is maintained by <a href="https://github.com/the-nw1-group">the-nw1-group</a></p>
+      <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+    </footer>
+  </div>
+  <script src="javascripts/scale.fix.js"></script>
 
-<p>You might need to add the following 2 substitution strings (Windows &gt; Preferences &gt; Run/Debug &gt; String Substitution),
-as I think these are workspace, rather than project settings:</p>
+</body>
 
-<table>
-<thead>
-<tr>
-<th>Variable</th>
-<th>Value</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>saxon_xslt_jar</td>
-<td>saxon9he.jar</td>
-<td>Name of Saxon XSTL Jar</td>
-</tr>
-<tr>
-<td>saxon_xslt_path</td>
-<td><em>path to JAR file</em></td>
-<td>Path to Saxon XSLT Jar</td>
-</tr>
-</tbody>
-</table>
-
-<p>Note: On Windows systems, in saxon_xslt_path use forward slashes rather than backslashes.</p>
-
-<p>For debugging and for burning the boot loader, you need:</p>
-
-<ul>
-<li>ST-LINK/V2  in-circuit debugger/programmer for STM8 and STM32 - either a stand-alone version, 
-or from a ST-Discovery board</li>
-<li>STM-32 ST-LINK Utility - I'm using version v3.8.0</li>
-</ul>
-
-<p>For programming via the bootloader, you need:</p>
-
-<ul>
-<li>A CAN to Serial, or CAN to USB convertor, such as MERG's CAN-USB2, 3 or 4. I'm using CAN-USB2. Details can be found
-on the  <a href="http://www.merg.org.uk/kits.php">http://www.merg.org.uk/kits.php</a> website</li>
-</ul>
-
-<p>I'm using Gitflow, so the most up-to-date version will be on the <code>develop</code> branch, rather than on <code>master</code>, which
-will only be updated periodically. <a href="http://nvie.com/posts/a-successful-git-branching-model/">http://nvie.com/posts/a-successful-git-branching-model/</a> has a brilliant description
-of working with Gitflow.</p>
-
-<p>Hopefully they should build after a clone from GIT, but if I've missed something, please let me know, and I'll try to 
-correct it. </p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/the-nw1-group">the-nw1-group</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
-  </body>
 </html>
