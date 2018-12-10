@@ -20,7 +20,7 @@ microontrollers.
 | ACB-2TC     | STM32F042G6      | For 2 turnouts, operates 2 servos, 2 relays, and 4 inputs for proving, additional 2 outputs |
 | ACB-4TC     | STM32F042K6      | For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving                       |
 | ACB-6IOMV   | STM32F042F6      | 6 configuration input or outputs, configurable for various voltages and other options       |
-| ACB-8IOMV2  | STM32F042F6      | 8 configuration input or outputs, configurable for various voltages and other options       |
+| ACB-8IOMV2  | STM32F042G6      | 8 configuration input or outputs, configurable for various voltages and other options       |
 | ACB-16LED   | STM32F042F6      | 16 constant current LED outputs                                                             |
 | ACB-90LED   | STM32F303CB      | 90 LED driver using Charlie Plexing to drive LEDs                                           |
 | ACB-4SND    | STM32F730RB      | 4 Mono sound output, with 8 inputs                                                          |
@@ -42,9 +42,9 @@ Whilst developing the modules listed above, a number of side projects have evolv
 | BCO           | STM32F030F4      | Based on the MERG "DCO", Block cutout for DCC                                     |
 | 2RELAY        |                  | 2 Relay board for Finder 32.21-x000 type relays                                   |
 | 4RELAY        |                  | 4 Relay board for Finder 34.51-x000 type relays                                   |
-| DTC1          |                  | Based on the MERG "DTC8", uses current transform to detect trains, 1 input        |
-| DTC2          |                  | Based on the MERG "DTC8", uses current transform to detect trains, 2 input        |
-| DTC4          |                  | Based on the MERG "DTC8", uses current transform to detect trains, 4 input        |
+| DTC1          |                  | Based on the MERG "DTC8", uses current transformer to detect trains, 1 input      |
+| DTC2          |                  | Based on the MERG "DTC8", uses current transformer to detect trains, 2 input      |
+| DTC4          |                  | Based on the MERG "DTC8", uses current transformer to detect trains, 4 input      |
 | PSU4V5        |                  | Simple DC/DC Buck convertor                                                       |
 | 8OUT-PP       |                  | 8 Output 5V push/pull addon for ACB-6IOMV/ACB-8IOMV                               |
 | uTroller      | STM32F042F6      | Simple DC model railway controller                                                |
@@ -54,7 +54,7 @@ Building and Debugging
 
 You'll need the following tools to build the source code, all version numbers are the versions I'm currently using, not
 required versions:
-* Visual Studio code - version 1.28.2
+* Visual Studio code - version 1.29.1
   * `ARM Extension` - version 0.3.0
   * `C/C++` - version 0.20.1
   * `Cortex-Debug` - version 0.1.21 
