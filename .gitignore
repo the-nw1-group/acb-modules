@@ -8,6 +8,7 @@ cbusMessages.S
 # Debugging files
 .cortex-debug.peripherals.state.json
 .cortex-debug.registers.state.json
+.vscode/ipch/
 
 # =========================
 # Operating System Files
@@ -34,6 +35,3 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
-# Visual Studio Code files
-.vscode/
