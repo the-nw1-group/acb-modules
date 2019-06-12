@@ -5,7 +5,7 @@ TARGET := cbus-network-analyser
 # Source and Include Files
 CSOURCES = \
 	src/canMessageLog.S \
-	src/errorHandler.S \
+	src/localErrorHandler.S \
 	src/ledPwm.S \
 	src/main.S \
 	src/random.S \
@@ -42,6 +42,7 @@ CSOURCES = \
 	../../acb-common/src/acb/msCounter.S \
 	../../acb-common/src/stm32f0/startup.S \
 	../../acb-common/src/stm32f0/system.S \
+	../../acb-common/src/errorHandler.S \
 	../../acb-common/src/cmsis/m0/core_cm0.S
 
 CINCLUDE_PATHS = \

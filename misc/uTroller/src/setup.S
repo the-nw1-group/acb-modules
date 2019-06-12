@@ -29,8 +29,8 @@ __setupCounter:
                     bl              MsCounter_init
                     bl              Setup_clocks
 
-                                                                    @ it "seems" (i.e. I could be wrong), that with the
-                                                                    @ ST-LINK and/or OpenOCD the processor isn't held in
+                                                                    @ it "seems" (i.e. I could be wrong), that with
+                                                                    @ ST-LINK and/or OpenOCD, the processor isn't held in
                                                                     @ reset (unlike PICs for example), and some code might
                                                                     @ run before the debugger is attached, which then
                                                                     @ breaks whatever the processor was doing. This might

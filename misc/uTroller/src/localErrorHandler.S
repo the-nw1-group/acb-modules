@@ -26,8 +26,8 @@ ErrorHandler_stackFrame:
     public_function(ErrorHandler_handle)
 
 @ void ErrorHandler_handle(int errorCode, long lr)
-@   Last chance fatal error handler, in debug mode, try to break. Then fast flash the status LED to indicate some
-@   is wrong. This assumes we at least got to setup the status led, but the timing is purely based on loops
+@   Last chance fatal error handler, in debug mode, try to break. Then fast flash the power LED to indicate some
+@   is wrong. This assumes we at least got to setup the power led, but the timing is purely based on loops
 @    as we can't rely on any timers, or the MsCounter...
 
 ErrorHandler_handle:
@@ -53,15 +53,18 @@ ErrorHandler_handle:
                     bkpt            #0                              @ debug break
 
 #endif
-@                    ldr             r2, = #QUADIR_STATUS_GPIOBASE
-@                    ldr             r1, =#1<<QUADIR_STATUS
-@                    movs            r3, #16
+                    ldr             r2, = #UTROLLER_TRACK_GPIOBASE  @ turn off track LED
+                    ldr             r1, =#1<<UTROLLER_TRACK
+                    str             r1, [r2, GPIO_BRR_OFFSET]
+                    ldr             r2, = #UTROLLER_POWER_GPIOBASE  @ fast flash power LED
+                    ldr             r1, =#1<<UTROLLER_POWER
+                    movs            r3, #16
 0:
-@                    str             r1, [r2, GPIO_BSRR_OFFSET]
-@                    ldr             r0, = #150000
+                    str             r1, [r2, GPIO_BSRR_OFFSET]
+                    ldr             r0, = #750000
 1:
-@                    subs            r0, r0, #1
-@                    bne             1b
-@                    rors            r1, r1, r3
+                    subs            r0, r0, #1
+                    bne             1b
+                    rors            r1, r1, r3
                     b               0b
    .end

@@ -14,21 +14,21 @@
 
     module(Analog)
 
-noSamples = 128                                                     @ number of samples in the averaging buffer
-avgDivider = 7                                                      @ log2(noSamples)
+noSamples  = 64                                                     @ number of samples in the averaging buffer
+avgDivider = 6                                                      @ log2(noSamples)
+noChannels = 2                                                      @ how many channels to convert
 
     private_data(Analog_private)
 
 Analog_sampleBuffer:
-                    .space          3 * 2 * noSamples, 0            @ average buffer, each sample is 2 bytes
+                    .space          2 * noChannels * noSamples, 0   @ average buffer, each sample is 2 bytes
 
     public_data(Analog_public)
 
-Analog_redValue:    .short          0                               @ calculated red value
-Analog_greenValue:  .short          0                               @ calculated green value
-Analog_blueValue:   .short          0                               @ calculated blue value
+Analog_vpropi:      .short          0                               @ calculated current usage from DRV8816
+Analog_speed:       .short          0                               @ calculated speed value (from the potentiometer)
 
-                    .global         Analog_redValue, Analog_greenValue, Analog_blueValue
+                    .global         Analog_vpropi, Analog_speed
 
     public_function(Analog_init)
 
@@ -50,7 +50,7 @@ Analog_init:
 dmaConfig = DMA_CCR_PL_0 | DMA_CCR_MSIZE_0 | DMA_CCR_PSIZE_1 | DMA_CCR_MINC | DMA_CCR_CIRC | DMA_CCR_TCIE | DMA_CCR_EN
 
                     ldr             r2, = #DMA1_Channel1            @ configure the DMA to move the converted data from
-                    ldr             r0, = #noSamples * 3            @ the adc to Analog_sampleBuffer, transfer noSamples
+                    ldr             r0, = #noSamples * noChannels   @ the adc to Analog_sampleBuffer, transfer noSamples
                     str             r0, [r2, #DMA_Channel_CNDTR_OFFSET] @ from ADC DR register to Analog_sampleBuffer
                     ldr             r0, = #_ADC1_DR
                     str             r0, [r2, #DMA_Channel_CPAR_OFFSET]
@@ -79,9 +79,9 @@ dmaConfig = DMA_CCR_PL_0 | DMA_CCR_MSIZE_0 | DMA_CCR_PSIZE_1 | DMA_CCR_MINC | DM
                     str             r0, [r2, #ADC_CFGR1_OFFSET]
                     ldr             r0, = #ADC_CFGR2_CKMODE_0       @ use PCLK/2
                     str             r0, [r2, #ADC_CFGR2_OFFSET]
-                    movs            r0, #ADC_SMPR_SMP_0             @ set sample time of 7.5 ADC clock cycles
+                    movs            r0, #ADC_SMPR_SMP_2 | ADC_SMPR_SMP_1 @ set sample time of 55.5 ADC clock cycles
                     str             r0, [r2, #ADC_SMPR_OFFSET]
-                    movs            r0, #ADC_CHSELR_CHSEL0 | ADC_CHSELR_CHSEL1 | ADC_CHSELR_CHSEL2 @ channels 0-2 converted
+                    movs            r0, #ADC_CHSELR_CHSEL4 | ADC_CHSELR_CHSEL5 @ channels 4-5 converted
                     str             r0, [r2, #ADC_CHSELR_OFFSET]
                     movs            r0, #ADC_CR_ADEN | ADC_CR_ADSTART @ start converting (based on Timer 2)
                     str             r0, [r2, #ADC_CR_OFFSET]
@@ -92,10 +92,10 @@ dmaConfig = DMA_CCR_PL_0 | DMA_CCR_MSIZE_0 | DMA_CCR_PSIZE_1 | DMA_CCR_MINC | DM
                     orrs            r0, r0, r1
                     str             r0, [r2]
 
-                    ldr             r2, = #TIM2_BASE                @ set TIM2 to trigger ADC conversions, running @ 0.5ms
+                    ldr             r2, = #TIM2_BASE                @ set TIM2 to trigger ADC conversions, running @ 1ms
                     ldr             r0, = #TIM_CR2_MMS_2            @ upcounter, master mode "compare OC1REF" to trigger TRGO
                     str             r0, [r2, #TIM_CR2_OFFSET]
-                    ldr             r0, = #23999
+                    ldr             r0, = #47999
                     str             r0, [r2, #TIM_ARR_OFFSET]
                     movs            r0, #TIM_CCMR1_OC1M_0           @ set OC1REF high when counter matches CCR1
                     str             r0, [r2, #TIM_CCMR1_OFFSET]     @ so that it forces a trigger "event" (TRGO)
@@ -120,35 +120,29 @@ __dma1Channel1IRQHandler:
     private_function(Analog_averageSamples)
 
 @ void Analog_averageSamples(void)
-@   Average the samples from the Analog_sampleBuffer and place the results into  Analog_redValue, Analog_greenValue
-@   and Analog_blueValue. The values are kept as 12 bit values.
+@   Average the samples from the Analog_sampleBuffer and place the results into Analog_vpropi, and Analog_speed
+@   The values are kept as 12 bit values.
 
 Analog_averageSamples:
                     push            {r5-r7, lr}
                     ldr             r7, = #Analog_sampleBuffer
                     movs            r6, #noSamples
-                    movs            r0, #0                          @ blue sum
-                    movs            r1, #0                          @ green sum
-                    movs            r2, #0                          @ red sum
+                    movs            r0, #0                          @ vpropi sum
+                    movs            r1, #0                          @ speed sum
 0:
-                    ldrh            r5, [r7]                        @ add to the red sum
+                    ldrh            r5, [r7]                        @ add to the vpropi sum
                     adds            r0, r0, r5
                     adds            r7, r7, #2
-                    ldrh            r5, [r7]                        @ add to the green sum
+                    ldrh            r5, [r7]                        @ add to the speed sum
                     adds            r1, r1, r5
-                    adds            r7, r7, #2
-                    ldrh            r5, [r7]                        @ add to the blue sum
-                    adds            r2, r2, r5
                     adds            r7, r7, #2
                     subs            r6, r6, #1
                     bne             0b
-                    lsrs            r0, r0, #avgDivider             @ and divide the red sum by the number of samples
-                    lsrs            r1, r1, #avgDivider             @ and divide the green sum by the number of samples
-                    lsrs            r2, r2, #avgDivider             @ and divide the blue sum by the number of samples
-                    ldr             r5, = #Analog_redValue          @ store results back
-                    strh            r0, [r5, #4]
+                    lsrs            r0, r0, #avgDivider             @ and divide the vpropi sum by the number of samples
+                    lsrs            r1, r1, #avgDivider             @ and divide the speed sum by the number of samples
+                    ldr             r5, = #Analog_vpropi            @ store results back
+                    strh            r0, [r5]
                     strh            r1, [r5, #2]
-                    strh            r2, [r5]
                     pop             {r5-r7, pc}
 
     .end

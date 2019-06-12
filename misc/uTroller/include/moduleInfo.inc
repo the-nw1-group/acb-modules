@@ -15,8 +15,8 @@
 #include "cmsis/core_cm0.inc"
 
 #include "acb/functionHeaders.inc"
-#include "acb/errorHandler.inc"
 #include "acb/math.inc"
+#include "acb/flash.inc"
 
 /*
  * Private PWM DC Controller include file
@@ -67,6 +67,8 @@
 
 #define ACB_ERRORHANDLER_DEFAULTHANDLER
 #define ACB_ERRORHANDLER_HANDLEFAULTS
+
+#include "acb/errorHandler.inc"
 
 /*
  * Defines for I/Os
@@ -123,4 +125,3 @@
 /* Analog Channels */
 #define UTROLLER_VPROPI                 4
 #define UTROLLER_SPEED                  5
-

@@ -6,14 +6,16 @@ TARGET := utroller
 CSOURCES = \
 	src/analog.S \
 	src/configuration.S \
-	src/errorHandler.S \
+	src/localErrorHandler.S \
 	src/main.S \
 	src/setup.S \
 	src/system.S \
 	../../acb-common/src/stm32f0/startup.S \
 	../../acb-common/src/acb/msCounter.S \
 	../../acb-common/src/acb/math.S \
-	../../acb-common/src/cmsis/m0/core_cm0.S
+	../../acb-common/src/cmsis/m0/core_cm0.S \
+	../../acb-common/src/acb/flash.S \
+	../../acb-common/src/acb/errorHandler.S
 
 CINCLUDE_PATHS = \
 	-Iinclude \

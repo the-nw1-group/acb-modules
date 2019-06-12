@@ -21,7 +21,6 @@
 #include "cmsis/core_cm0.inc"
 
 #include "acb/functionHeaders.inc"
-#include "acb/errorHandler.inc"
 #include "acb/math.inc"
 #include "acb/watchdog.inc"
 #include "acb/flash.inc"
@@ -136,6 +135,8 @@
 
 #define ACB_ERRORHANDLER_DEFAULTHANDLER
 #define ACB_ERRORHANDLER_HANDLEFAULTS
+
+#include "acb/errorHandler.inc"
 
 /*
  * Simple input debounce Constants

@@ -6,7 +6,7 @@ TARGET := signal-tester
 CSOURCES = \
 	src/analog.S \
 	src/configuration.S \
-	src/errorHandler.S \
+	src/localErrorHandler.S \
 	src/main.S \
 	src/setup.S \
 	src/system.S \
@@ -35,6 +35,7 @@ CSOURCES = \
 	../../acb-common/src/acb/eeprom/eeprom.S \
 	../../acb-common/src/acb/eeprom/eepromCache.S \
 	../../acb-common/src/acb/eeprom/eepromI2C.S \
+	../../acb-common/src/errorHandler.S \
 	../../acb-common/src/cmsis/m0/core_cm0.S
 
 CINCLUDE_PATHS = \

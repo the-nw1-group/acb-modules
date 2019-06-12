@@ -9,10 +9,9 @@
 
 #include "moduleInfo.inc"
 
-     .extern         Setup_setup                                     @ setup hardware and peripherals
-@    .extern         Configuation_isConfigured                       @ check if the module is configured
-@    .extern         Detect_check                                    @ check and perform detection
-@    .extern         Detect_checkStartupState                        @ check to see if start in low power mode
+     .extern        Setup_setup                                     @ setup hardware and peripherals
+     .extern        Configuration_isConfigured                      @ check if the module is configured
+     .extern        Configuration_configure                         @ configure controller
 
 @ main code for uTroller
 
@@ -25,10 +24,12 @@
 
 main:
                     bl              Setup_setup
-                    bl              Configuation_isConfigured       @ is this module configured?
+                    bl              Configuration_isConfigured      @ is this module configured?
                     cmp             r0, #1                          @ yes, then just continue with the application
                     beq             __mainLoop
+                    b               Configuration_configure         @ otherwise get the user to configure the controller
+
 __mainLoop:
-                    b               __mainLoop
+                     b               __mainLoop
 
     .end

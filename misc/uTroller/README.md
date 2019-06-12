@@ -30,15 +30,15 @@ must be configured. To indicate this, the Power LED is turned off, and the Track
 
 | Flash                          | Description                                                         |
 |:------------------------------:| ------------------------------------------------------------------- |
-| One Fast Flash, every 0.5s     | Turn the potentiometer all the way to the left, and leave it there  |
-| Three Fast Flashes, every 0.5s | Turn the potentiometer all the way to the right, and leave it there |
-| Two Fast Flashes, every 0.5s   | Turn the potentiometer to the center, and leave it there            |
+| One Fast Flash, every 0.8s     | Turn the potentiometer all the way to the left, and leave it there  |
+| Three Fast Flashes, every 0.8s | Turn the potentiometer all the way to the right, and leave it there |
+| Two Fast Flashes, every 0.8s   | Turn the potentiometer to the center, and leave it there            |
 
-The configuration procedure is for the Track LED to flash once per 0.5s, the user must move the potentiometer fully to
-the left. Once the unit has a stable ADC reading, under a threshold value, typically over 10s, the unit will then
-flash the Track LED three times per 0.5s, and the user then must move the potentiometer fully to the right. Again, once
-a stable ADC reading, over a threshold value, typically over 10s, the unit will then flash the Track LED two times per 
-0.5s. The user then moves the potentiometer to the centre, detent, position, and once a stable ADC reading between two
+The configuration procedure is for the Track LED to flash once per 0.8s, the user must move the potentiometer fully to
+the left. Once the unit has a stable ADC reading, under a threshold value, typically over 5s, the unit will then
+flash the Track LED three times per 0.8s, and the user then must move the potentiometer fully to the right. Again, once
+a stable ADC reading, over a threshold value, typically over 5s, the unit will then flash the Track LED two times per 
+0.8s. The user then moves the potentiometer to the centre, detent, position, and once a stable ADC reading between two
 thresholds is achieved, these are stored permanently within the uProcessors flash memory, and the uProcessor rebooted.
 On reboot, these values are read, and used for the values for end and centre stops.
 

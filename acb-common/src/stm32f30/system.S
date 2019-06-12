@@ -131,6 +131,7 @@ System_init:
                     bl              _setSysClock
                     cmp             r0, #ERROR                      @ did that fail? If so call System_onClockFail
                     beq             __init_callFailHandler
+                    bl              System_coreClockUpdate          @ Update clock variable
                     ldr             r1, = #SCB_VTOR
 #ifdef VECT_TAB_SRAM
                     ldr             r0, = #_application_orgin       @ location of the app vector table
@@ -172,12 +173,14 @@ System_coreClockUpdate:
                     push            {r7, lr}
                     ldr             r7, = #RCC_BASE                 @ get the clock source
                     ldr             r0, [r7, #RCC_CFGR_OFFSET]
+                    movs            r2, #RCC_CFGR_SWS
+                    ands            r2, r2, r0
                     movs            r1, #RCC_CFGR_SWS_PLL
-                    tst             r0, r1
-                    bne             _ccu_HSI
+                    cmp             r2, r1
+                    beq             _ccu_HSI
                     movs            r1, #RCC_CFGR_SWS_HSE
-                    tst             r0, r1
-                    bne             _ccu_HSE
+                    cmp             r2, r1
+                    beq             _ccu_HSE
 _ccu_HSI:                                                           @ uses the define HSI_VALUE
                     ldr             r1, = #HSI_VALUE
                     b               _ccu_calcHCLK

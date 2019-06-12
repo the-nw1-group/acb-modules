@@ -27,8 +27,8 @@ CDEFINES = \
 
 # Build Flags
 CPU = cortex-m3
-FPU = -mfloat-abi=hard
-FLOAT_ABI = -mfpu=fpv4-sp-d16
+FLOAT_ABI = -mfloat-abi=hard
+FPU = -mfpu=fpv4-sp-d16 $(FLOAT_ABI)
 
 # Linker Flags
 LDSCRIPTS = -T ldscripts/bootldr-mem.ld -T ldscripts/bootldr-sections.ld

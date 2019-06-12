@@ -6,7 +6,7 @@ TARGET := quad-ir
 CSOURCES = \
 	src/analog.S \
 	src/detect.S \
-	src/errorHandler.S \
+	src/localErrorHandler.S \
 	src/irLed.S \
 	src/lowPower.S \
 	src/main.S \
@@ -15,6 +15,7 @@ CSOURCES = \
 	../../acb-common/src/acb/msCounter.S \
 	../../acb-common/src/acb/math.S \
 	../../acb-common/src/stm32f0/startup.S \
+	../../src/errorHandler.S \
 	../../acb-common/src/cmsis/m0/core_cm0.S
 
 CINCLUDE_PATHS = \

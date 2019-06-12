@@ -137,7 +137,7 @@ MsCounter_alarmAt:
     public_function(MsCounter_alarmIn)
 
 @ bool MsCounter_alarmIn(int slot, int offsetToAlarm, int address)
-@   Call the address at the current time plus the offset . Returns SUCCESS if the slot was unpdated with the time and
+@   Call the address at the current time plus the offset . Returns SUCCESS if the slot was updated with the time and
 @   address, otherwise ERROR is returned. Typically if the slot number is invalid.
 
 MsCounter_alarmIn:
