@@ -203,16 +203,16 @@
         required versions:</p>
 
       <ul>
-        <li>Visual Studio code - version 1.29.1</li>
+        <li>Visual Studio code - version 1.49.2</li>
         <ul>
-          <li><code>ARM Extension</code> - version 0.3.0</li>
-          <li><code>C/C++</code> - version 0.20.1</li>
-          <li><code>Cortex-Debug</code> - version 0.1.21</li>
+          <li><code>ARM Extension</code> - version 1.4.0</li>
+          <li><code>C/C++</code> - version 1.0.1</li>
+          <li><code>Cortex-Debug</code> - version 0.3.7</li>
         </ul>
-        <li>Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - version 7-2018-q2</li>
-        <li>OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team - version 0.10.0-10-20181020-0522</li>
+        <li>Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - version 9-2020-q2</li>
+        <li>OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team - version 0.10.0-3</li>
         <li>GNU make (for Windows) - from <a href='http://gnuwin32.sourceforge.net/packages/make.htm'>here</a></li>
-        <li>Saxon XSLT and XQuery Processor - version Saxon-HE 9-9-0-1J</li>
+        <li>Saxon XSLT and XQuery Processor - version Saxon-HE 10.2</li>
         <li>CMSIS-SVD-master from <a href='https://github.com/posborne/cmsis-svd'>here</a></li>
       </ul>
 
@@ -234,8 +234,8 @@
 
       <ul>
         <li><code>${DEV_ROOT}\GnuWin32\bin</code></li>
-        <li><code>${DEV_ROOT}\GNU Tools ARM Embedded\7-2018-q2\arm-none-eabi\bin</code></li>
-        <li><code>${DEV_ROOT}\GNU Tools ARM Embedded\7-2018-q2\bin</code></li>
+        <li><code>${DEV_ROOT}\GNU Tools ARM Embedded\9-2020-q2\arm-none-eabi\bin</code></li>
+        <li><code>${DEV_ROOT}\GNU Tools ARM Embedded\9-2020-q2\bin</code></li>
       </ul>
 
       <p>Finally, at last you say, you'll need the following in your user settings (settings.json) within visual studio code:</p>
@@ -244,7 +244,7 @@
         "terminal.integrated.env.windows": {
             "SAXON_PATH": "${env:DEV_ROOT_}saxon-he"
         },
-        "cortex-debug.openocdPath": "${env:DEV_ROOT}\\GNU MCU Eclipse\\OpenOCD\\0.10.0-10-20181020-0522\\bin\\openocd.exe"
+        "cortex-debug.openocdPath": "${env:DEV_ROOT}\\GNU MCU Eclipse\\OpenOCD\\0.10.0-13\\bin\\openocd.exe"
       }</code></pre>
 
       <p>I've not tried this on OSX or any form of linux</p>
@@ -254,7 +254,7 @@
       <ul>
         <li>ST-LINK/V2 in-circuit debugger/programmer for STM8 and STM32 - either a stand-alone version,
           or from a ST-Discovery board</li>
-        <li>STM-32 ST-LINK Utility - I'm using version v4.3.0</li>
+        <li>STM-32 ST-LINK Utility - I'm using version v4.5.0</li>
       </ul>
 
       <p>For programming via the bootloader, you need:</p>
