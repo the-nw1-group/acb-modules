@@ -3,8 +3,8 @@ uTroller
 
 A small (3S) LiPo battery powered PWM model railway controller. Control is via a centre detent potentiometer which is 
 read and averaged by the STM32F042 ADC, which is then used to derive the direction and PWM on-time. The frequency can be
-adjusted using config #0 jumper: jumper out low frequency PWM; jumper in high frequency PWM. Config #1 controls the
-current limit: jumper out 2A current limit; jumper in 1A current limit. 
+adjusted using config #0 jumper: jumper out low frequency PWM (250Hz); jumper in high frequency PWM (23khz). Config #1
+controls the current limit: jumper out 2A current limit; jumper in 1A current limit. 
 
 Output voltage to the rails is limited to a maximum of 9v.
 
@@ -19,11 +19,15 @@ Power On LED and Track On LED also indicate various error conditions:
 | Power | Off        | Device turned off                                                     |
 | Power | On         | Device turned on and functioning normally                             |
 | Power | Fast Flash | Unhandled error encountered                                           |
-| Power | Slow Flash | Device started with potentiometer in a position other than center/off | 
+| Power | Slow Flash | Device started with potentiometer in a position other than center/off |
 | Track | Off        | No track output: device off, or potentiometer in center/off position  |
 | Track | On         | Track power applied                                                   |
-| Track | Slow Flash | 75% of current limit drawn                                            | 
+| Track | Slow Flash | 75% of current limit drawn                                            |
 | Track | Fast Flash | Current limit exceeded, track output turned off                       |
+
+75% limit calculated as limit - limit >> 2 - which is approx. 75%
+
+When the current limit is reached, the speed pot must be reset to the off position.
 
 When the unit is used for the first time, the potentiometer values for full left, full right, and center position
 must be configured. To indicate this, the Power LED is turned off, and the Track LED flashes using the following:

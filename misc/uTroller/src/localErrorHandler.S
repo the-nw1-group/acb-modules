@@ -54,10 +54,10 @@ ErrorHandler_handle:
 
 #endif
                     ldr             r2, = #UTROLLER_TRACK_GPIOBASE  @ turn off track LED
-                    ldr             r1, =#1<<UTROLLER_TRACK
+                    ldr             r1, = #1<<UTROLLER_TRACK
                     str             r1, [r2, GPIO_BRR_OFFSET]
                     ldr             r2, = #UTROLLER_POWER_GPIOBASE  @ fast flash power LED
-                    ldr             r1, =#1<<UTROLLER_POWER
+                    ldr             r1, = #1<<UTROLLER_POWER
                     movs            r3, #16
 0:
                     str             r1, [r2, GPIO_BSRR_OFFSET]

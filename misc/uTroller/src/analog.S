@@ -74,8 +74,8 @@ dmaConfig = DMA_CCR_PL_0 | DMA_CCR_MSIZE_0 | DMA_CCR_PSIZE_1 | DMA_CCR_MINC | DM
                     bne             0b
 
                     movs            r0, #ADC_CR_ADEN                @ enable the ADC so we can configure it
-                    str             r0, [r2, #ADC_CR_OFFSET]        @ set continous, overwrite, triggered from Timer 2 update, using DMA in circular mode
-                    ldr             r0, = #ADC_CFGR1_CONT | ADC_CFGR1_OVRMOD | ADC_CFGR1_EXTEN_0 | ADC_CFGR1_EXTSEL_1 | ADC_CFGR1_DMACFG | ADC_CFGR1_DMAEN
+                    str             r0, [r2, #ADC_CR_OFFSET]        @ set continous, overwrite, triggered from Timer 1 update, using DMA in circular mode
+                    ldr             r0, = #ADC_CFGR1_CONT | ADC_CFGR1_OVRMOD | ADC_CFGR1_EXTEN_0 | ADC_CFGR1_DMACFG | ADC_CFGR1_DMAEN
                     str             r0, [r2, #ADC_CFGR1_OFFSET]
                     ldr             r0, = #ADC_CFGR2_CKMODE_0       @ use PCLK/2
                     str             r0, [r2, #ADC_CFGR2_OFFSET]
@@ -83,16 +83,16 @@ dmaConfig = DMA_CCR_PL_0 | DMA_CCR_MSIZE_0 | DMA_CCR_PSIZE_1 | DMA_CCR_MINC | DM
                     str             r0, [r2, #ADC_SMPR_OFFSET]
                     movs            r0, #ADC_CHSELR_CHSEL4 | ADC_CHSELR_CHSEL5 @ channels 4-5 converted
                     str             r0, [r2, #ADC_CHSELR_OFFSET]
-                    movs            r0, #ADC_CR_ADEN | ADC_CR_ADSTART @ start converting (based on Timer 2)
+                    movs            r0, #ADC_CR_ADEN | ADC_CR_ADSTART @ start converting (based on Timer 1)
                     str             r0, [r2, #ADC_CR_OFFSET]
 
-                    ldr             r2, = #_RCC_APB1ENR             @ enable Timer 2 clock
+                    ldr             r2, = #_RCC_APB2ENR             @ enable Timer 1 clock
                     ldr             r1, [r2]
-                    movs            r0, #RCC_APB1ENR_TIM2EN
+                    ldr             r0, = #RCC_APB2ENR_TIM1EN
                     orrs            r0, r0, r1
                     str             r0, [r2]
 
-                    ldr             r2, = #TIM2_BASE                @ set TIM2 to trigger ADC conversions, running @ 1ms
+                    ldr             r2, = #TIM1_BASE                @ set TIM1 to trigger ADC conversions, running @ 1ms
                     ldr             r0, = #TIM_CR2_MMS_2            @ upcounter, master mode "compare OC1REF" to trigger TRGO
                     str             r0, [r2, #TIM_CR2_OFFSET]
                     ldr             r0, = #47999

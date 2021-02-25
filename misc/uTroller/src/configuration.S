@@ -26,10 +26,10 @@ Configuration_eeprom:
 
 @ temp setting so we don't need to configure every time...
 
-configStatus:           .short     0x011 @ 0                               @ does the config block contain valid data
-configMaxReverseValue:  .short     0xFFD @ 0                               @ ADC value of max reverse (pot. to the left)
-configMaxForwardValue:  .short     0x000 @ 0                               @ ADC value of max forward (pot. to the right)
-configOffValue:         .short     0x7F5 @ 0                               @ ADC value of off (pot. to the middle)
+configStatus:           .short     0 @ 0x011                        @ does the config block contain valid data
+configMaxReverseValue:  .short     0 @ 0xFFD                        @ ADC value of max reverse (pot. to the left)
+configMaxForwardValue:  .short     0 @ 0x000                        @ ADC value of max forward (pot. to the right)
+configOffValue:         .short     0 @ 0x7F5                        @ ADC value of off (pot. to the middle)
 
 CONFIG_STATUS_CONFIGURED = 0x01
 CONFIG_STATUS_EMPTY      = 0x00
@@ -58,7 +58,7 @@ CONFIG_FLASH_RATE       = 100
 @   Returns true if the module is configured, otherwise false
 
 Configuration_isConfigured:
-                    ldr             r0, =#configStatus
+                    ldr             r0, = #configStatus
                     ldrh            r0, [r0]
                     movs            r1, #CONFIG_STATUS_CONFIGURED
                     ands            r0, r0, r1
@@ -70,7 +70,7 @@ Configuration_isConfigured:
 @   Returns the configured max reverse value
 
 Configuration_getMaxReverse:
-                    ldr             r0, =#configMaxReverseValue
+                    ldr             r0, = #configMaxReverseValue
                     ldrh            r0, [r0]
                     bx              lr
 
@@ -80,7 +80,7 @@ Configuration_getMaxReverse:
 @   Returns the configured max forward value
 
 Configuration_getMaxForward:
-                    ldr             r0, =#configMaxForwardValue
+                    ldr             r0, = #configMaxForwardValue
                     ldrh            r0, [r0]
                     bx              lr
 
@@ -91,7 +91,7 @@ Configuration_getMaxForward:
 @   Returns the configured max forward value
 
 Configuration_getOffValue:
-                    ldr             r0, =#configOffValue
+                    ldr             r0, = #configOffValue
                     ldrh            r0, [r0]
                     bx              lr
 
@@ -102,7 +102,7 @@ Configuration_getOffValue:
 
 Configuration_getOption0Value:
                     push            {r7, lr}
-                    ldr             r7, =#configOptionCache
+                    ldr             r7, = #configOptionCache
                     ldrb            r0, [r7]
                     cmp             r0, #0xFF
                     bne             0f
@@ -119,7 +119,7 @@ Configuration_getOption0Value:
 
 Configuration_getOption1Value:
                     push            {r7, lr}
-                    ldr             r7, =#configOptionCache
+                    ldr             r7, = #configOptionCache
                     ldrb            r0, [r7]
                     cmp             r0, #0xFF
                     bne             0f
@@ -141,8 +141,8 @@ CONFIG_SETUP_LEFT_MIN   = CONFIG_SETUP_LEFT   - 0x0010
 CONFIG_SETUP_LEFT_MAX   = CONFIG_SETUP_LEFT
 CONFIG_SETUP_RIGHT_MIN  = CONFIG_SETUP_RIGHT
 CONFIG_SETUP_RIGHT_MAX  = CONFIG_SETUP_RIGHT  + 0x0010
-CONFIG_SETUP_CENTER_MIN = CONFIG_SETUP_CENTER - 0x0020
-CONFIG_SETUP_CENTER_MAX = CONFIG_SETUP_CENTER + 0x0020
+CONFIG_SETUP_CENTER_MIN = CONFIG_SETUP_CENTER - 0x0050
+CONFIG_SETUP_CENTER_MAX = CONFIG_SETUP_CENTER + 0x0050
 
     static_data(Configuration_setupLimits)
 Configuration_setupLimits:
@@ -176,11 +176,11 @@ Configuration_setupLimits:
 Configuration_configure:
                     bl              Configuration_configureSetup
 
-                    ldr             r7, =#configOptionCache
-                    ldr             r0, =#Configuration_setupLimits
+                    ldr             r7, = #configOptionCache
+                    ldr             r0, = #Configuration_setupLimits
                     ldrh            r4, [r0]                        @ load min and max expected values
                     ldrh            r5, [r0, #2]
-                    ldr             r6, =#Analog_vpropi
+                    ldr             r6, = #Analog_vpropi
 __configureLoop:
                     ldrb            r0, [r7, #3]                    @ check if the value has been ok for 5s
                     movs            r1, #1
@@ -195,15 +195,15 @@ __configureLoop:
                     movs            r1, #1<<1                       @ when the alarm triggers, we know the value (more or less)
                     ands            r0, r1                          @ is within range...
                     bne             __configureContinue
-                    movs            r0, #1                          @ no alarm, so start one
-                    ldr             r1, =#5*1000
-                    ldr             r2, =#Configuration_configureValueOK
+                    movs            r0, #AS_CONFIG_CHECK_TIMEOUT    @ no alarm, so start one
+                    ldr             r1, = #5*1000
+                    ldr             r2, = #Configuration_configureValueOK
                     bl              MsCounter_alarmIn
                     movs            r0, #1<<1                       @ and set the flag that the alarm has been set
                     strb            r0, [r7, #3]
                     b               __configureContinue
 __configureOutOfRange:
-                    movs            r0, #1                          @ value out of range, so clear alarm
+                    movs            r0, #AS_CONFIG_CHECK_TIMEOUT    @ value out of range, so clear alarm
                     bl              MsCounter_clearAlarm
                     movs            r0, #0                          @ and reset flags
                     strb            r0, [r7, #3]
@@ -217,7 +217,7 @@ __configureValueOK:
                     strb            r0, [r7, #2]                    @ reset flash state
                     ldrb            r0, [r7, #1]                    @ store value, based on stage
                     adds            r0, r0, #1                      @ add 1 to get offset for below
-                    ldr             r1, =#configSetupStatus
+                    ldr             r1, = #configSetupStatus
                     ldrh            r2, [r6, #2]
                     strh            r2, [r1, r0]
                     cmp             r0, #6                          @ inc the stage, unless already at the end...
@@ -226,7 +226,7 @@ __configureValueOK:
                     strb            r0, [r7, #1]                    @ store back next offset
 
                     cpsie           i                               @ re-enable interrupts
-                    ldr             r1, =#Configuration_setupLimits
+                    ldr             r1, = #Configuration_setupLimits
                     subs            r0, r0, #1
                     lsls            r0, r0, #1
                     ldrh            r4, [r1, r0]                    @ load new min and max expected values
@@ -239,7 +239,7 @@ __configureFinished:
                     strb            r0, [r1]                        @ set version number and configuration set
                     bl              Configuration_writeToEeprom     @ write configuration data to eeprom
 0:
-                    b               NVIC_systemReset                @ restart the device
+                    bl              NVIC_systemReset                @ restart the device (bl, as address is too far for b)
 
     private_function(Configuration_getOptions)
 
@@ -248,12 +248,12 @@ __configureFinished:
 @   configOptionCache. Returns the value stored
 
 Configuration_getOptions:
-                    ldr             r2, =#UTROLLER_CONFIG_GPIOBASE
+                    ldr             r2, = #UTROLLER_CONFIG_GPIOBASE
                     ldr             r0, [r2, #GPIO_IDR_OFFSET]
-                    ldr             r1, =#(1<<UTROLLER_CONFIG0) | (1<<UTROLLER_CONFIG1)
+                    ldr             r1, = #(1<<UTROLLER_CONFIG0) | (1<<UTROLLER_CONFIG1)
                     ands            r0, r0, r1
-                    lsls            r0, r0, #UTROLLER_CONFIG0
-                    ldr             r2, =#configOptionCache
+                    lsrs            r0, r0, #(UTROLLER_CONFIG0-1)
+                    ldr             r2, = #configOptionCache
                     strb            r0, [r2]
                     bx              lr
 
@@ -277,9 +277,9 @@ Configuration_configureSetup:
                     orrs            r0, r0, r1
                     str             r0, [r2, #GPIO_MODER_OFFSET]
 
-                    movs            r0, #0
-                    ldr             r1, =#CONFIG_FLASH_RATE
-                    ldr             r2, =#Configuration_configureFlashLEDs
+                    movs            r0, #AS_CONFIG_LED_FLASH
+                    ldr             r1, = #CONFIG_FLASH_RATE
+                    ldr             r2, = #Configuration_configureFlashLEDs
                     bl              MsCounter_alarmIn
 
                     pop             {r7, pc}
@@ -291,7 +291,7 @@ Configuration_configureSetup:
 
 Configuration_configureFlashLEDs:
                     push            {r7, lr}
-                    ldr             r0, =#configFlashState
+                    ldr             r0, = #configFlashState
                     ldrb            r1, [r0]
                     adds            r2, r1, #1
                     cmp             r2, #8
@@ -299,24 +299,24 @@ Configuration_configureFlashLEDs:
                     movs            r2, #0
 0:
                     strb            r2, [r0]
-                    ldr             r2, =#configStage
+                    ldr             r2, = #configStage
                     ldrb            r2, [r2]
                     cmp             r1, r2
                     bgt             9f
 
-                    ldr             r0, =#UTROLLER_TRACK_GPIOBASE
+                    ldr             r0, = #UTROLLER_TRACK_GPIOBASE
                     ldr             r1, [r0, #GPIO_ODR_OFFSET]
-                    ldr             r2, =#1<<UTROLLER_TRACK
+                    ldr             r2, = #1<<UTROLLER_TRACK
                     tst             r1, r2
-                    beq             0f
+                    beq             1f
                     str             r2, [r0, #GPIO_BRR_OFFSET]
                     b               9f
-0:
+1:
                     str             r2, [r0, #GPIO_BSRR_OFFSET]
 9:
-                    movs            r0, #0                              @ re-arm the alarm!
-                    ldr             r1, =#CONFIG_FLASH_RATE
-                    ldr             r2, =#Configuration_configureFlashLEDs
+                    movs            r0, #AS_CONFIG_LED_FLASH        @ re-arm the alarm!
+                    ldr             r1, = #CONFIG_FLASH_RATE
+                    ldr             r2, = #Configuration_configureFlashLEDs
                     bl              MsCounter_alarmIn
                     pop             {r7, pc}
 
@@ -327,7 +327,7 @@ Configuration_configureFlashLEDs:
 @   set the value is ok flag
 
 Configuration_configureValueOK:
-                    ldr             r0, =#configOptionCache
+                    ldr             r0, = #configOptionCache
                     movs            r1, #1
                     strb            r1, [r0, #3]
                     bx              lr
@@ -340,13 +340,13 @@ Configuration_configureValueOK:
 Configuration_writeToEeprom:
                     push            {r5-r7, lr}
                     bl              Flash_unlockWrite               @ unlock flash writing
-                    ldr             r0, =#Configuration_eeprom
+                    ldr             r0, = #Configuration_eeprom
                     movs            r1, #FLASH_CR_PER
                     bl              Flash_erase                     @ erase the configuration data (ALL of it)
                     bl              Flash_enableFlashProgramming    @ enable flash writing
 
-                    ldr             r4, =#Configuration_eeprom
-                    ldr             r5, =#configSetupStatus
+                    ldr             r4, = #Configuration_eeprom
+                    ldr             r5, = #configSetupStatus
                     ldrh            r0, [r5, #2]                    @ write configuration data
                     strh            r0, [r4, #2]
                     bl              Flash_waitForOperation
@@ -359,6 +359,9 @@ Configuration_writeToEeprom:
                     ldrh            r0, [r5]                        @ write status word (last)
                     strh            r0, [r4]
                     bl              Flash_waitForOperation
+
+                    bl              Flash_disableFlashProgramming   @ Finish writing to flash
+                    bl              Flash_lockWrite
                     pop             {r5-r7, pc}
 
     .end

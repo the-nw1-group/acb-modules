@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "uTroller",
+            "cwd": "${workspaceRoot}",
+            "executable": "./debug/utroller.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32F042F6",
+            "runToMain": true,
+            "svdFile": "${env:DEV_ROOT}\\cmsis-svd-master\\data\\STMicro\\STM32F042x.svd",
+            "configFiles": [
+                "interface\\stlink.cfg",
+                "target\\stm32f0x.cfg"
+            ]
+        }
+    ]
+}

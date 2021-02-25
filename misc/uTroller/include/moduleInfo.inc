@@ -37,7 +37,7 @@
  * | 7   | PA1      | I/O - OUT    | PWM EN1   (DRV8816)   |
  * | 8   | PA2      | I/O - OUT    | PWM IN2   (DRV8816)   |
  * | 9   | PA3      | I/O - OUT    | PWM EN1   (DRV8816)   |
- * | 10  | PA4      | I/O - Analog | Vpropi (DRV8816)      |
+ * | 10  | PA4      | I/O - Analog | Vpropi    (DRV8816)   |
  * | 11  | PA5      | I/O - Analog | Speed Control         |
  * | 12  | PA6      | I/O - IN     | Tied to analog ground |
  * | 13  | PA7      | I/O - OUT    | PWM Power LED         |
@@ -76,6 +76,7 @@
  */
 
 #define CONCAT2(a, b) a ## b
+#define CONCAT5(a,b,c,d,e) a ## b ## c ## d ## e
 #define CONCAT(a, b) CONCAT2(a, b)
 
 /*
@@ -109,12 +110,31 @@
 #define UTROLLER_TRACK                  1
 #define UTROLLER_POWER_GPIOBASE         GPIOA_BASE
 #define UTROLLER_POWER                  7
+#define UTROLLER_PWM_GPIOBASE           GPIOA_BASE
 
-/* Timer 2 based Pins */
+/* Digital / Timer 2 based Pins */
 #define UTROLLER_MOTOR_EN1              1
-#define UTROLLER_MOTOR_IN1              2
+#define UTROLLER_MOTOR_IN1              0
 #define UTROLLER_MOTOR_EN2              3
-#define UTROLLER_MOTOR_IN2              4
+#define UTROLLER_MOTOR_IN2              2
+
+#define UTROLLER_MOTOR_TIM(r,b,b2)      CONCAT5(TIM_,r,_,b,b2)
+#define UTROLLER_MOTOR_EN1_TIM(r,b,b2)  (UTROLLER_MOTOR_TIM(r ## 1,b ## 2,b2))
+#define UTROLLER_MOTOR_IN1_TIM(r,b,b2)  (UTROLLER_MOTOR_TIM(r ## 1,b ## 1,b2))
+#define UTROLLER_MOTOR_EN2_TIM(r,b,b2)  (UTROLLER_MOTOR_TIM(r ## 2,b ## 4,b2))
+#define UTROLLER_MOTOR_IN2_TIM(r,b,b2)  (UTROLLER_MOTOR_TIM(r ## 2,b ## 3,b2))
+
+#define UTROLLER_MOTOR_IN1_CCR          TIM_CCR1_OFFSET
+#define UTROLLER_MOTOR_IN2_CCR          TIM_CCR3_OFFSET
+
+#define UTROLLER_DRV8816_TIMER_BASE     TIM2_BASE
+#define UTROLLER_DRV8816_AF             2
+
+#define UTROLLER_POWER_TIMER_BASE       TIM14_BASE
+#define UTROLLER_POWER_AF               4
+
+#define UTROLLER_TRACK_TIMER_BASE       TIM3_BASE
+#define UTROLLER_TRACK_AF               1
 
 /* Timer 3 based Pins - overlaps with TRACK above */
 #define UTROLLER_TRACK_CH               4
@@ -125,3 +145,8 @@
 /* Analog Channels */
 #define UTROLLER_VPROPI                 4
 #define UTROLLER_SPEED                  5
+
+/* Alarm slot references */
+#define AS_CONFIG_LED_FLASH             0
+#define AS_CONFIG_CHECK_TIMEOUT         1
+#define AS_CONT_OVERCURRENT_CHECK       2

@@ -24,7 +24,7 @@
 Setup_setup:
                     push            {r7, lr}
 __setupCounter:
-                    ldr             r0, =#System_coreClock
+                    ldr             r0, = #System_coreClock
                     ldr             r0, [r0]
                     bl              MsCounter_init
                     bl              Setup_clocks
