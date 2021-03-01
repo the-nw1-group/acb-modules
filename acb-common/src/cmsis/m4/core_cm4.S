@@ -62,12 +62,12 @@ NVIC_systemReset:
                     dsb                                             @ Ensure completion of memory access
                     b               .                               @ wait until reset
 
-    public_function(NVIC_SetPriorityGrouping)
+    public_function(NVIC_setPriorityGrouping)
 
-@ void NVIC_SetPriorityGrouping(uint priorityGroup)
+@ void NVIC_setPriorityGrouping(uint priorityGroup)
 @   the function sets the priority grouping field using the required unlock sequence.
 
-NVIC_SetPriorityGrouping:
+NVIC_setPriorityGrouping:
                     ands            r0, r0, #7                      @ only values 0..7 are used
                     ldr             r1, =#SCB_AIRCR                 @ read old register configuration
                     ldr             r2, [r1]
@@ -80,16 +80,15 @@ NVIC_SetPriorityGrouping:
                     str             r2, [r1]
                     bx              lr
 
-    public_function(NVIC_GetPriorityGrouping)
+    public_function(NVIC_getPriorityGrouping)
 
-@ uint NVIC_GetPriorityGrouping(void)
+@ uint NVIC_getPriorityGrouping(void)
 @   the function reads the priority grouping field from the NVIC Interrupt Controller.
 
-NVIC_GetPriorityGrouping:
+NVIC_getPriorityGrouping:
                     ldr             r1, =#SCB_AIRCR
                     ldr             r0, [r1]
-                    ldr             r1, =#SCB_AIRCR_PRIGROUP_Msk
-                    ands            r0, r0, r1
+                    ands            r0, r0, #SCB_AIRCR_PRIGROUP_Msk
                     lsr             r0, r0, #SCB_AIRCR_PRIGROUP_Pos
                     bx              lr
 
@@ -104,7 +103,7 @@ NVIC_enableIRQ:
                     lsls            r1, r1, r0
                     ldr             r2, = #NVIC_ISER
                     lsrs            r3, r0, #5
-                    str             r1, [r2, r3]
+                    str             r1, [r2, r3, LSL #2]
                     bx              lr
 
     public_function(NVIC_disableIRQ)
@@ -118,7 +117,7 @@ NVIC_disableIRQ:
                     lsls            r1, r1, r0
                     ldr             r2, = #NVIC_ICER
                     lsrs            r3, r0, #5
-                    str             r1, [r2, r3]
+                    str             r1, [r2, r3, LSL #2]
                     bx              lr
 
     public_function(NVIC_getPendingIRQ)
@@ -132,7 +131,7 @@ NVIC_getPendingIRQ:
                     lsls            r1, r1, r0
                     ldr             r2, = #NVIC_ISPR
                     lsrs            r3, r0, #5
-                    ldr             r0, [r2, r3]
+                    ldr             r0, [r2, r3, LSL #2]
                     tst             r0, r1
                     ite             eq
                     movseq          r0, #1
@@ -150,7 +149,7 @@ NVIC_setPendingIRQ:
                     lsls            r1, r1, r0
                     ldr             r2, = #NVIC_ISPR
                     lsrs            r3, r0, #5
-                    str             r1, [r2, r3]
+                    str             r1, [r2, r3, LSL #2]
                     bx              lr
 
     public_function(NVIC_clearPendingIRQ)
@@ -164,21 +163,21 @@ NVIC_clearPendingIRQ:
                     lsls            r1, r1, r0
                     ldr             r2, = #NVIC_ICPR
                     lsrs            r3, r0, #5
-                    str             r1, [r2, r3]
+                    str             r1, [r2, r3, LSL #2]
                     bx              lr
 
-    public_function(NVIC_GetActive)
+    public_function(NVIC_getActive)
 
-@ uint NVIC_GetActive(int irq)
+@ uint NVIC_getActive(int irq)
 @   the function reads the active register in NVIC and returns the active bit.
 
-NVIC_GetActive:
+NVIC_getActive:
                     ands            r0, r0, #0x1F
                     movs            r1, #1
                     lsls            r1, r1, r0
                     ldr             r2, = #NVIC_IABR
                     lsrs            r3, r0, #5
-                    ldr             r0, [r2, r3]
+                    ldr             r0, [r2, r3, LSL #2]
                     tst             r0, r1
                     ite             eq
                     movseq          r0, #1
@@ -200,17 +199,17 @@ NVIC_setPriority:
 0:                                                                  @ set Priority for Cortex-M  System Interrupts
                     ands            r0, r0, #0x0F                   @ Mask only the bottom 4 bits
                     subs            r0, r0, #4
-                    ldr             r2, =#SCB_SHP
+                    ldr             r2, =#SCB_SHP1
                     strb            r1, [r2, r0]
                     bx              lr
 
-    public_function(NVIC_GetPriority)
+    public_function(NVIC_getPriority)
 
-@ uint NVIC_GetPriority(int irq)
+@ uint NVIC_getPriority(int irq)
 @   the function reads the priority of an interrupt. The interrupt number can be positive to specify an
 @   external (device specific) interrupt, or negative to specify an internal (core) interrupt.
 
-NVIC_GetPriority:
+NVIC_getPriority:
                     cmp             r0, #0
                     blt             0f
                     ldr             r2, =#NVIC_IP
@@ -221,15 +220,15 @@ NVIC_GetPriority:
 0:                                                                  @ get priority for Cortex-M  system interrupts
                     ands            r0, r0, #0x0F                   @ Mask only the bottom 4 bits
                     subs            r0, r0, #4
-                    ldr             r2, =#SCB_SHP
+                    ldr             r2, =#SCB_SHP1
                     ldrb            r0, [r2, r0]
                     b               1b
 
-    public_function(NVIC_EncodePriority)
+    public_function(NVIC_encodePriority)
 
-@ uint NVIC_EncodePriority(uint priorityGroup, uint preemptPriority, uint subPriority)
+@ uint NVIC_encodePriority(uint priorityGroup, uint preemptPriority, uint subPriority)
 @   the function encodes the priority for an interrupt with the given priority group, preemptive priority value, and subpriority value.
-NVIC_EncodePriority:
+NVIC_encodePriority:
                     push            {r7, lr}
                     ands            r0, r0, #7
                     rsbs            r3, r0, #7
@@ -256,12 +255,12 @@ NVIC_EncodePriority:
                     orrs            r0, r0, r3
                     pop             {r7, pc}
 
-    public_function(NVIC_DecodePriority)
+    public_function(NVIC_decodePriority)
 
-@ void NVIC_DecodePriority(uint priority, uint priorityGroup, uint* pPreemptPriority, unit* pSubPriority)
+@ void NVIC_decodePriority(uint priority, uint priorityGroup, uint* pPreemptPriority, unit* pSubPriority)
 @   the function decodes an interrupt priority value with a given priority group to preemptive priority value and subpriority value.
 
-NVIC_DecodePriority:
+NVIC_decodePriority:
                     push            {r5-r7, lr}
                     ands            r1, r1, #7
                     rsbs            r5, r1, #7

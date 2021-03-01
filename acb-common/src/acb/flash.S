@@ -26,6 +26,14 @@
 #define FLASH_FKEY2 FLASH_KEY2
 #endif
 
+#if !defined(FLASH_CR_MER)
+#define FLASH_CR_MER FLASH_CR_MER1
+#endif
+
+#if !defined(FLASH_CR_OPTPG)
+#define FLASH_CR_OPTPG FLASH_CR_OPTSTRT
+#endif 
+
 Flash_unlockWrite:
                     ldr             r3, = #FLASH_R_BASE
                     ldr             r0, [r3, #FLASH_CR_OFFSET]      @ does the flash access need unlocking?
@@ -63,7 +71,13 @@ Flash_lockWrite:
 Flash_unlockOptionByteWrite:
                     ldr             r3, = #FLASH_R_BASE
                     ldr             r0, [r3, #FLASH_CR_OFFSET]      @ does writes to the option bytes needs unlocking
+#if defined(FLASH_CR_OPTWRE)
                     ldr             r1, = #FLASH_CR_OPTWRE
+#elif defined(FLASH_CR_OPTLOCK)
+                    ldr             r1, = #FLASH_CR_OPTLOCK
+#else
+    #error Define the option byte write/unlock bit
+#endif
                     tst             r0, r1
                     bne             0f                              @ writes to option byte already enabled
 
@@ -81,6 +95,7 @@ Flash_unlockOptionByteWrite:
 @   erase an area of flash memory; required before writing to that area.
 @   address is the base address of the page to erase when erasing in page mode.
 @   eraseType should be one off: FLASH_CR_PER, FLASH_CR_MER, or FLASH_CR_OPTER
+@       if FLASH_CR_OPTER is supported by the device
 @   returns true on success or false (ERROR) on failure
 
 Flash_erase:
@@ -90,22 +105,34 @@ Flash_erase:
                     beq             __fEraseOptionOK
                     cmp             r1, #FLASH_CR_MER
                     beq             __fEraseOptionOK
+#if defined(FLASH_CR_OPTER)
                     cmp             r1, #FLASH_CR_OPTER
                     beq             __fEraseOptionOK
+#endif
 __fEraseError:
                     movs            r0, #ERROR
                     b               0f
 
 __fEraseOptionOK:
                     ldr             r4, [r7, #FLASH_CR_OFFSET]
-                    movs            r2, #(FLASH_CR_PER | FLASH_CR_MER | FLASH_CR_OPTER)
+#if defined(FLASH_CR_OPTER)
+    #define ERASE_MASK (FLASH_CR_PER | FLASH_CR_MER | FLASH_CR_OPTER)
+#else
+    #define ERASE_MASK (FLASH_CR_PER | FLASH_CR_MER)
+#endif
+                    movs            r2, #ERASE_MASK
                     bics            r4, r4, r2
                     orrs            r4, r4, r1
                     str             r4, [r7, #FLASH_CR_OFFSET]
                     cmp             r1, #FLASH_CR_PER
                     bne             __fEraseStart
+
+#if defined(FLASH_AR_OFFSET)
                     str             r0, [r7, #FLASH_AR_OFFSET]      @ store the address to erase, must be done after
                                                                     @ setting the PER bit in the CR register
+#else
+    #warn Warning: Need to write the erase option for devices without the FLASH_AR_OFFSET register
+#endif
 
 __fEraseStart:                                                      @ start erase operation
                     ldr             r0, [r7, #FLASH_CR_OFFSET]      @ reload as set operation above, may have changed
@@ -115,7 +142,7 @@ __fEraseStart:                                                      @ start eras
                     bl              Flash_waitForOperation
                                                                     @ clear erase flags
                     ldr             r0, [r7, #FLASH_CR_OFFSET]
-                    movs            r2, #(FLASH_CR_PER | FLASH_CR_MER | FLASH_CR_OPTER)
+                    movs            r2, #ERASE_MASK
                     bics            r0, r0, r2
                     str             r0, [r7, #FLASH_CR_OFFSET]
                                                                     @ check for write protect errors

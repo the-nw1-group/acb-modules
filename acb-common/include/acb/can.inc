@@ -21,10 +21,22 @@
 
 #define ACB_USE_CAN
 
+#if !defined(ACB_CAN_SJW)
 #define ACB_CAN_SJW     0
+#endif 
+
+#if !defined(ACB_CAN_BS1)
 #define ACB_CAN_BS1     10
+#endif 
+
+#if !defined(ACB_CAN_BS2)
 #define ACB_CAN_BS2     3
+#endif 
+
+#if !defined(ACB_CAN_BRP)
 #define ACB_CAN_BRP     23
+#endif 
+
 
 /*
  * Port definitions
@@ -99,4 +111,3 @@
 #define AcbTransport_sendMessage            Can_sendMessage
 #define AcbTransport_postMessage            Can_postMessage
 #define AcbTransport_peakMessage            Can_getMsg
-

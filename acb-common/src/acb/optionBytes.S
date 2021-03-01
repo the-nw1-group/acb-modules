@@ -76,11 +76,13 @@ OptionByte_write:
                     bl              Flash_unlockOptionByteWrite
                     cmp             r0, #SUCCESS
                     bne             __obWriteFail
+#if defined(FLASH_CR_OPTER)
                     movs            r0, #0
                     movs            r1, #FLASH_CR_OPTER
                     bl              Flash_erase
                     cmp             r0, #SUCCESS
                     bne             __obWriteFail
+#endif
                     bl              Flash_enableOptionByteProgramming
                     cmp             r0, #SUCCESS
                     bne             __obWriteFail

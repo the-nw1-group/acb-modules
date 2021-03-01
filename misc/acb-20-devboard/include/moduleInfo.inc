@@ -11,13 +11,14 @@
 
 #include "constants.inc"
 
-#include "stm/stm32l431xx.inc"
+#include "stm/stm32l4xx.inc"
 #include "stm/startup_stm32l431xx.inc"
-
+#include "stm/system_stm32l431xx.inc"
 #include "cmsis/core_cm4.inc"
 
+#include "acb/common.inc"
 #include "acb/functionHeaders.inc"
-
+#include "acb/msCounter.inc"
 
 /*
  * Private ACB 2.0 Development Board
@@ -55,15 +56,6 @@
  * |:---:| -------- | ------------ | --------------------- |
  *
  */
-
-/*
- * Define the number of alarm slots required
- *
- */
-
-#define ACB_ALARM_SLOTS 4
-
-#include "acb/msCounter.inc"
 
 /*
  * Configure error handler to capture default handler, and all faults

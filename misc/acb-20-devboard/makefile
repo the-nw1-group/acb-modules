@@ -4,10 +4,12 @@ TARGET := acb_20_devboard
 
 # Source and Include Files
 CSOURCES = \
+	../../acb-common/src/stm32l431/system.S \
 	../../acb-common/src/stm32l431/startup.S \
 	../../acb-common/src/acb/msCounter.S \
 	../../acb-common/src/cmsis/m4/core_cm4.S \
-	../../acb-common/src/acb/errorHandler.S
+	../../acb-common/src/acb/errorHandler.S \
+	src/main.S
 
 CINCLUDE_PATHS = \
 	-Iinclude \
@@ -15,7 +17,8 @@ CINCLUDE_PATHS = \
 
 # Defines
 CDEFINES = \
-	-DSTM32L431 \
+	-DSTM32L431xx \
+ 	-DHSE_VALUE=12000000\
 	$(CDEFINES.$(BUILD))
 
 # Build Flags

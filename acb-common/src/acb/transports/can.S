@@ -17,16 +17,38 @@
 
     public_function(Can_initForStandardFrames)
 
+#if defined(STM32L431xx)
+    #define ACB_PERIPH_CLOCK_ENABLE    _RCC_APB1ENR1
+    #define ACB_RCC_APB1ENR_CANEN      RCC_APB1ENR1_CAN1EN
+#else
+    #define ACB_PERIPH_CLOCK_ENABLE    _RCC_APB1ENR
+    #if defined(__STM32F30x)
+        #define ACB_RCC_APB1ENR_CANEN      RCC_APB1ENR_CAN1EN
+    #else
+        #define ACB_RCC_APB1ENR_CANEN      RCC_APB1ENR_CANEN
+    #endif
+#endif
+
 @ for now default to using CAN1
 #if !defined(CAN_BASE)
-#define CAN_BASE CAN1_BASE
+    #define CAN_BASE CAN1_BASE
 
-#define _CAN_sFIFOMailBox       _CAN1_sFIFOMailBox
-#define _CAN_sFilterRegister    _CAN1_sFilterRegister
-#define _CAN_sTxMailBox         _CAN1_sTxMailBox
-#define _CAN_FMR                _CAN1_FMR
+    #if !defined(_CAN_sFIFOMailBox)
+        #define _CAN_sFIFOMailBox       _CAN1_sFIFOMailBox
+    #endif
 
-#define RCC_APB1ENR_CANEN RCC_APB1ENR_CAN1EN
+    #if !defined(_CAN_sFilterRegister)
+        #define _CAN_sFilterRegister    _CAN1_sFilterRegister
+    #endif
+
+    #if !defined(_CAN_sTxMailBox)
+        #define _CAN_sTxMailBox         _CAN1_sTxMailBox
+    #endif
+
+    #if !defined(_CAN_FMR)
+        #define _CAN_FMR                _CAN1_FMR
+    #endif
+
 #endif
 
 @ void CAN_initForStandardFrames()
@@ -289,9 +311,9 @@ Can_setupPort:
 @   leaves the CAN module in initalise mode
 
 Can_setupPeripheral:
-                    ldr             r3, = #_RCC_APB1ENR             @ enable bxCAN clock
+                    ldr             r3, = #ACB_PERIPH_CLOCK_ENABLE  @ enable bxCAN clock
                     ldr             r1, [r3]
-                    ldr             r0, = #RCC_APB1ENR_CANEN
+                    ldr             r0, = #ACB_RCC_APB1ENR_CANEN
                     orrs            r0, r0, r1
                     str             r0, [r3]
 
