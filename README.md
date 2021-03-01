@@ -1,5 +1,5 @@
-Another Control Bus
-===================
+Another Control Bus 2.0
+=======================
 
 or Accessory Control Bus - a CBUS like control bus for model railway accessories such as control panels, servos,
 signals and the like. More details on CBUS can be found on the <http://www.merg.org.uk/merg_resources/cbus.php> website.
@@ -11,21 +11,22 @@ Further documentation can be found <http://the-nw1-group.github.io/acb-modules>.
 The Modules
 -----------
 
-The modules are based around either STM32F042 ARM Cortex-M0 microcontroller, or more powerful STM32F3xxx, or STM32F7xxx 
+The modules are based around either STM32L431 ARM Cortex-M0 microcontroller, or more powerful STM32H7xxx 
 microontrollers. 
 
-| Module      | Microcontroller  | Description |
-| ----------- | ---------------- | ------------------------------------------------------------------------------------------- |
-| ACB-1TC     | STM32F042F6      | For 1 turnout, operates 1 servo, 1 relay, and 2 inputs for proving                          |
-| ACB-2TC     | STM32F042G6      | For 2 turnouts, operates 2 servos, 2 relays, and 4 inputs for proving, additional 2 outputs |
-| ACB-4TC     | STM32F042K6      | For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving                       |
-| ACB-6IOMV   | STM32F042F6      | 6 configuration input or outputs, configurable for various voltages and other options       |
-| ACB-8IOMV2  | STM32F042G6      | 8 configuration input or outputs, configurable for various voltages and other options       |
-| ACB-16LED   | STM32F042F6      | 16 constant current LED outputs                                                             |
-| ACB-90LED   | STM32F303CB      | 90 LED driver using Charlie Plexing to drive LEDs                                           |
-| ACB-4SND    | STM32F730RB      | 4 Mono sound output, with 8 inputs                                                          |
-| ACB-ETH2    | STM32F767V6      | CAN to CAN and Ethernet bridge                                                              |
-| ACB-BLE-CAB | STM32L031K6      | Wireless Bluetooth Low Energy DCC Cab                                                       |
+| Module         | Microcontroller  | Description |
+| -------------- | ---------------- | ------------------------------------------------------------------------------------------- |
+| ACB-2TC        | STM32L431K       | For 2 turnouts, operates 2 servos, 2 relays, and 4 inputs for proving                       |
+| ACB-4DTC       | STM32L431K       | Detection of 4 DCC block occupancy, using current transformers                              |
+| ACB-4IR-DETECT | STM32L431K       | Detection of 4 DCC block occupancy, using reflection of IR LEDs                             |
+| ACB-4RELAY     | STM32L431K       | 4 channel solid-state relay output module                                                   |
+| ACB-4SIG       | STM32L431K       | 4 WS2812 based signal driver, and 4 low(-ish) power LED output                              |
+| ACB-4SND       | STM32L431R       | 4 Channel mono-sound output                                                                 |
+| ACB-4TC        | STM32L431C       | For 4 turnouts, operates 4 servos, 4 relays, and 8 inputs for proving                       |
+| ACB-8IO        | STM32L431K       | Generic 8 input/output module                                                               |
+| ACB-16LED      | STM32L431K       | 16 constant current LED outputs                                                             |
+| ACB-110LED     | STM32L431C       | 110 LED driver using Charlie Plexing to drive LEDs                                          |
+| ACB-ETHERNET   | STM32H723V       | CAN to Ethernet bridge
 
 Most of the code is written in assembler - yeah I know...  
 
@@ -37,16 +38,7 @@ Whilst developing the modules listed above, a number of side projects have evolv
 | Module        | Microcontroller  | Description |
 | ------------- | ---------------- | --------------------------------------------------------------------------------- |
 | Signal Tester | STM32F042F6      | For testing serial RGB LEDs and for testing and positioning Servos                |
-| CBUS Monitor  | STM32F042F6      | Display messages on the CAN bus, decode, graph, and send test messages            |
 | QUAD-IR       | STM32F030F4      | Based on the MERG "Hector", use reflected IR to detect trains                     | 
-| BCO           | STM32F030F4      | Based on the MERG "DCO", Block cutout for DCC                                     |
-| 2RELAY        |                  | 2 Relay board for Finder 32.21-x000 type relays                                   |
-| 4RELAY        |                  | 4 Relay board for Finder 34.51-x000 type relays                                   |
-| DTC1          |                  | Based on the MERG "DTC8", uses current transformer to detect trains, 1 input      |
-| DTC2          |                  | Based on the MERG "DTC8", uses current transformer to detect trains, 2 input      |
-| DTC4          |                  | Based on the MERG "DTC8", uses current transformer to detect trains, 4 input      |
-| PSU4V5        |                  | Simple DC/DC Buck convertor                                                       |
-| 8OUT-PP       |                  | 8 Output 5V push/pull addon for ACB-6IOMV/ACB-8IOMV                               |
 | uTroller      | STM32F042F6      | Simple DC model railway controller                                                |
 
 Building and Debugging
@@ -55,10 +47,10 @@ Building and Debugging
 You'll need the following tools to build the source code, all version numbers are the versions I'm currently using, not
 required versions:
 
-* Visual Studio code - version 1.49.2
-  * `ARM Extension` - version 1.4.0
-  * `C/C++` - version 1.0.1
-  * `Cortex-Debug` - version 0.3.7
+* Visual Studio code - version 1.53.2
+  * `ARM Extension` - version 1.5.0
+  * `C/C++` - version 1.2.2
+  * `Cortex-Debug` - version 0.3.12
 * Pre-built GNU toolchain from ARM Cortex-M & Cortex-R processors - version 9-2020-q2
 * OpenOCD - I'm using the one prebuilt by the GNU ARM Eclipse plug-in team - version 0.10.0-13
 * GNU make (for Windows) <http://gnuwin32.sourceforge.net/packages/make.htm>
