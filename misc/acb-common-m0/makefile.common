@@ -1,0 +1,163 @@
+# Common makefile for ACB modules
+
+# Prologue
+all :
+BUILD = debug
+BUILD_DIR = $(BUILD)
+
+# Binaries
+PREFIX = arm-none-eabi-
+# The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
+# either it can be added to the PATH environment variable.
+ifdef GCC_PATH
+CC  = $(GCC_PATH)/$(PREFIX)gcc
+CXX = $(GCC_PATH)/$(PREFIX)g++
+AS  = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
+CP  = $(GCC_PATH)/$(PREFIX)objcopy
+SZ  = $(GCC_PATH)/$(PREFIX)size
+LD  = $(GCC_PATH)/$(PREFIX)g++
+else
+CC  = $(PREFIX)gcc
+CXX = $(PREFIX)g++
+AS  = $(PREFIX)gcc -x assembler-with-cpp
+CP  = $(PREFIX)objcopy
+SZ  = $(PREFIX)size
+LD  = $(PREFIX)g++
+endif
+HEX = $(CP) -O ihex
+BIN = $(CP) -O binary -S
+
+ifdef JAVA_HOME
+JAVA = $(JAVA_HOME)/bin/java
+else
+JAVA = java
+endif
+ifdef SAXON_PATH
+SAXON = $(JAVA) -jar "$(SAXON_PATH)/saxon-he-10.2.jar"
+else
+SAXON = $(JAVA) -jar saxon-he-10.2.jar
+endif
+
+# MCU Defines
+MCU = -mcpu=$(CPU) -mtune=$(CPU) -mthumb $(FPU) $(FLOAT-ABI)
+
+# Defines (C++/C common)
+DEFINES.debug = \
+	-DDEBUG
+
+DEFINES.release = \
+
+FLAGS.debug = \
+	-Og \
+	-g3
+
+FLAGS.release = \
+	-O3
+
+FLAGS.common = \
+	$(MCU) \
+	-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -ffreestanding -fno-builtin -fno-move-loop-invariants \
+	-Wunused -Wuninitialized -Wall -Wextra -Wmissing-declarations -Wconversion -Wpointer-arith -Wpadded -Wshadow -Wlogical-op -Waggregate-return -Wfloat-equal
+
+FLAGS = \
+	-Wa,-adhlns="$(@:%.o=%.o.lst)" \
+	-MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@)" \
+
+# Defines (C)
+CDEFINES.debug   = $(DEFINES.debug)
+CDEFINES.release = $(DEFINES.release)
+
+CFLAGS.debug   = $(FLAGS.debug)
+CFLAGS.release = $(FLAGS.release)
+
+CFLAGS.common = $(FLAGS.common)
+
+CFLAGS = \
+	$(CFLAGS.common) \
+	$(FLAGS) \
+	$(CFLAGS.$(BUILD))
+
+# Defines (C++)
+CXXDEFINES.debug   = $(DEFINES.debug)
+CXXDEFINES.release = $(DEFINES.release)
+
+CXXFLAGS.debug   = $(FLAGS.debug)
+CXXFLAGS.release = $(FLAGS.release)
+
+CXXFLAGS.common = \
+    $(FLAGS.common) --std=c++17 -pedantic
+
+CXXFLAGS = \
+	$(CFLAGS.common) \
+	$(FLAGS) \
+	$(CFLAGS.$(BUILD))
+
+# Linker Defines
+
+# Linker Flags
+LIBS = -lc -lm -lnosys
+
+LIBDIR =
+
+LDFLAGS = \
+	$(CFLAGS.common) \
+	$(LDSCRIPTS) \
+	$(LIBS) \
+	$(LIBDIR) \
+	-nostartfiles -Xlinker --gc-sections --specs=nano.specs -v -lc -lnosys \
+	-Wl,-Map,$(BUILD_DIR)/$(TARGET).map,--cref
+
+# Other Flags
+SZFLAGS = --format=sysv --totals -x
+
+# Build the application
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+
+OBJECTS  = $(addprefix $(BUILD_DIR)/,$(filter %.o,$(notdir $(CSOURCES:.S=.o))))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(filter %.o,$(notdir $(CSOURCES:.c=.o))))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(filter %.o,$(notdir $(CSOURCES:.cpp=.o))))
+vpath %.S   $(dir $(CSOURCES))
+vpath %.c   $(dir $(CSOURCES))
+vpath %.cpp $(dir $(CSOURCES))
+
+$(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR) 
+	$(AS) -c $(CFLAGS) $(CDEFINES) $(CINCLUDE_PATHS) $< -o $@
+
+$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
+	$(CC) -c $(CFLAGS) $(CDEFINES) $(CINCLUDE_PATHS) $< -o $@
+
+$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR) 
+	$(CX) -c $(CXXFLAGS) $(CDEFINES) $(CINCLUDE_PATHS) $< -o $@
+
+$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+	$(LD) $(LDFLAGS) $(OBJECTS) -o $@
+	$(SZ) $(SZFLAGS) $@
+
+$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+	$(HEX) $< $@
+	
+$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+	$(BIN) $< $@
+
+$(BUILD_DIR):
+	mkdir -p $@
+
+.PHONY: clean all
+
+clean:
+	rm -rf $(BUILD_DIR)
+
+# Yeah the following is a massive hack...
+
+CBUS_MESSAGES_SRC=../acb-common/src/cbus/src/cbusMessages.S
+CBUS_MESSAGES_XSL=../acb-common/src/cbus/xslt/gen-handlers.xslt
+CBUS_MESSAGES_XML=../acb-common/src/cbus/xml/CBUS-messages.xml
+ifneq (,$(findstring $(CBUS_MESSAGES_SRC), $(CSOURCES)))
+$(CBUS_MESSAGES_SRC): $(CBUS_MESSAGES_XSL) Makefile | $(BUILD_DIR) 
+	$(SAXON) -xsl:$< -o:$@ -s:$(CBUS_MESSAGES_XML)
+endif
+
+ifneq (,$(findstring ../$(CBUS_MESSAGES_SRC), $(CSOURCES)))
+../$(CBUS_MESSAGES_SRC): ../$(CBUS_MESSAGES_XSL) Makefile | $(BUILD_DIR) 
+	$(SAXON) -xsl:$< -o:$@ -s:../$(CBUS_MESSAGES_XML)
+endif
