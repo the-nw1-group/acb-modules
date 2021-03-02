@@ -12,16 +12,16 @@ CSOURCES = \
 	src/system.S \
 	src/drv8816.S \
 	src/controller.S \
-	../../acb-common/src/stm32f0/startup.S \
-	../../acb-common/src/acb/msCounter.S \
-	../../acb-common/src/acb/math.S \
-	../../acb-common/src/cmsis/m0/core_cm0.S \
-	../../acb-common/src/acb/flash.S \
-	../../acb-common/src/acb/errorHandler.S
+	../acb-common-m0/src/stm32f0/startup.S \
+	../acb-common-m0/src/acb/msCounter.S \
+	../acb-common-m0/src/acb/math.S \
+	../acb-common-m0/src/cmsis/m0/core_cm0.S \
+	../acb-common-m0/src/acb/flash.S \
+	../acb-common-m0/src/acb/errorHandler.S
 
 CINCLUDE_PATHS = \
 	-Iinclude \
-	-I../../acb-common/include
+	-I../acb-common-m0/include
 
 # Defines
 CDEFINES = \
@@ -35,4 +35,4 @@ CPU = cortex-m0
 LDSCRIPTS = -T ldscripts/mem.ld -T ldscripts/sections.ld
 
 # Include common makefile
-include ../../acb-common/makefile.common
+include ../acb-common-m0/makefile.common
