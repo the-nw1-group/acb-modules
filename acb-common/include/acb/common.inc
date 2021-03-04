@@ -40,28 +40,28 @@
 #define ACB_LED_GREEN_BIT   3
 #define ACB_LED_YELLOW_BIT  2
 #elif !defined(ACB_LED_USE)
-#error You must manually define ACB_LED_USE when ACB_LED_CUSTOM is defined
+   #error You must manually define ACB_LED_USE when ACB_LED_CUSTOM is defined
 #elif (ACB_LED_USE==1) && (!defined(ACB_LED_PORT) || !defined(ACB_LED_GREEN_BIT) || !defined(ACB_LED_YELLOW_BIT))
-#error You must manually define all of: ACB_LED_PORT; ACB_LED_GREEN_BIT; ACB_LED_YELLOW_BIT, when ACB_LED_CUSTOM is defined and ACB_LED_USE = 1
+   #error You must manually define all of: ACB_LED_PORT; ACB_LED_GREEN_BIT; ACB_LED_YELLOW_BIT, when ACB_LED_CUSTOM is defined and ACB_LED_USE = 1
 #endif
 
 #if !defined(ACB_FLIMSW_CUSTOM)
-#define ACB_FLIMSW_USE                      1
-#define ACB_FLIMSW_PORT                     GPIOB_BASE
-#define ACB_FLIMSW_BIT                      8
-/*
- *  These must match the selection ...PORT and ...BIT
- *  i.e PB8 = SYSCFG_EXTICR3[0..3] = 1
- */
-#define ACB_FLIMSW_SYSCFG_EXTI_REG          (_SYSCFG_EXTICR + (3-1) * 4)
-#define ACB_FLIMSW_SYSCFG_EXTI_START_BIT    0
-#define ACB_FLIMSW_SYSCFG_EXTI_VALUE        SYSCFG_EXTICR3_EXTI8_PB
-#define ACB_FLIMSW_SYSCFG_EXTI_ISR          __exti415IRQHandler
-#define ACB_FLIMSW_SYSCFG_EXTI_IRQ          EXTI4_15_IRQn
+   #define ACB_FLIMSW_USE                      1
+   #define ACB_FLIMSW_PORT                     GPIOB_BASE
+   #define ACB_FLIMSW_BIT                      8
+   /*
+   *  These must match the selection ...PORT and ...BIT
+   *  i.e PB8 = SYSCFG_EXTICR3[0..3] = 1
+   */
+   #define ACB_FLIMSW_SYSCFG_EXTI_REG          (_SYSCFG_EXTICR + (3-1) * 4)
+   #define ACB_FLIMSW_SYSCFG_EXTI_START_BIT    0
+   #define ACB_FLIMSW_SYSCFG_EXTI_VALUE        SYSCFG_EXTICR3_EXTI8_PB
+   #define ACB_FLIMSW_SYSCFG_EXTI_ISR          __exti415IRQHandler
+   #define ACB_FLIMSW_SYSCFG_EXTI_IRQ          EXTI4_15_IRQn
 #elif !defined(ACB_FLIMSW_USE)
-#error You must manually define ACB_FLIMSW_USE when ACB_FLIMSW_CUSTOM is defined
+   #error You must manually define ACB_FLIMSW_USE when ACB_FLIMSW_CUSTOM is defined
 #elif (ACB_FLIMSW_USE==1) && (!defined(ACB_FLIMSW_PORT) || !defined(ACB_FLIMSW_BIT) || !defined(ACB_FLIMSW_SYSCFG_EXTI_REG) || !defined(ACB_FLIMSW_SYSCFG_EXTI_START_BIT) || !defined(ACB_FLIMSW_SYSCFG_EXTI_VALUE) || !defined(ACB_FLIMSW_SYSCFG_EXTI_ISR) || !defined(ACB_FLIMSW_SYSCFG_EXTI_IRQ))
-#error You must manually define all of: ACB_FLIMSW_PORT; ACB_FLIMSW_BIT; ACB_FLIMSW_SYSCFG_EXTI_REG; ACB_FLIMSW_SYSCFG_EXTI_START_BIT; ACB_FLIMSW_SYSCFG_EXTI_VALUE; ACB_FLIMSW_SYSCFG_EXTI_ISR; ACB_FLIMSW_SYSCFG_EXTI_IRQ when ACB_FLIMSW_CUSTOM is defined and ACB_FLIMSW_USE = 1
+   #error You must manually define all of: ACB_FLIMSW_PORT; ACB_FLIMSW_BIT; ACB_FLIMSW_SYSCFG_EXTI_REG; ACB_FLIMSW_SYSCFG_EXTI_START_BIT; ACB_FLIMSW_SYSCFG_EXTI_VALUE; ACB_FLIMSW_SYSCFG_EXTI_ISR; ACB_FLIMSW_SYSCFG_EXTI_IRQ when ACB_FLIMSW_CUSTOM is defined and ACB_FLIMSW_USE = 1
 #endif
 
 /*
@@ -69,5 +69,5 @@
  */
 
 #if !defined(ACB_ALARM_SLOTS)
-#define ACB_ALARM_SLOTS 8
+   #define ACB_ALARM_SLOTS 8
 #endif

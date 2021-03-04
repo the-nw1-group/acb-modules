@@ -50,38 +50,34 @@
  */
 
 #if ACB_CANPORT == ACB_CAN_USEPORTA
-
-#define ACB_CAN_AHBENR              RCC_AHBENR_GPIOAEN
-#define ACB_CAN_GPIOBASE            GPIOA_BASE
-#define ACB_CAN_RXPIN               11
-#define ACB_CAN_TXPIN               12
-#define ACB_CAN_GPIO_AFR_OFFSET     (GPIO_AFR_OFFSET+4)
-
+       #define ACB_CAN_AHBENR              RCC_AHBENR_GPIOAEN
+       #define ACB_CAN_GPIOBASE            GPIOA_BASE
+       #define ACB_CAN_RXPIN               11
+       #define ACB_CAN_TXPIN               12
+       #define ACB_CAN_GPIO_AFR_OFFSET     (GPIO_AFR_OFFSET+4)
 #elif ACB_CANPORT == ACB_CAN_USEPORTB
-
-#define ACB_CAN_AHBENR              RCC_AHBENR_GPIOBEN
-#define ACB_CAN_GPIOBASE            GPIOB_BASE
-#define ACB_CAN_RXPIN               8
-#define ACB_CAN_TXPIN               9
-#define ACB_CAN_GPIO_AFR_OFFSET     (GPIO_AFR_OFFSET+4)
-
+       #define ACB_CAN_AHBENR              RCC_AHBENR_GPIOBEN
+       #define ACB_CAN_GPIOBASE            GPIOB_BASE
+       #define ACB_CAN_RXPIN               8
+       #define ACB_CAN_TXPIN               9
+       #define ACB_CAN_GPIO_AFR_OFFSET     (GPIO_AFR_OFFSET+4)
 #elif (ACB_CANPORT == ACB_CAN_USEOTHER) && (!defined(ACB_CAN_AHBENR) || !defined(ACB_CAN_GPIOBASE) || !defined(ACB_CAN_RXPIN) ||\
        !defined(ACB_CAN_TXPIN) || !defined(ACB_CAN_GPIO_AFR_OFFSET) || !defined(ACB_CAN_REQUIRES_SYSCONFIG))
-#error You must manually define the CAN/PIN settings for this usage
+       #error You must manually define the CAN/PIN settings for this usage
 #else
-#error You must define ACB_CANPORT to be either ACB_CAN_USEPORTA, ACB_CAN_USEPORTB or ACB_CAN_USEOTHER
+       #error You must define ACB_CANPORT to be either ACB_CAN_USEPORTA, ACB_CAN_USEPORTB or ACB_CAN_USEOTHER
 #endif
 
 #if ACB_CAN_RXPIN > 7
-#define ACB_CAN_AFR_RXPIN (ACB_CAN_RXPIN-8)
+       #define ACB_CAN_AFR_RXPIN (ACB_CAN_RXPIN-8)
 #else
-#define ACB_CAN_AFR_RXPIN (ACB_CAN_RXPIN)
+       #define ACB_CAN_AFR_RXPIN (ACB_CAN_RXPIN)
 #endif
 
 #if ACB_CAN_TXPIN > 7
-#define ACB_CAN_AFR_TXPIN (ACB_CAN_TXPIN-8)
+       #define ACB_CAN_AFR_TXPIN (ACB_CAN_TXPIN-8)
 #else
-#define ACB_CAN_AFR_TXPIN (ACB_CAN_TXPIN)
+       #define ACB_CAN_AFR_TXPIN (ACB_CAN_TXPIN)
 #endif
 
 /*

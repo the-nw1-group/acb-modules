@@ -25,35 +25,36 @@
  *
  */
 
-
-// THE REST **TODO**
-
 /*
  * Pin functions are
  *
- * | Pin | Function | Type         | Description           |
- * |:---:| -------- | ------------ | --------------------- |
- * | 1   | BOOT0    | I/P - IN     | Tied to ground        |
- * | 2   | PF0      | I/O - N/A    | Not Used              |
- * | 3   | PF1      | I/O - OUT    | nSLEEP    (DRV8816)   |
- * | 4   | NRST     | RST - RST    | SWD - RST             |
- * | 5   | VDDA     | S   - PWR    | 3.3v power supply     |
- * | 6   | PA0      | I/O - OUT    | PWM IN1   (DRV8816)   |
- * | 7   | PA1      | I/O - OUT    | PWM EN1   (DRV8816)   |
- * | 8   | PA2      | I/O - OUT    | PWM IN2   (DRV8816)   |
- * | 9   | PA3      | I/O - OUT    | PWM EN1   (DRV8816)   |
- * | 10  | PA4      | I/O - Analog | Vpropi    (DRV8816)   |
- * | 11  | PA5      | I/O - Analog | Speed Control         |
- * | 12  | PA6      | I/O - IN     | Tied to analog ground |
- * | 13  | PA7      | I/O - OUT    | PWM Power LED         |
- * | 14  | PB1      | I/O - OUT    | PWM Track LED         |
- * | 15  | VSS      | S   - PWR    | Ground                |
- * | 16  | VDD      | S   - PWR    | 3.3v power supply     |
- * | 17  | PA9      | I/O - IN     | Config #1             |
- * | 18  | PA10     | I/O - IN     | Config #0             |
- * | 19  | PA13     | I/O - DBG    | SWD - SWDIO           |
- * | 20  | PA14     | I/O - DBG    | SWD - SWCLK           |
- * |:---:| -------- | ------------ | --------------------- |
+ * | Pin | Function  | Type             | Description                 |
+ * |:---:| --------- | ---------------- | --------------------------- |
+ * | 1   | VDD       | S   - PWR        | 3.3v power supply           |
+ * | 4   | NRST      | RST - RST        | SWD - RST                   |
+ * | 5   | VDDA      | S   - PWR        | 3.3v power supply           |
+ * | 6   | PA0       | I   - RCC_CLK_IN | Clock In (12mhz Oscillator) |
+ * | 7   | PA1       | I/O - Analog     | ADC1_IN6 - ADC1             |
+ * | 8   | PA2       | I/O - Analog     | ADC1_IN7 - ADC2             |
+ * | 12  | PA6       | I/O - IN         | IN1                         |
+ * | 13  | PA7       | I/O - IN         | IN2                         |
+ * | 16  | VSS       | S   - PWR        | Ground                      |
+ * | 17  | VDD       | S   - PWR        | 3.3v power supply           |
+ * | 18  | PA8       | I/O - OUT        | TIM1_CH1 - OUT1             |
+ * | 19  | PA9       | I/O - OUT        | TIM1_CH2 - OUT2             |
+ * | 21  | PA11      | I/O - IN         | CAN1_RX                     |
+ * | 22  | PA12      | I/O - OUT        | CAN1_TX                     |
+ * | 23  | PA13      | I/O - DBG        | SWD - SWDIO                 |
+ * | 24  | PA14      | I/O - DBG        | SWD - SWCLK                 |
+ * | 25  | PA15      | I/O - OUT        | EEPROM nCS                  |
+ * | 26  | PB3       | I/O - OUT        | SPI3_CLK - EEPROM SPI Clock |
+ * | 27  | PB4       | I/O - IN         | SPI3_MISO - EEPROM MISO     |
+ * | 28  | PB5       | I/O - OUT        | SPI3_MOSI - EEPROM MOSI     |
+ * | 31  | PH3-BOOT0 | I/O - IN         | User Switch                 |
+ * | 32  | VSS       | S   - PWR        | Ground                      |
+ * |:---:| --------- | ---------------- | --------------------------- |
+ *
+ * Others are unused
  *
  */
 
